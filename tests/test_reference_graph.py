@@ -77,7 +77,7 @@ def test_reference_graph_initialization():
 def test_reference_graph_add_publication(citing_publication):
     rg = ReferenceGraph()
     rg.add_publication(citing_publication)
-    assert citing_publication in rg.graph.nodes
+    assert citing_publication.doi in rg.graph.nodes
 
 
 def test_reference_graph_add_citation(citing_publication, cited_publication):
@@ -86,21 +86,29 @@ def test_reference_graph_add_citation(citing_publication, cited_publication):
     rg.add_publication(cited_publication)
 
     rg.add_citation(citing_publication, cited_publication)
-    assert rg.graph.has_edge(citing_publication, cited_publication)
+    assert rg.graph.has_edge(citing_publication.doi, cited_publication.doi)
 
 
 def test_add_publication_from_database_to_graph(filled_publication_database):
     rg = ReferenceGraph()
     for pub in filled_publication_database.publications:
         rg.add_publication(pub)  # Assuming DOI is used as the identifier
-    assert pub in rg.graph.nodes
+    for pub in filled_publication_database.publications:
+        assert pub.doi in rg.graph.nodes
 
 
 def test_add_citation_between_publications(filled_publication_database):
     rg = ReferenceGraph()
-    pub = filled_publication_database.publications[0]
-    rg.add_publication(pub)
-    for ref in pub.references:
-        rg.add_publication(ref)  # Add referenced publication as node
-        rg.add_citation(pub, ref)  # Add citation (edge)
-    assert rg.graph.has_edge(pub, "10.2345/ml.2020")
+    for pub in filled_publication_database.publications:
+        rg.add_publication(pub)
+
+    for pub in filled_publication_database.publications:
+        for ref_doi in pub.references:
+            if ref_doi in [pub.doi for pub in filled_publication_database.publications]:
+                ref = filled_publication_database.search_by_doi(ref_doi)
+                rg.add_citation(pub, ref)
+
+    assert rg.graph.has_edge(
+        filled_publication_database.publications[0].doi,
+        filled_publication_database.publications[1].doi,
+    )
