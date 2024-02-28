@@ -19,18 +19,6 @@ from reference_network import Publication
 
 
 @pytest.fixture
-def sample_publication():
-    title = "Sample Publication"
-    authors = ["Author One", "Author Two"]
-    year = 2024
-    doi = "10.1000/sampledoi"
-    references = ["10.1000/ref1", "10.1000/ref2"]
-    return Publication(
-        title=title, authors=authors, year=year, doi=doi, references=references
-    )
-
-
-@pytest.fixture
 def identical_doi_publication():
     title = "Comparison Publication"
     authors = ["Author One", "Author Three"]
