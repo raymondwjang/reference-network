@@ -14,7 +14,7 @@
 #         (Optional) Method to load/save the database from/to a file
 
 import pytest
-from unittest.mock import patch, mock_open
+from tempfile import NamedTemporaryFile
 from reference_network.publication import Publication
 from reference_network.publication_database import PublicationDatabase
 
@@ -73,25 +73,22 @@ def test_search_publications_by_author(db_with_sample_publication):
     assert "Author One" in results[0].authors
 
 
-@pytest.fixture
-def mock_data(sample_publication):
-    return sample_publication.to_string()
+# Test searching for publications by doi
+def test_search_publications_by_doi(db_with_sample_publication):
+    results = db_with_sample_publication.search_by_doi("10.1000/sampledoi")
+    assert results.doi == "10.1000/sampledoi"
 
 
 # Test loading and saving the database
 # @pytest.mark.skip(reason="Optional functionality not yet implemented")
-def test_load_save_database(sample_publication, mock_data):
+def test_load_save_database(sample_publication):
     db = PublicationDatabase()
     db.add_publication(sample_publication)
-    with patch(
-        "reference_network.publication_database.PublicationDatabase",
-        mock_open(read_data=mock_data),
-        create=True,
-    ):
-        db.save_to_file("test_db.json")
+    with NamedTemporaryFile() as temp_file:
+        db.save_to_file(temp_file.name)
 
         new_db = PublicationDatabase()
-        new_db.load_from_file("test_db.json")
+        new_db.load_from_file(temp_file.name)
 
     assert len(new_db.publications) == 1
     assert new_db.publications[0].title == "Sample Publication"

@@ -1,3 +1,4 @@
+import warnings
 from pathlib import Path
 from reference_network.publication import Publication
 
@@ -23,11 +24,29 @@ class PublicationDatabase:
         """
         self.publications = [pub for pub in self.publications if pub.doi != doi]
 
-    def search_by_year(self, year: int):
+    def search_by_year(self, year: int) -> list[Publication]:
         return [pub for pub in self.publications if pub.year == year]
 
-    def search_by_author(self, author: str):
+    def search_by_author(self, author: str) -> list[Publication]:
         return [pub for pub in self.publications if author in pub.authors]
+
+    def search_by_doi(self, doi: str) -> Publication:
+        """Since unique DOIs are used as identifiers, this method always
+        returns a single publication with the given DOI.
+
+        Args:
+            doi (str): The DOI of the publication to search for.
+
+        Returns:
+            Publication: The publication with the given DOI,
+
+        Raises:
+            ValueError: Raised if no publication with the given DOI is found.
+        """
+        for pub in self.publications:
+            if pub.doi == doi:
+                return pub
+        raise ValueError(f"No publication with DOI '{doi}' found.")
 
     def save_to_file(self, filename: str | Path):
         """This method saves the database to a file.
@@ -37,24 +56,23 @@ class PublicationDatabase:
 
         Raises:
             FileExistsError: Raised if the file already exists
-            FileNotFoundError: Raised if the path does not exist
         """
         if isinstance(filename, str):
             filename = Path(filename)
 
-        # check if file exists
+        # Print warning if file already exists
         if filename.exists():
-            raise FileExistsError(f"File {filename} already exists.")
+            warnings.warn(f"File '{filename}' already exists.", category=UserWarning)
 
         # check if path exists
         if not filename.parent.exists():
-            raise FileNotFoundError(f"Path {filename.parent} does not exist.")
+            filename.parent.mkdir(parents=True)
 
         with open(filename, "w") as file:
             for pub in self.publications:
                 file.write(pub.to_string() + "\n")
 
-    def load_from_file(self, filename: str | Path):
+    def load_from_file(self, filename: str | Path) -> "PublicationDatabase":
         """This method loads the database from a file.
 
         Args:
@@ -63,3 +81,5 @@ class PublicationDatabase:
         with open(filename, "r") as file:
             for line in file:
                 self.publications.append(Publication.from_string(line.strip()))
+
+        return self
