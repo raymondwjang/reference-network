@@ -14,6 +14,7 @@
 #         (Optional) Method to load/save the database from/to a file
 
 import pytest
+from unittest.mock import patch, mock_open
 from reference_network.publication import Publication
 from reference_network.publication_database import PublicationDatabase
 
@@ -26,7 +27,9 @@ def sample_publication():
     year = 2024
     doi = "10.1000/sampledoi"
     references = ["10.1000/ref1", "10.1000/ref2"]
-    return Publication(title, authors, year, doi, references)
+    return Publication(
+        title=title, authors=authors, year=year, doi=doi, references=references
+    )
 
 
 # Fixture for an empty PublicationDatabase
@@ -47,7 +50,7 @@ def db_with_sample_publication(sample_publication):
 def test_add_publication(empty_db, sample_publication):
     empty_db.add_publication(sample_publication)
     assert len(empty_db.publications) == 1
-    assert empty_db.publications[0].title == "Sample Title"
+    assert empty_db.publications[0].title == "Sample Publication"
 
 
 # Test removing a publication from the database
@@ -58,9 +61,9 @@ def test_remove_publication(db_with_sample_publication, sample_publication):
 
 # Test searching for publications by year
 def test_search_publications_by_year(db_with_sample_publication):
-    results = db_with_sample_publication.search_by_year(2021)
+    results = db_with_sample_publication.search_by_year(2024)
     assert len(results) == 1
-    assert results[0].year == 2021
+    assert results[0].year == 2024
 
 
 # Test searching for publications by author
@@ -70,13 +73,25 @@ def test_search_publications_by_author(db_with_sample_publication):
     assert "Author One" in results[0].authors
 
 
+@pytest.fixture
+def mock_data(sample_publication):
+    return sample_publication.to_string()
+
+
 # Test loading and saving the database
-@pytest.mark.skip(reason="Optional functionality not yet implemented")
-def test_load_save_database():
+# @pytest.mark.skip(reason="Optional functionality not yet implemented")
+def test_load_save_database(sample_publication, mock_data):
     db = PublicationDatabase()
     db.add_publication(sample_publication)
-    db.save_to_file("test_db.json")
-    new_db = PublicationDatabase()
-    new_db.load_from_file("test_db.json")
+    with patch(
+        "reference_network.publication_database.PublicationDatabase",
+        mock_open(read_data=mock_data),
+        create=True,
+    ):
+        db.save_to_file("test_db.json")
+
+        new_db = PublicationDatabase()
+        new_db.load_from_file("test_db.json")
+
     assert len(new_db.publications) == 1
-    assert new_db.publications[0].title == "Sample Title"
+    assert new_db.publications[0].title == "Sample Publication"

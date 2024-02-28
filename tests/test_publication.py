@@ -25,7 +25,9 @@ def sample_publication():
     year = 2024
     doi = "10.1000/sampledoi"
     references = ["10.1000/ref1", "10.1000/ref2"]
-    return Publication(title, authors, year, doi, references)
+    return Publication(
+        title=title, authors=authors, year=year, doi=doi, references=references
+    )
 
 
 def test_publication_initialization(sample_publication):
@@ -56,6 +58,31 @@ def test_publication_add_references(sample_publication):
 
 
 def test_publication_initialization_without_references():
-    pub = Publication("Sample Publication", ["Author One"], 2024, "10.1000/sampledoi")
+    pub = Publication(
+        title="Sample Publication",
+        authors=["Author One"],
+        year=2024,
+        doi="10.1000/sampledoi",
+    )
 
     assert pub.references == []
+
+
+def test_publication_from_string():
+    pub = Publication.from_string(
+        "Sample Publication|Author One, Author Two|2024|10.1000/sampledoi|10.1000/ref1, 10.1000/ref2"
+    )
+    assert pub.title == "Sample Publication"
+    assert pub.authors == ["Author One", "Author Two"]
+    assert pub.year == 2024
+    assert pub.doi == "10.1000/sampledoi"
+    assert pub.references == ["10.1000/ref1", "10.1000/ref2"]
+
+
+def test_publication_to_string(sample_publication):
+    pub = sample_publication
+    string = pub.to_string()
+    assert (
+        string
+        == "Sample Publication|Author One, Author Two|2024|10.1000/sampledoi|10.1000/ref1, 10.1000/ref2"
+    )
