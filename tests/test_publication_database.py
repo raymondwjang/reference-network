@@ -55,7 +55,7 @@ def test_add_publication(empty_db, sample_publication):
 
 # Test removing a publication from the database
 def test_remove_publication(db_with_sample_publication, sample_publication):
-    db_with_sample_publication.remove_publication(sample_publication)
+    db_with_sample_publication.remove_publication(sample_publication.doi)
     assert len(db_with_sample_publication.publications) == 0
 
 
