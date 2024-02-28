@@ -1,4 +1,5 @@
-# This class represents a single publication. It should store relevant metadata such as title, authors, publication year, DOI, and references (citations).
+# This class represents a single publication. It should store relevant metadata
+# such as title, authors, publication year, DOI, and references (citations).
 
 #     Attributes:
 #         Title
@@ -9,8 +10,9 @@
 
 #     Methods:
 #         Constructor to initialize the publication with its metadata
-#         Method to add a reference
+#         Method to add a reference(s)
 #         (Optional) Method to fetch metadata from external sources like DOI
+#           --> separating this into a diff class
 
 import pytest
 from reference_network.publication import Publication
@@ -41,3 +43,19 @@ def test_publication_add_reference(sample_publication):
     pub.add_reference(new_reference)
     assert new_reference in pub.references
     assert len(pub.references) == 3  # Assuming initial references are counted
+
+
+def test_publication_add_references(sample_publication):
+    pub = sample_publication
+    new_references = ["10.1000/newref1", "10.1000/newref2"]
+    pub.add_references(new_references)
+    assert (new_references[0] in pub.references) and (
+        new_references[1] in pub.references
+    )
+    assert len(pub.references) == 4  # Assuming initial references are counted
+
+
+def test_publication_initialization_without_references():
+    pub = Publication("Sample Publication", ["Author One"], 2024, "10.1000/sampledoi")
+
+    assert pub.references == []
