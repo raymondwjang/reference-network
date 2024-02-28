@@ -9,4 +9,5 @@
 #         Methods to parse fetched data into Publication objects
 
 import pytest
+
 from reference_network.data_fetcher import DataFetcher

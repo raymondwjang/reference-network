@@ -16,6 +16,7 @@ black = "^24.2.0"
 pydantic = "^2.6.3"
 plotly = "^5.19.0"
 graphviz = "^0.20.1"
+isort = "^5.13.2"
 
 
 [tool.poetry.group.dev.dependencies]

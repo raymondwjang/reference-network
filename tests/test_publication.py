@@ -15,6 +15,7 @@
 #           --> separating this into a diff class
 
 import pytest
+
 from reference_network import Publication
 
 
