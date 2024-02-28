@@ -13,15 +13,9 @@
 #         (e.g., year, author)
 #         (Optional) Method to load/save the database from/to a file
 
-import pytest
 from tempfile import NamedTemporaryFile
+
 from reference_network import PublicationDatabase
-
-
-# Fixture for an empty PublicationDatabase
-@pytest.fixture
-def empty_db():
-    return PublicationDatabase()
 
 
 # Test adding a publication to the database
@@ -32,28 +26,28 @@ def test_add_publication(empty_db, sample_publication):
 
 
 # Test removing a publication from the database
-def test_remove_publication(db_with_sample_publication, sample_publication):
-    db_with_sample_publication.remove_publication(sample_publication.doi)
-    assert len(db_with_sample_publication.publications) == 0
+def test_remove_publication(sparse_publication_database, sample_publication):
+    sparse_publication_database.remove_publication(sample_publication.doi)
+    assert len(sparse_publication_database.publications) == 0
 
 
 # Test searching for publications by year
-def test_search_publications_by_year(db_with_sample_publication):
-    results = db_with_sample_publication.search_by_year(2024)
+def test_search_publications_by_year(sparse_publication_database):
+    results = sparse_publication_database.search_by_year(2024)
     assert len(results) == 1
     assert results[0].year == 2024
 
 
 # Test searching for publications by author
-def test_search_publications_by_author(db_with_sample_publication):
-    results = db_with_sample_publication.search_by_author("Author One")
+def test_search_publications_by_author(sparse_publication_database):
+    results = sparse_publication_database.search_by_author("Author One")
     assert len(results) == 1
     assert "Author One" in results[0].authors
 
 
 # Test searching for publications by doi
-def test_search_publications_by_doi(db_with_sample_publication):
-    results = db_with_sample_publication.search_by_doi("10.1000/sampledoi")
+def test_search_publications_by_doi(sparse_publication_database):
+    results = sparse_publication_database.search_by_doi("10.1000/sampledoi")
     assert results.doi == "10.1000/sampledoi"
 
 
