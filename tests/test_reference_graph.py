@@ -16,9 +16,7 @@
 #         Method to load/save the graph from/to a file
 
 import pytest
-from reference_network.reference_graph import ReferenceGraph
-from reference_network.publication import Publication
-from reference_network.publication_database import PublicationDatabase
+from reference_network import Publication, PublicationDatabase, ReferenceGraph
 
 
 @pytest.fixture

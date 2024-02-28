@@ -15,7 +15,7 @@
 #           --> separating this into a diff class
 
 import pytest
-from reference_network.publication import Publication
+from reference_network import Publication
 
 
 @pytest.fixture

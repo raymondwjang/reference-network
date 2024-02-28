@@ -15,8 +15,7 @@
 
 import pytest
 from tempfile import NamedTemporaryFile
-from reference_network.publication import Publication
-from reference_network.publication_database import PublicationDatabase
+from reference_network import Publication, PublicationDatabase
 
 
 # Fixture for creating a sample publication object
