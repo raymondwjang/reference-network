@@ -14,7 +14,6 @@ TEST_DATA_PATH = "tests/data/my_zotero_library.csv"
 def csv_data_fetcher():
     return CSVDataFetcher(
         filepath=TEST_DATA_PATH,
-        semantic_scholar_api_key="my_semantic_scholar_api_key",
     )
 
 
