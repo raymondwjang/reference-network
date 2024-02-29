@@ -102,7 +102,7 @@ jobs:
       - name: Run tests
         run: |
           source .venv/bin/activate
-          pytest tests/ --cov=<project-dir> --cov-report=xml
+          pytest tests/ --cov=./ --cov-report=xml
           coverage report
 
         #----------------------------------------------
