@@ -18,6 +18,7 @@ from unittest.mock import MagicMock, patch
 import pytest
 
 from reference_network import GraphVisualizer
+from config import PLOT_CONFIG
 
 
 @pytest.fixture
@@ -26,23 +27,32 @@ def mock_reference_graph(filled_reference_graph):
 
 
 @pytest.fixture
-def graph_visualizer(mock_reference_graph):
-    return GraphVisualizer(mock_reference_graph, use_interactivity=True)
+def plotly_visualizer(mock_reference_graph):
+    return GraphVisualizer(
+        mock_reference_graph, use_interactivity=True, plotly_config=PLOT_CONFIG
+    )
+
+
+@pytest.fixture
+def graphviz_visualizer(mock_reference_graph):
+    return GraphVisualizer(
+        mock_reference_graph, use_interactivity=True, graphviz_config=PLOT_CONFIG
+    )
 
 
 @patch("reference_network.graph_visualizer.GraphVisualizer._visualize_with_plotly")
 def test_graph_visualizer_visualize_with_plotly(
-    mock_visualize_with_plotly, graph_visualizer
+    mock_visualize_with_plotly, plotly_visualizer
 ):
-    graph_visualizer.use_interactivity = True
-    graph_visualizer.visualize()
+    plotly_visualizer.use_interactivity = True
+    plotly_visualizer.visualize()
     mock_visualize_with_plotly.assert_called_once()
 
 
 @patch("reference_network.graph_visualizer.GraphVisualizer._visualize_with_graphviz")
 def test_graph_visualizer_visualize_with_graphviz(
-    mock_visualize_with_graphviz, graph_visualizer
+    mock_visualize_with_graphviz, graphviz_visualizer
 ):
-    graph_visualizer.use_interactivity = False
-    graph_visualizer.visualize()
+    graphviz_visualizer.use_interactivity = False
+    graphviz_visualizer.visualize()
     mock_visualize_with_graphviz.assert_called_once()
