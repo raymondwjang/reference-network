@@ -40,6 +40,8 @@ class PlotlyConfig(BaseModel):
         }
     )
 
+    image_path: str = "output/reference_graph.gv"
+
     @classmethod
     def from_yaml(cls, file_path: str):
         with open(file_path, "r") as file:

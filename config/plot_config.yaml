@@ -1,3 +1,4 @@
+# Plotly Config
 edge_line:
   width: 0.5
   color: "#888"
@@ -14,3 +15,6 @@ layout:
     l: 0
     r: 0
     t: 0
+
+# GraphViz Config
+image_path: "output/reference_graph.gv"
