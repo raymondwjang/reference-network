@@ -1,11 +1,11 @@
 import pytest
-from config import PlotlyConfig, DataConfig
+from config import PlotConfig, DataConfig
 from tempfile import NamedTemporaryFile
 
 
 @pytest.fixture
 def plot_config():
-    pc = PlotlyConfig()
+    pc = PlotConfig()
     pc.edge_line = {"width": 0.5, "color": "#888"}
     pc.node_marker = {
         "showscale": True,
@@ -37,13 +37,13 @@ def test_plot_config_save_load_yaml(plot_config):
         plot_config.to_yaml(tmp.name)
 
         # Load the configuration from the temporary file
-        loaded_config = PlotlyConfig.from_yaml(tmp.name)
+        loaded_config = PlotConfig.from_yaml(tmp.name)
 
         # Assert that the loaded configuration is the same as the original
         assert plot_config == loaded_config
 
     # Assert that the configuration is loaded as an AppConfig instance
-    assert isinstance(loaded_config, PlotlyConfig)
+    assert isinstance(loaded_config, PlotConfig)
 
     # Example assertions - replace these with actual settings from your config
     assert loaded_config.edge_line == {"width": 0.5, "color": "#888"}
@@ -74,7 +74,6 @@ def test_data_config_save_load_yaml(data_config):
     # Assert that the configuration is loaded as an AppConfig instance
     assert isinstance(loaded_config, DataConfig)
 
-    # Example assertions - replace these with actual settings from your config
     assert loaded_config.data_path == "data/references.json"
     assert loaded_config.zotero_api_key == "your_zotero_api_key"
     assert loaded_config.library_id == "your_zotero_library_id"
