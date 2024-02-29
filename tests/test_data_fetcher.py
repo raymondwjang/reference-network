@@ -27,3 +27,11 @@ def test_data_fetcher_fetch_references_by_doi(csv_data_fetcher):
     assert "article-title" in references[0]
     assert "author" in references[0]
     assert "year" in references[0]
+
+
+def test_data_fetcher_fetch_with_rate_limit(csv_data_fetcher):
+    delay = csv_data_fetcher.fetch_with_rate_limit()
+    assert delay is not None
+    assert delay > 0
+    assert delay < 1
+    assert isinstance(delay, float)

@@ -10,7 +10,9 @@ from reference_network import Publication
 
 class DataFetcher(ABC):
     def __init__(self):
-        pass
+        self.headers = {
+            "User-Agent": "ReferenceNetwork/1.0 (raymond.w.jang@gmail.com)",
+        }
 
     @abstractmethod
     def load_zotero_exported_file(
@@ -18,14 +20,26 @@ class DataFetcher(ABC):
     ) -> List[Publication]:
         pass
 
+    def fetch_with_rate_limit(self, url: str = "https://api.crossref.org/works/"):
+        response = requests.get(url, headers=self.headers)
+        rate_limit = int(
+            response.headers.get("X-Rate-Limit-Limit", 50)
+        )  # Default to 50 if not provided
+        rate_limit_interval = int(
+            response.headers.get("X-Rate-Limit-Interval", "1s")[:-1]
+        )  # Remove 's' and convert to int
+
+        # Calculate the delay needed between requests (in seconds, according to crossref docs)
+        # Refer to https://github.com/CrossRef/rest-api-doc#good-manners--more-reliable-service
+        delay = rate_limit_interval / rate_limit
+
+        return delay
+
     def fetch_references_by_doi(self, doi: str):
-        headers = {
-            "User-Agent": "ReferenceNetwork/1.0 (raymond.w.jang@gmail.com)",
-        }
         url = f"https://api.crossref.org/works/{doi}"
 
         # Make the request to Crossref API
-        response = requests.get(url, headers=headers)
+        response = requests.get(url, headers=self.headers)
         if response.status_code == 200:
             data = response.json()
             references = data.get("message", {}).get("reference", [])
@@ -37,6 +51,7 @@ class DataFetcher(ABC):
 
 class CSVDataFetcher(DataFetcher):
     def __init__(self, filepath: str | Path):
+        super().__init__()
         self.filepath = Path(filepath)
         if self.filepath.suffix != ".csv":
             raise ValueError(
@@ -55,6 +70,7 @@ class ZoteroDataFetcher(DataFetcher):
         library_id: str,
         zotero_api_key: str,
     ):
+        super().__init__()
         self.library_id = library_id
         self.zotero_api_key = zotero_api_key
 
