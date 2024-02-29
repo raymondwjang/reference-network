@@ -1,6 +1,21 @@
 import pytest
 
-from reference_network import Publication, PublicationDatabase, ReferenceGraph
+from reference_network import (
+    CSVDataFetcher,
+    Publication,
+    PublicationDatabase,
+    ReferenceGraph,
+)
+
+TEST_DATA_PATH = "tests/data/my_zotero_library.csv"
+
+
+@pytest.fixture
+def csv_data_fetcher():
+    return CSVDataFetcher(
+        filepath=TEST_DATA_PATH,
+        semantic_scholar_api_key="my_semantic_scholar_api_key",
+    )
 
 
 @pytest.fixture(scope="function")
