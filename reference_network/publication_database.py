@@ -1,5 +1,6 @@
 import warnings
 from pathlib import Path
+
 from reference_network.publication import Publication
 
 
