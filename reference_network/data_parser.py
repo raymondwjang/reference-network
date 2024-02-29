@@ -9,7 +9,7 @@ class DataParser:
         # transform pandas row to PublicationDatabase
         publication = Publication(
             title=zotero_row["Title"],
-            authors=zotero_row["Author"].split(" and "),
+            authors=zotero_row["Author"].split("; "),
             year=zotero_row["Publication Year"],
             doi=zotero_row["DOI"],
         )
