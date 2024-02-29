@@ -8,7 +8,8 @@ class ReferenceGraph:
         self.graph = nx.DiGraph()
 
     def add_publication(self, publication: Publication):
-        self.graph.add_node(publication.doi, publication=publication)
+        hover_info = f"Title: {publication.title}\nAuthors: {publication.authors[0]} et al.\nYear: {publication.year}"
+        self.graph.add_node(publication.doi, title=hover_info)
 
     def add_citation(
         self, citing_publication: Publication, cited_publication: Publication
