@@ -2,23 +2,19 @@ from pathlib import Path
 
 import pandas as pd
 
+from reference_network import Publication, PublicationDatabase
+
 
 class DataFetcher:
     def __init__(
         self,
-        load_zotero_from_online: bool = False,
-        zotero_api_key: str | None = None,
         semantic_scholar_api_key: str | None = None,
     ):
-        self.zotero_from_online = load_zotero_from_online
-        if self.zotero_from_online:
-            if zotero_api_key is None:
-                raise ValueError("An API key is required for online Zotero access")
+
         if semantic_scholar_api_key is None:
             raise ValueError(
                 "An API key is required for online Semantic Scholar access"
             )
-        self.zotero_api_key = zotero_api_key
         self.semantic_scholar_api_key = semantic_scholar_api_key
 
     def load_zotero_exported_file(
@@ -26,12 +22,12 @@ class DataFetcher:
         from_online: bool = False,
         filepath: str | Path | None = None,
         library_id: str | None = None,
-        api_key: str | None = None,
+        zotero_api_key: str | None = None,
     ):
         if from_online:
-            if api_key is None:
+            if zotero_api_key is None:
                 raise ValueError("An API key is required for online Zotero access")
-            self.api_key = api_key
+            self.zotero_api_key = zotero_api_key
             self.library_id = library_id
         else:
             if filepath is None:
@@ -45,6 +41,26 @@ class DataFetcher:
             zotero_data = pd.read_csv(self.filepath)
 
         return zotero_data
+
+    def transform_row_to_publication(self, zotero_row: pd.Series):
+        # transform pandas row to PublicationDatabase
+        publication = Publication(
+            title=zotero_row["Title"],
+            authors=zotero_row["Author"].split(" and "),
+            year=zotero_row["Publication Year"],
+            doi=zotero_row["DOI"],
+        )
+        return publication
+
+    def transform_df_to_publication_database(self, zotero_data: pd.DataFrame):
+        publication_database = PublicationDatabase()
+        for _, row in zotero_data.iterrows():
+            if pd.isna(row["DOI"]):
+                print(f"Skipping row with title {row['Title']} because it has no DOI")
+                continue
+            publication = self.transform_row_to_publication(row)
+            publication_database.add_publication(publication)
+        return publication_database
 
     def fetch_by_doi(self, doi: str):
         pass
