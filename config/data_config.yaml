@@ -1,0 +1,4 @@
+data_path: data/my_zotero_library.csv
+zotero_api_key: sample_api_key
+library_id: sample_id
+semantic_scholar_api_key: sample_api_key

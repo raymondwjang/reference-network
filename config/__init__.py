@@ -1,1 +1,1 @@
-from .config import PlotlyConfig, CONFIG
+from .config import PlotlyConfig, PLOT_CONFIG, DataConfig, DATA_CONFIG

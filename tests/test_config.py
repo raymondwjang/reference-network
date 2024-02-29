@@ -1,10 +1,10 @@
 import pytest
-from config import PlotlyConfig
+from config import PlotlyConfig, DataConfig
 from tempfile import NamedTemporaryFile
 
 
 @pytest.fixture
-def config():
+def plot_config():
     pc = PlotlyConfig()
     pc.edge_line = {"width": 0.5, "color": "#888"}
     pc.node_marker = {
@@ -21,16 +21,26 @@ def config():
     return pc
 
 
-def test_config_save_load_yaml(config):
+@pytest.fixture
+def data_config():
+    return DataConfig(
+        data_path="data/references.json",
+        zotero_api_key="your_zotero_api_key",
+        library_id="your_zotero_library_id",
+        semantic_scholar_api_key="your_semantic_scholar_api_key",
+    )
+
+
+def test_plot_config_save_load_yaml(plot_config):
     with NamedTemporaryFile() as tmp:
         # Save the configuration to a temporary file
-        config.to_yaml(tmp.name)
+        plot_config.to_yaml(tmp.name)
 
         # Load the configuration from the temporary file
         loaded_config = PlotlyConfig.from_yaml(tmp.name)
 
         # Assert that the loaded configuration is the same as the original
-        assert config == loaded_config
+        assert plot_config == loaded_config
 
     # Assert that the configuration is loaded as an AppConfig instance
     assert isinstance(loaded_config, PlotlyConfig)
@@ -48,3 +58,24 @@ def test_config_save_load_yaml(config):
         "hovermode": "closest",
         "margin": {"b": 0, "l": 0, "r": 0, "t": 0},
     }
+
+
+def test_data_config_save_load_yaml(data_config):
+    with NamedTemporaryFile() as tmp:
+        # Save the configuration to a temporary file
+        data_config.to_yaml(tmp.name)
+
+        # Load the configuration from the temporary file
+        loaded_config = DataConfig.from_yaml(tmp.name)
+
+        # Assert that the loaded configuration is the same as the original
+        assert data_config == loaded_config
+
+    # Assert that the configuration is loaded as an AppConfig instance
+    assert isinstance(loaded_config, DataConfig)
+
+    # Example assertions - replace these with actual settings from your config
+    assert loaded_config.data_path == "data/references.json"
+    assert loaded_config.zotero_api_key == "your_zotero_api_key"
+    assert loaded_config.library_id == "your_zotero_library_id"
+    assert loaded_config.semantic_scholar_api_key == "your_semantic_scholar_api_key"
