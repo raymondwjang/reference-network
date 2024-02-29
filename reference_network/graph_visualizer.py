@@ -82,6 +82,4 @@ class GraphVisualizer:
             dot.edge(str(edge[0]), str(edge[1]))
 
         # Render the graph to a file (e.g., PNG)
-        dot.render(
-            "output/reference_graph.gv", view=True
-        )  # 'view=True' opens the rendered file
+        dot.render(config.image_path, view=True)  # 'view=True' opens the rendered file
