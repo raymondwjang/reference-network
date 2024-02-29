@@ -63,7 +63,10 @@ class PublicationDatabase:
 
         # Print warning if file already exists
         if filename.exists():
-            warnings.warn(f"File '{filename}' already exists.", category=UserWarning)
+            warnings.warn(
+                f"File '{filename}' already exists. Overwriting...",
+                category=UserWarning,
+            )
 
         # check if path exists
         if not filename.parent.exists():
