@@ -27,7 +27,7 @@ def mock_reference_graph(filled_reference_graph):
 
 @pytest.fixture
 def graph_visualizer(mock_reference_graph):
-    return GraphVisualizer(mock_reference_graph)
+    return GraphVisualizer(mock_reference_graph, use_interactivity=True)
 
 
 @patch("reference_network.graph_visualizer.GraphVisualizer._visualize_with_plotly")
