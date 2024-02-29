@@ -1,4 +1,4 @@
-from config import CONFIG
+from config import PLOT_CONFIG
 
 from reference_network import (
     ReferenceGraph,
@@ -8,11 +8,12 @@ from reference_network import (
 
 def main():
 
-    # fetcher = DataFetcher()
     graph = ReferenceGraph()
-    graph.ingest_publication_database(filled_publication_database)
+    graph.ingest_publication_database()
 
-    visualizer = GraphVisualizer(graph, use_interactivity=True, plotly_config=CONFIG)
+    visualizer = GraphVisualizer(
+        graph, use_interactivity=True, plotly_config=PLOT_CONFIG
+    )
     visualizer.visualize()
 
 
