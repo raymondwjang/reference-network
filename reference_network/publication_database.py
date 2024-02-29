@@ -84,6 +84,6 @@ class PublicationDatabase:
         """
         with open(filename, "r") as file:
             for line in file:
-                self.publications.append(Publication.from_string(line.strip()))
+                self.add_publication(Publication.from_string(line.strip()))
 
         return self
