@@ -8,9 +8,17 @@
 #         Methods to fetch data by DOI, title, author, etc.
 #         Methods to parse fetched data into Publication objects
 
-import pytest
-from unittest.mock import patch, MagicMock
 
 from reference_network import DataFetcher
 
-from config import PLOT_CONFIG
+
+TEST_DATA_PATH = "tests/data/my_zotero_library.csv"
+
+
+def test_data_fetcher_load_zotero_exported_file():
+    fetcher = DataFetcher()
+    zotero_data = fetcher.load_zotero_exported_file(filepath=TEST_DATA_PATH)
+    assert zotero_data is not None
+    assert len(zotero_data) == 31
+    assert "Title" in zotero_data.columns
+    assert "DOI" in zotero_data.columns

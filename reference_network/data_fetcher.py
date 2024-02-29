@@ -1,11 +1,25 @@
 from pathlib import Path
-import requests
+
 import pandas as pd
 
 
 class DataFetcher:
-    def __init__(self):
-        pass
+    def __init__(
+        self,
+        load_zotero_from_online: bool = False,
+        zotero_api_key: str | None = None,
+        semantic_scholar_api_key: str | None = None,
+    ):
+        self.zotero_from_online = load_zotero_from_online
+        if self.zotero_from_online:
+            if zotero_api_key is None:
+                raise ValueError("An API key is required for online Zotero access")
+        if semantic_scholar_api_key is None:
+            raise ValueError(
+                "An API key is required for online Semantic Scholar access"
+            )
+        self.zotero_api_key = zotero_api_key
+        self.semantic_scholar_api_key = semantic_scholar_api_key
 
     def load_zotero_exported_file(
         self,
