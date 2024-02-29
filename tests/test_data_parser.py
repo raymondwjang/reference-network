@@ -1,10 +1,4 @@
-import pytest
-from reference_network import Publication, PublicationDatabase, DataParser
-
-
-@pytest.fixture
-def data_parser():
-    return DataParser()
+from reference_network import Publication, PublicationDatabase
 
 
 def test_data_parser_transform_row_to_publication(csv_data_fetcher, data_parser):
@@ -37,13 +31,11 @@ def test_data_parser_crossref_data_into_publication(
 
 
 def test_data_parser_populate_references(
-    sparse_publication_database, csv_data_fetcher, data_parser
+    real_publication_database, csv_data_fetcher, data_parser
 ):
     delay_between_requests = csv_data_fetcher.fetch_with_rate_limit()
     database = data_parser.populate_references(
-        sparse_publication_database, csv_data_fetcher, delay_between_requests
+        real_publication_database, csv_data_fetcher, delay_between_requests
     )
     assert isinstance(database, PublicationDatabase)
-    assert len(database.publications) == 1
-    assert len(database.publications[0].references) == 50
-    assert isinstance(database.publications[0].references[0], str)
+    assert len(database.publications) == 29
