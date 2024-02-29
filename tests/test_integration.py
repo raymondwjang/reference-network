@@ -3,7 +3,6 @@ from config import PLOT_CONFIG
 
 
 def test_e2e_workflow(filled_publication_database):
-    # fetcher = DataFetcher()
     graph = ReferenceGraph()
     graph.ingest_publication_database(filled_publication_database)
 
