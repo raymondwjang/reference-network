@@ -1,3 +1,4 @@
+import time
 import pandas as pd
 
 from reference_network import Publication, PublicationDatabase
@@ -41,9 +42,13 @@ class DataParser:
         return publication
 
     def populate_references(
-        self, publication_database: PublicationDatabase, data_fetcher
+        self,
+        publication_database: PublicationDatabase,
+        data_fetcher,
+        delay_between_requests,
     ):
         for publication in publication_database.publications:
             references = data_fetcher.fetch_references_by_doi(publication.doi)
             publication = self.crossref_data_into_publication(publication, references)
+            time.sleep(delay_between_requests)
         return publication_database
