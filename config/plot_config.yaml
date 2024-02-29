@@ -17,4 +17,4 @@ layout:
     t: 0
 
 # GraphViz Config
-image_path: "output/reference_graph.gv"
+image_path: "figures/reference_graph.gv"
