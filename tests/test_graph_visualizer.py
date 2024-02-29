@@ -17,7 +17,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from reference_network import GraphVisualizer
+from reference_network import InteractiveVisualizer, StaticVisualizer
 from config import PLOT_CONFIG
 
 
@@ -27,32 +27,28 @@ def mock_reference_graph(filled_reference_graph):
 
 
 @pytest.fixture
-def plotly_visualizer(mock_reference_graph):
-    return GraphVisualizer(
-        mock_reference_graph, use_interactivity=True, plotly_config=PLOT_CONFIG
-    )
+def interactive_visualizer(mock_reference_graph):
+    return InteractiveVisualizer(mock_reference_graph, pyvis_config=PLOT_CONFIG)
 
 
 @pytest.fixture
-def graphviz_visualizer(mock_reference_graph):
-    return GraphVisualizer(
-        mock_reference_graph, use_interactivity=True, graphviz_config=PLOT_CONFIG
-    )
+def static_visualizer(mock_reference_graph):
+    return StaticVisualizer(mock_reference_graph, graphviz_config=PLOT_CONFIG)
 
 
-@patch("reference_network.graph_visualizer.GraphVisualizer._visualize_with_plotly")
-def test_graph_visualizer_visualize_with_plotly(
-    mock_visualize_with_plotly, plotly_visualizer
+@patch("reference_network.graph_visualizer.InteractiveVisualizer.visualize")
+def test_graph_visualizer_visualize_with_pyvis(
+    mock_visualize_with_pyvis, interactive_visualizer
 ):
-    plotly_visualizer.use_interactivity = True
-    plotly_visualizer.visualize()
-    mock_visualize_with_plotly.assert_called_once()
+    interactive_visualizer.use_interactivity = True
+    interactive_visualizer.visualize()
+    mock_visualize_with_pyvis.assert_called_once()
 
 
-@patch("reference_network.graph_visualizer.GraphVisualizer._visualize_with_graphviz")
+@patch("reference_network.graph_visualizer.StaticVisualizer.visualize")
 def test_graph_visualizer_visualize_with_graphviz(
-    mock_visualize_with_graphviz, graphviz_visualizer
+    mock_visualize_with_graphviz, static_visualizer
 ):
-    graphviz_visualizer.use_interactivity = False
-    graphviz_visualizer.visualize()
+    static_visualizer.use_interactivity = False
+    static_visualizer.visualize()
     mock_visualize_with_graphviz.assert_called_once()

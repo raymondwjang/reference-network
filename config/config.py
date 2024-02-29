@@ -22,7 +22,7 @@ class DataConfig(BaseModel):
 DATA_CONFIG = DataConfig.from_yaml("config/data_config.yaml")
 
 
-class PlotlyConfig(BaseModel):
+class PlotConfig(BaseModel):
     edge_line: dict = Field(default_factory=lambda: {"width": 0.5, "color": "#888"})
     node_marker: dict = Field(
         default_factory=lambda: {
@@ -53,4 +53,4 @@ class PlotlyConfig(BaseModel):
             yaml.dump(self.model_dump(), file)
 
 
-PLOT_CONFIG = PlotlyConfig.from_yaml("config/plot_config.yaml")
+PLOT_CONFIG = PlotConfig.from_yaml("config/plot_config.yaml")

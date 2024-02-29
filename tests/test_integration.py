@@ -2,7 +2,8 @@ from reference_network import (
     CSVDataFetcher,
     DataParser,
     ReferenceGraph,
-    GraphVisualizer,
+    InteractiveVisualizer,
+    StaticVisualizer,
 )
 from config import PLOT_CONFIG
 
@@ -22,7 +23,5 @@ def test_e2e_workflow():
     graph = ReferenceGraph()
     graph.ingest_publication_database(database)
 
-    visualizer = GraphVisualizer(
-        graph, use_interactivity=False, plotly_config=PLOT_CONFIG
-    )
+    visualizer = InteractiveVisualizer(graph, pyvis_config=PLOT_CONFIG)
     visualizer.visualize()
