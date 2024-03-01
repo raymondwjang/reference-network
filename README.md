@@ -1,6 +1,6 @@
 # Reference Network
 
-The Reference Network is a Python library designed to create, visualize, and analyze reference networks from academic publications. It leverages powerful libraries such as NetworkX for network analysis, PyVis for interactive visualization, and Graphviz for static graph rendering, providing a comprehensive toolset for researchers, librarians, and anyone interested in bibliometrics.
+The Reference Network is a Python application designed to create, visualize, and analyze reference networks from academic publications. It leverages powerful libraries such as NetworkX for network analysis, PyVis for interactive visualization, and Graphviz for static graph rendering, providing a comprehensive toolset for researchers, librarians, and anyone interested in bibliometrics.
 
 ## Features
 
