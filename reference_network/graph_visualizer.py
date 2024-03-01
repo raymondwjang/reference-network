@@ -21,6 +21,7 @@ class InteractiveVisualizer(GraphVisualizer):
         super().__init__(reference_graph, config)
 
     def visualize(self):
+        """Visualize the reference graph interactively using Pyvis."""
         # Create a Pyvis network
         net = Network(
             directed=True,
@@ -75,6 +76,7 @@ class StaticVisualizer(GraphVisualizer):
         super().__init__(reference_graph, config)
 
     def visualize(self):
+        """Visualize the reference graph statically using Graphviz."""
         # Create a Graphviz graph from the reference_graph
         dot = Digraph(name="My Zotero Reference Graph")
         for node in self.reference_graph.graph.nodes():
