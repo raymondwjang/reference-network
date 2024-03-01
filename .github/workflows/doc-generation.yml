@@ -3,7 +3,7 @@ name: Generate Documentation
 on:
   push:
     branches:
-      - main  # or master, depending on your default branch
+      - main
 
 jobs:
   build-docs:
@@ -60,7 +60,7 @@ jobs:
           # Use pdoc to generate your documentation
 
       - name: Deploy to GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@4.1.4
+        uses: JamesIves/github-pages-deploy-action@v4
         with:
           branch: main  # The branch the action should deploy to.
           folder: docs  # The folder the action should deploy.
