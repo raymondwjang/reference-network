@@ -63,7 +63,10 @@ class PublicationDatabase:
 
         # Print warning if file already exists
         if filename.exists():
-            warnings.warn(f"File '{filename}' already exists.", category=UserWarning)
+            warnings.warn(
+                f"File '{filename}' already exists. Overwriting...",
+                category=UserWarning,
+            )
 
         # check if path exists
         if not filename.parent.exists():
@@ -81,6 +84,6 @@ class PublicationDatabase:
         """
         with open(filename, "r") as file:
             for line in file:
-                self.publications.append(Publication.from_string(line.strip()))
+                self.add_publication(Publication.from_string(line.strip()))
 
         return self

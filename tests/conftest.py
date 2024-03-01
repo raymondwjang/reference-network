@@ -1,6 +1,31 @@
 import pytest
+import logging
 
-from reference_network import Publication, PublicationDatabase, ReferenceGraph
+from reference_network import (
+    CSVDataFetcher,
+    DataParser,
+    Publication,
+    PublicationDatabase,
+    ReferenceGraph,
+)
+
+
+@pytest.fixture(scope="session", autouse=True)
+def configure_logging():
+    logging.basicConfig(
+        level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
+    )
+    # Use 'session' scope for application-wide settings, and 'autouse=True' to automatically use this fixture in tests
+
+
+TEST_DATA_PATH = "tests/data/my_zotero_library.csv"
+
+
+@pytest.fixture
+def csv_data_fetcher():
+    return CSVDataFetcher(
+        filepath=TEST_DATA_PATH,
+    )
 
 
 @pytest.fixture(scope="function")
@@ -60,3 +85,15 @@ def filled_reference_graph(filled_publication_database):
     rg = ReferenceGraph()
     rg.ingest_publication_database(filled_publication_database)
     return rg
+
+
+@pytest.fixture
+def data_parser():
+    return DataParser()
+
+
+@pytest.fixture
+def real_publication_database(csv_data_fetcher, data_parser):
+    zotero_data = csv_data_fetcher.load_zotero_exported_file()
+    raw_database = data_parser.transform_df_to_publication_database(zotero_data)
+    return raw_database

@@ -44,7 +44,7 @@ class Publication(BaseModel):
             Publication: A new publication.
         """
         title, authors, year, doi, references_str = string.split("|")
-        authors_list = authors.split(", ")
+        authors_list = authors.split("; ")
         references_list = references_str.split(", ") if references_str else []
         return cls(
             title=title,
@@ -60,7 +60,7 @@ class Publication(BaseModel):
         Returns:
             str: A string representation of the publication.
         """
-        authors_str = ", ".join(self.authors)
+        authors_str = "; ".join(self.authors)
         references_str = ", ".join(self.references)
         return f"{self.title}|{authors_str}|{self.year}|{self.doi}|{references_str}"
 
