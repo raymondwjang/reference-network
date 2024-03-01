@@ -112,7 +112,7 @@ def test_publication_initialization_without_references():
 
 def test_publication_from_string():
     pub = Publication.from_string(
-        "Sample Publication|Author One, Author Two|2024|10.1000/sampledoi|10.1000/ref1, 10.1000/ref2"
+        "Sample Publication|Author One; Author Two|2024|10.1000/sampledoi|10.1000/ref1, 10.1000/ref2"
     )
     assert pub.title == "Sample Publication"
     assert pub.authors == ["Author One", "Author Two"]
@@ -126,5 +126,5 @@ def test_publication_to_string(sample_publication):
     string = pub.to_string()
     assert (
         string
-        == "Sample Publication|Author One, Author Two|2024|10.1000/sampledoi|10.1000/ref1, 10.1000/ref2"
+        == "Sample Publication|Author One; Author Two|2024|10.1000/sampledoi|10.1000/ref1, 10.1000/ref2"
     )
