@@ -8,7 +8,6 @@ The Reference Network is a Python library designed to create, visualize, and ana
 - **Interactive Visualization**: Generate interactive visualizations of reference networks with PyVis, enabling users to explore the connections between publications through a web-based interface.
 - **Static Graph Rendering**: Produce high-quality static images of reference networks using Graphviz, suitable for publication in academic journals or presentations.
 - **Analysis Tools**: Utilize NetworkX to calculate network metrics such as centrality, clustering coefficients, and more, offering insights into the structure and characteristics of the reference network. (TODO)
-- **Dynamic Color Support**: Automatically assign colors to disconnected graph components for enhanced visual clarity, with support for dynamic color generation using Seaborn.
 
 ## Installation
 
