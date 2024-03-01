@@ -1,4 +1,5 @@
 # Reference Network
+[![codecov](https://codecov.io/gh/RaymondWJang/reference-network/graph/badge.svg?token=3FP4FI26NL)](https://codecov.io/gh/RaymondWJang/reference-network)
 
 The Reference Network is a Python application designed to create, visualize, and analyze reference networks from academic publications. It leverages libraries such as NetworkX for network analysis, PyVis for interactive visualization, and Graphviz for static graph rendering, providing a comprehensive toolset for researchers, librarians, and anyone interested in bibliometrics.
 
