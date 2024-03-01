@@ -5,7 +5,7 @@ from reference_network import (
     InteractiveVisualizer,
     StaticVisualizer,
 )
-from config import PLOT_CONFIG, DATA_CONFIG
+from reference_network.config import PLOT_CONFIG, DATA_CONFIG
 
 
 def test_e2e_workflow():

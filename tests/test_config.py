@@ -1,5 +1,5 @@
 import pytest
-from config import PlotConfig, DataConfig
+from reference_network.config import PlotConfig, DataConfig
 from tempfile import NamedTemporaryFile
 
 

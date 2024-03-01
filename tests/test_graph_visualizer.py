@@ -18,7 +18,7 @@ from unittest.mock import MagicMock, patch
 import pytest
 
 from reference_network import InteractiveVisualizer, StaticVisualizer
-from config import PLOT_CONFIG
+from reference_network.config import PLOT_CONFIG
 
 
 @pytest.fixture
