@@ -6,7 +6,7 @@ from reference_network import Publication, PublicationDatabase
 
 class DataParser:
     def transform_row_to_publication(self, zotero_row: pd.Series):
-        # transform pandas row to PublicationDatabase
+        # transform pandas row to Publication
         publication = Publication(
             title=zotero_row["Title"],
             authors=zotero_row["Author"].split("; "),

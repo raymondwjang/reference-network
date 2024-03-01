@@ -1,6 +1,5 @@
-# If your application fetches publication data from external sources
-# (e.g., Google Scholar, PubMed, CrossRef), you might create a class dedicated
-# to this purpose.
+# If the application fetches publication data from external sources
+# (e.g., Google Scholar, PubMed, SemanticScholar, CrossRef), need a dedicated class
 
 #     Attributes: None specific, though could include API keys or rate
 #         limiting settings

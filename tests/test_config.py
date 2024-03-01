@@ -35,8 +35,6 @@ def test_plot_config_save_load_yaml(plot_config):
 
     # Assert that the configuration is loaded as an AppConfig instance
     assert isinstance(loaded_config, PlotConfig)
-
-    # Example assertions - replace these with actual settings from your config
     assert loaded_config.base_size == 10
     assert loaded_config.scaling_factor == 2
     assert loaded_config.interactive_graph_path == "figures/interactive_graph.html"
@@ -54,7 +52,7 @@ def test_data_config_save_load_yaml(data_config):
         # Assert that the loaded configuration is the same as the original
         assert data_config == loaded_config
 
-    # Assert that the configuration is loaded as an AppConfig instance
+    # Assert that the configuration is loaded as a DataConfig instance
     assert isinstance(loaded_config, DataConfig)
 
     assert loaded_config.data_path == "data/references.json"
