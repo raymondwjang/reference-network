@@ -20,6 +20,7 @@ pip install git+https://github.com/RaymondWJang/reference-network
 
 ## Usage
 
+Please refer to docs/zotero_integration.md for retrieving your Zotero library in a compatible format.
 Below is a simple example of how to create a reference network, add publications, and generate an interactive visualization:
 
 ```python
