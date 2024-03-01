@@ -21,6 +21,7 @@ requests = "^2.31.0"
 pytest-cov = "^4.1.0"
 diskcache = "^5.6.3"
 pyvis = "^0.3.2"
+pdoc3 = "^0.10.0"
 
 
 [tool.poetry.group.dev.dependencies]

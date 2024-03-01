@@ -1,0 +1,35 @@
+name: Generate Documentation
+
+on:
+  push:
+    branches:
+      - main  # or master, depending on your default branch
+
+jobs:
+  build-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          persist-credentials: false  # This is necessary for JamesIves/github-pages-deploy-action to work
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.8'  # Set up the Python version for the runner
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pdoc3  # Ensure pdoc3 is installed
+
+      - name: Generate Documentation
+        run: |
+          pdoc --html --output-dir ./docs reference_network
+          # Use pdoc to generate your documentation
+
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@4.1.4
+        with:
+          branch: main  # The branch the action should deploy to.
+          folder: docs  # The folder the action should deploy.
