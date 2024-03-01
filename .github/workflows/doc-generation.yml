@@ -56,7 +56,7 @@ jobs:
 
       - name: Generate Documentation
         run: |
-          poetry run pdoc --html --output-dir ./docs reference_network
+          poetry run pdoc --html --force --output-dir ./docs reference_network
           # Use pdoc to generate your documentation
 
       - name: Deploy to GitHub Pages
