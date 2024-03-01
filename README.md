@@ -15,9 +15,8 @@ The Reference Network is a Python library designed to create, visualize, and ana
 To install the Reference Network Package, you will need Python 3.9 or later. You can install the package using pip:
 
 ```sh
-pip install git+https://github.com/RaymondWJang/reference-network
+git clone https://github.com/RaymondWJang/reference-network
 ```
-
 ## Usage
 
 Please refer to docs/zotero_integration.md for retrieving your Zotero library in a compatible format.
