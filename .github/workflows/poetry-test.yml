@@ -110,14 +110,3 @@ jobs:
           source .venv/bin/activate
           pytest tests/ --cov=./ --cov-report=xml
           coverage report
-
-        #----------------------------------------------
-        #             upload coverage stats
-        # (requires CODECOV_TOKEN in repository secrets)
-        #----------------------------------------------
-      - name: Upload coverage
-        uses: codecov/codecov-action@v3
-        with:
-          # token: ${{ secrets.CODECOV_TOKEN }}  # Only required for private repositories
-          file: ./coverage.xml
-          fail_ci_if_error: true
