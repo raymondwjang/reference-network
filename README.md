@@ -15,7 +15,7 @@ The Reference Network is a Python library designed to create, visualize, and ana
 To install the Reference Network Package, you will need Python 3.6 or later. You can install the package using pip:
 
 ```sh
-pip install reference_network
+pip install https://github.com/RaymondWJang/reference-network
 ```
 
 ## Usage
