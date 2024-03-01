@@ -1,20 +1,7 @@
-# Plotly Config
-edge_line:
-  width: 0.5
-  color: "#888"
-node_marker:
-  showscale: true
-  colorscale: "YlGnBu"
-  color: []
-  size: 10
-layout:
-  showlegend: false
-  hovermode: "closest"
-  margin:
-    b: 0
-    l: 0
-    r: 0
-    t: 0
+# Pyvis Config
+base_size: 10
+scaling_factor: 2
+interactive_graph_path: "figures/reference_graph.html"
 
 # GraphViz Config
-image_path: "figures/reference_graph.gv"
+static_graph_path: "figures/reference_graph.gv"
