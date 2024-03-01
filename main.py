@@ -1,5 +1,5 @@
 import logging.config
-from config import LOGGING_CONFIG
+from reference_network.config import LOGGING_CONFIG
 
 
 def main():

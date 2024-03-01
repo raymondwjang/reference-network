@@ -20,7 +20,7 @@ class DataFetcher(ABC):
     ) -> List[Publication]:
         pass
 
-    def fetch_with_rate_limit(self, url: str = "https://api.crossref.org/works/"):
+    def request_rate_limit(self, url: str = "https://api.crossref.org/works/"):
         response = requests.get(url, headers=self.headers)
         rate_limit = int(
             response.headers.get("X-Rate-Limit-Limit", 50)
