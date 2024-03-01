@@ -7,11 +7,9 @@ from graphviz import Digraph
 
 
 class GraphVisualizer(ABC):
-    def __init__(
-        self,
-        reference_graph,
-    ):
+    def __init__(self, reference_graph, config):
         self.reference_graph = reference_graph
+        self.config = config
 
     @abstractmethod
     def visualize(self):
@@ -19,9 +17,8 @@ class GraphVisualizer(ABC):
 
 
 class InteractiveVisualizer(GraphVisualizer):
-    def __init__(self, reference_graph, pyvis_config):
-        super().__init__(reference_graph)
-        self.config = pyvis_config
+    def __init__(self, reference_graph, config):
+        super().__init__(reference_graph, config)
 
     def visualize(self):
         # Create a Pyvis network
@@ -40,8 +37,8 @@ class InteractiveVisualizer(GraphVisualizer):
         reference_counts = dict(self.reference_graph.graph.in_degree)
 
         def reference_count_to_size(count):
-            base_size = 10  # Minimum size
-            scaling_factor = 2
+            base_size = self.config.base_size  # Minimum size
+            scaling_factor = self.config.scaling_factor  # Scaling factor
             return base_size + (count * scaling_factor)
 
         components = list(nx.weakly_connected_components(self.reference_graph.graph))
@@ -70,17 +67,16 @@ class InteractiveVisualizer(GraphVisualizer):
             )  # Default to gray if not found
 
         net.show_buttons(filter_=["physics"])
-        net.show("interactive_graph.html", notebook=False)
+        net.show(self.config.interactive_graph_path, notebook=False)
 
 
 class StaticVisualizer(GraphVisualizer):
-    def __init__(self, reference_graph, graphviz_config):
-        super().__init__(reference_graph)
-        self.config = graphviz_config
+    def __init__(self, reference_graph, config):
+        super().__init__(reference_graph, config)
 
-    def visualize(self, config):
+    def visualize(self):
         # Create a Graphviz graph from the reference_graph
-        dot = Digraph(comment="The Reference Graph")
+        dot = Digraph(name="My Zotero Reference Graph")
         for node in self.reference_graph.graph.nodes():
             dot.node(str(node), str(node))  # Assuming nodes can be uniquely identified
 
@@ -88,4 +84,6 @@ class StaticVisualizer(GraphVisualizer):
             dot.edge(str(edge[0]), str(edge[1]))
 
         # Render the graph to a file (e.g., PNG)
-        dot.render(config.image_path, view=True)  # 'view=True' opens the rendered file
+        dot.render(
+            self.config.static_graph_path, view=True, cleanup=True
+        )  # 'view=True' opens the rendered file

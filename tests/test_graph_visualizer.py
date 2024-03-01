@@ -28,12 +28,12 @@ def mock_reference_graph(filled_reference_graph):
 
 @pytest.fixture
 def interactive_visualizer(mock_reference_graph):
-    return InteractiveVisualizer(mock_reference_graph, pyvis_config=PLOT_CONFIG)
+    return InteractiveVisualizer(mock_reference_graph, config=PLOT_CONFIG)
 
 
 @pytest.fixture
 def static_visualizer(mock_reference_graph):
-    return StaticVisualizer(mock_reference_graph, graphviz_config=PLOT_CONFIG)
+    return StaticVisualizer(mock_reference_graph, config=PLOT_CONFIG)
 
 
 @patch("reference_network.graph_visualizer.InteractiveVisualizer.visualize")
