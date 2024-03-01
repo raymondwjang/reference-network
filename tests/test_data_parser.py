@@ -33,7 +33,7 @@ def test_data_parser_crossref_data_into_publication(
 def test_data_parser_populate_references(
     real_publication_database, csv_data_fetcher, data_parser
 ):
-    delay_between_requests = csv_data_fetcher.fetch_with_rate_limit()
+    delay_between_requests = csv_data_fetcher.request_rate_limit()
     database = data_parser.populate_references(
         real_publication_database, csv_data_fetcher, delay_between_requests
     )

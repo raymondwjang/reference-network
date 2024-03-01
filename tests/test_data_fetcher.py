@@ -28,8 +28,8 @@ def test_data_fetcher_fetch_references_by_doi(csv_data_fetcher):
     assert "year" in references[0]
 
 
-def test_data_fetcher_fetch_with_rate_limit(csv_data_fetcher):
-    delay = csv_data_fetcher.fetch_with_rate_limit()
+def test_data_fetcher_request_rate_limit(csv_data_fetcher):
+    delay = csv_data_fetcher.request_rate_limit()
     assert delay is not None
     assert delay > 0
     assert delay < 1
