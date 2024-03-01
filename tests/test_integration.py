@@ -15,7 +15,7 @@ def test_e2e_workflow():
 
     parser = DataParser()
     zotero_database = parser.transform_df_to_publication_database(zotero_data)
-    delay_between_requests = df.fetch_with_rate_limit()
+    delay_between_requests = df.request_rate_limit()
     database = parser.populate_references(
         zotero_database, df, delay_between_requests=delay_between_requests
     )
