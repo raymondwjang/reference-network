@@ -3,7 +3,7 @@ name: Generate and Publish Documentation
 on:
   push:
     branches:
-      - gh-pages # change later to main
+      - main
 
 jobs:
   build:
