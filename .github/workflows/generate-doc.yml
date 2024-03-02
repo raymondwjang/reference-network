@@ -33,6 +33,6 @@ jobs:
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./docs/reference_network
+        publish_dir: ./docs  # The directory to deploy (relative to the root of the repository)
         publish_branch: gh-pages  # The branch you want to deploy to (gh-pages branch)
         keep_files: true  # Set to true to keep files already in the gh-pages branch
