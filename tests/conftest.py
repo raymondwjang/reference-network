@@ -1,13 +1,9 @@
-import pytest
 import logging
 
-from reference_network import (
-    CSVDataFetcher,
-    DataParser,
-    Publication,
-    PublicationDatabase,
-    ReferenceGraph,
-)
+import pytest
+
+from reference_network import (CSVDataFetcher, DataParser, Publication,
+                               PublicationDatabase, ReferenceGraph)
 
 
 @pytest.fixture(scope="session", autouse=True)

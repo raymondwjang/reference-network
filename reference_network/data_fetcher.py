@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import List
 
+from diskcache import Cache
 import requests
 import pandas as pd
 

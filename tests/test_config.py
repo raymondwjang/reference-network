@@ -1,6 +1,8 @@
-import pytest
-from reference_network.config import PlotConfig, DataConfig
 from tempfile import NamedTemporaryFile
+
+import pytest
+
+from reference_network.config import DataConfig, PlotConfig
 
 
 @pytest.fixture

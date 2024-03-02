@@ -1,4 +1,5 @@
 import logging.config
+
 from reference_network.config import LOGGING_CONFIG
 
 

@@ -1,5 +1,6 @@
-from typing import List
 import time
+from typing import List
+
 import pandas as pd
 
 from reference_network import Publication, PublicationDatabase

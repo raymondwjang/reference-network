@@ -1,11 +1,7 @@
-from reference_network import (
-    CSVDataFetcher,
-    DataParser,
-    ReferenceGraph,
-    InteractiveVisualizer,
-    StaticVisualizer,
-)
-from reference_network.config import PLOT_CONFIG, DATA_CONFIG
+from reference_network import (CSVDataFetcher, DataParser,
+                               InteractiveVisualizer, ReferenceGraph,
+                               StaticVisualizer)
+from reference_network.config import DATA_CONFIG, PLOT_CONFIG
 
 
 def test_e2e_workflow():
