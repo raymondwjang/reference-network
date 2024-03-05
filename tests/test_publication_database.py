@@ -15,7 +15,7 @@
 
 from tempfile import NamedTemporaryFile
 
-from reference_network import PublicationDatabase
+from reference_network.publication_database import PublicationDatabase
 
 
 # Test adding a publication to the database

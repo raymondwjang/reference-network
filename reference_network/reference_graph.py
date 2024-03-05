@@ -1,13 +1,11 @@
 import networkx as nx
 
-from reference_network.publication import Publication
-
 
 class ReferenceGraph:
     def __init__(self):
         self.graph = nx.DiGraph()
 
-    def add_publication(self, publication: Publication):
+    def add_publication(self, publication):
         """Add a publication to the graph.
 
         Args:
@@ -16,9 +14,7 @@ class ReferenceGraph:
         hover_info = f"Title: {publication.title}\nAuthors: {publication.authors[0]} et al.\nYear: {publication.year}"
         self.graph.add_node(publication.doi, title=hover_info)
 
-    def add_citation(
-        self, citing_publication: Publication, cited_publication: Publication
-    ):
+    def add_citation(self, citing_publication, cited_publication):
         """Add a citation between two publications.
 
         Args:

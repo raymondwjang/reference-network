@@ -1,9 +1,10 @@
 from abc import ABC, abstractmethod
+
 import matplotlib.colors as mcolors
-import seaborn as sns
 import networkx as nx
-from pyvis.network import Network
+import seaborn as sns
 from graphviz import Digraph
+from pyvis.network import Network
 
 
 class GraphVisualizer(ABC):

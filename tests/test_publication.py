@@ -16,7 +16,7 @@
 
 import pytest
 
-from reference_network import Publication
+from reference_network.publication import Publication
 
 
 @pytest.fixture

@@ -1,12 +1,14 @@
-from typing import List
 import time
+from typing import List
+
 import pandas as pd
 
-from reference_network import Publication, PublicationDatabase
+from .publication import Publication
+from .publication_database import PublicationDatabase
 
 
 class DataParser:
-    def transform_row_to_publication(self, zotero_row: pd.Series) -> Publication:
+    def transform_row_to_publication(self, zotero_row: pd.Series):
         """Transform a row from a Zotero DataFrame to a Publication.
 
         Args:
@@ -63,9 +65,7 @@ class DataParser:
                 )
         return dois
 
-    def crossref_data_into_publication(
-        self, publication: Publication, references
-    ) -> Publication:
+    def crossref_data_into_publication(self, publication, references):
         """Add Crossref data to a publication.
 
         Args:

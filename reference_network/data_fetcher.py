@@ -2,10 +2,10 @@ from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import List
 
-import requests
 import pandas as pd
+import requests
 
-from reference_network import Publication
+from reference_network.config import CACHE_MANAGER
 
 
 class DataFetcher(ABC):
@@ -15,9 +15,7 @@ class DataFetcher(ABC):
         }
 
     @abstractmethod
-    def load_zotero_exported_file(
-        self,
-    ) -> List[Publication]:
+    def load_zotero_exported_file(self):
         pass
 
     def request_rate_limit(self, url: str = "https://api.crossref.org/works/"):
@@ -36,6 +34,9 @@ class DataFetcher(ABC):
         return delay
 
     def fetch_references_by_doi(self, doi: str):
+        if f"crossref_references_response_from_{doi}" in CACHE_MANAGER:
+            return CACHE_MANAGER[f"crossref_references_response_from_{doi}"]
+
         url = f"https://api.crossref.org/works/{doi}"
 
         # Make the request to Crossref API
@@ -43,6 +44,7 @@ class DataFetcher(ABC):
         if response.status_code == 200:
             data = response.json()
             references = data.get("message", {}).get("reference", [])
+            CACHE_MANAGER[f"crossref_references_response_from_{doi}"] = references
             return references
         else:
             print(f"Failed to fetch data for DOI {doi}: HTTP {response.status_code}")
