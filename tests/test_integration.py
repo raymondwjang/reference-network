@@ -1,6 +1,10 @@
-from reference_network import (CSVDataFetcher, DataParser,
-                               InteractiveVisualizer, ReferenceGraph,
-                               StaticVisualizer)
+from reference_network import (
+    CSVDataFetcher,
+    DataParser,
+    InteractiveVisualizer,
+    ReferenceGraph,
+    StaticVisualizer,
+)
 from reference_network.config import DATA_CONFIG, PLOT_CONFIG
 
 
