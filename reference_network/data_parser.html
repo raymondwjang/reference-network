@@ -26,15 +26,17 @@
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">from typing import List
-import time
+<pre><code class="python">import time
+from typing import List
+
 import pandas as pd
 
-from reference_network import Publication, PublicationDatabase
+from .publication import Publication
+from .publication_database import PublicationDatabase
 
 
 class DataParser:
-    def transform_row_to_publication(self, zotero_row: pd.Series) -&gt; Publication:
+    def transform_row_to_publication(self, zotero_row: pd.Series):
         &#34;&#34;&#34;Transform a row from a Zotero DataFrame to a Publication.
 
         Args:
@@ -91,9 +93,7 @@ class DataParser:
                 )
         return dois
 
-    def crossref_data_into_publication(
-        self, publication: Publication, references
-    ) -&gt; Publication:
+    def crossref_data_into_publication(self, publication, references):
         &#34;&#34;&#34;Add Crossref data to a publication.
 
         Args:
@@ -148,7 +148,7 @@ class DataParser:
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class DataParser:
-    def transform_row_to_publication(self, zotero_row: pd.Series) -&gt; Publication:
+    def transform_row_to_publication(self, zotero_row: pd.Series):
         &#34;&#34;&#34;Transform a row from a Zotero DataFrame to a Publication.
 
         Args:
@@ -205,9 +205,7 @@ class DataParser:
                 )
         return dois
 
-    def crossref_data_into_publication(
-        self, publication: Publication, references
-    ) -&gt; Publication:
+    def crossref_data_into_publication(self, publication, references):
         &#34;&#34;&#34;Add Crossref data to a publication.
 
         Args:
@@ -245,7 +243,7 @@ class DataParser:
 <h3>Methods</h3>
 <dl>
 <dt id="reference_network.data_parser.DataParser.crossref_data_into_publication"><code class="name flex">
-<span>def <span class="ident">crossref_data_into_publication</span></span>(<span>self, publication: <a title="reference_network.publication.Publication" href="publication.html#reference_network.publication.Publication">Publication</a>, references) ‑> <a title="reference_network.publication.Publication" href="publication.html#reference_network.publication.Publication">Publication</a></span>
+<span>def <span class="ident">crossref_data_into_publication</span></span>(<span>self, publication, references)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Add Crossref data to a publication.</p>
@@ -265,9 +263,7 @@ class DataParser:
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def crossref_data_into_publication(
-    self, publication: Publication, references
-) -&gt; Publication:
+<pre><code class="python">def crossref_data_into_publication(self, publication, references):
     &#34;&#34;&#34;Add Crossref data to a publication.
 
     Args:
@@ -408,7 +404,7 @@ class DataParser:
 </details>
 </dd>
 <dt id="reference_network.data_parser.DataParser.transform_row_to_publication"><code class="name flex">
-<span>def <span class="ident">transform_row_to_publication</span></span>(<span>self, zotero_row: pandas.core.series.Series) ‑> <a title="reference_network.publication.Publication" href="publication.html#reference_network.publication.Publication">Publication</a></span>
+<span>def <span class="ident">transform_row_to_publication</span></span>(<span>self, zotero_row: pandas.core.series.Series)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Transform a row from a Zotero DataFrame to a Publication.</p>
@@ -426,7 +422,7 @@ class DataParser:
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def transform_row_to_publication(self, zotero_row: pd.Series) -&gt; Publication:
+<pre><code class="python">def transform_row_to_publication(self, zotero_row: pd.Series):
     &#34;&#34;&#34;Transform a row from a Zotero DataFrame to a Publication.
 
     Args:

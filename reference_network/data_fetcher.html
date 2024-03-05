@@ -30,10 +30,10 @@
 from pathlib import Path
 from typing import List
 
-import requests
 import pandas as pd
+import requests
 
-from reference_network import Publication
+from reference_network.config import CACHE_MANAGER
 
 
 class DataFetcher(ABC):
@@ -43,9 +43,7 @@ class DataFetcher(ABC):
         }
 
     @abstractmethod
-    def load_zotero_exported_file(
-        self,
-    ) -&gt; List[Publication]:
+    def load_zotero_exported_file(self):
         pass
 
     def request_rate_limit(self, url: str = &#34;https://api.crossref.org/works/&#34;):
@@ -64,6 +62,9 @@ class DataFetcher(ABC):
         return delay
 
     def fetch_references_by_doi(self, doi: str):
+        if f&#34;crossref_references_response_from_{doi}&#34; in CACHE_MANAGER:
+            return CACHE_MANAGER[f&#34;crossref_references_response_from_{doi}&#34;]
+
         url = f&#34;https://api.crossref.org/works/{doi}&#34;
 
         # Make the request to Crossref API
@@ -71,6 +72,7 @@ class DataFetcher(ABC):
         if response.status_code == 200:
             data = response.json()
             references = data.get(&#34;message&#34;, {}).get(&#34;reference&#34;, [])
+            CACHE_MANAGER[f&#34;crossref_references_response_from_{doi}&#34;] = references
             return references
         else:
             print(f&#34;Failed to fetch data for DOI {doi}: HTTP {response.status_code}&#34;)
@@ -181,9 +183,7 @@ inheritance.</p></div>
         }
 
     @abstractmethod
-    def load_zotero_exported_file(
-        self,
-    ) -&gt; List[Publication]:
+    def load_zotero_exported_file(self):
         pass
 
     def request_rate_limit(self, url: str = &#34;https://api.crossref.org/works/&#34;):
@@ -202,6 +202,9 @@ inheritance.</p></div>
         return delay
 
     def fetch_references_by_doi(self, doi: str):
+        if f&#34;crossref_references_response_from_{doi}&#34; in CACHE_MANAGER:
+            return CACHE_MANAGER[f&#34;crossref_references_response_from_{doi}&#34;]
+
         url = f&#34;https://api.crossref.org/works/{doi}&#34;
 
         # Make the request to Crossref API
@@ -209,6 +212,7 @@ inheritance.</p></div>
         if response.status_code == 200:
             data = response.json()
             references = data.get(&#34;message&#34;, {}).get(&#34;reference&#34;, [])
+            CACHE_MANAGER[f&#34;crossref_references_response_from_{doi}&#34;] = references
             return references
         else:
             print(f&#34;Failed to fetch data for DOI {doi}: HTTP {response.status_code}&#34;)
@@ -235,6 +239,9 @@ inheritance.</p></div>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def fetch_references_by_doi(self, doi: str):
+    if f&#34;crossref_references_response_from_{doi}&#34; in CACHE_MANAGER:
+        return CACHE_MANAGER[f&#34;crossref_references_response_from_{doi}&#34;]
+
     url = f&#34;https://api.crossref.org/works/{doi}&#34;
 
     # Make the request to Crossref API
@@ -242,6 +249,7 @@ inheritance.</p></div>
     if response.status_code == 200:
         data = response.json()
         references = data.get(&#34;message&#34;, {}).get(&#34;reference&#34;, [])
+        CACHE_MANAGER[f&#34;crossref_references_response_from_{doi}&#34;] = references
         return references
     else:
         print(f&#34;Failed to fetch data for DOI {doi}: HTTP {response.status_code}&#34;)
@@ -249,7 +257,7 @@ inheritance.</p></div>
 </details>
 </dd>
 <dt id="reference_network.data_fetcher.DataFetcher.load_zotero_exported_file"><code class="name flex">
-<span>def <span class="ident">load_zotero_exported_file</span></span>(<span>self) ‑> List[<a title="reference_network.publication.Publication" href="publication.html#reference_network.publication.Publication">Publication</a>]</span>
+<span>def <span class="ident">load_zotero_exported_file</span></span>(<span>self)</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -258,9 +266,7 @@ inheritance.</p></div>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@abstractmethod
-def load_zotero_exported_file(
-    self,
-) -&gt; List[Publication]:
+def load_zotero_exported_file(self):
     pass</code></pre>
 </details>
 </dd>

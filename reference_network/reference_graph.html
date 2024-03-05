@@ -28,14 +28,12 @@
 </summary>
 <pre><code class="python">import networkx as nx
 
-from reference_network.publication import Publication
-
 
 class ReferenceGraph:
     def __init__(self):
         self.graph = nx.DiGraph()
 
-    def add_publication(self, publication: Publication):
+    def add_publication(self, publication):
         &#34;&#34;&#34;Add a publication to the graph.
 
         Args:
@@ -44,9 +42,7 @@ class ReferenceGraph:
         hover_info = f&#34;Title: {publication.title}\nAuthors: {publication.authors[0]} et al.\nYear: {publication.year}&#34;
         self.graph.add_node(publication.doi, title=hover_info)
 
-    def add_citation(
-        self, citing_publication: Publication, cited_publication: Publication
-    ):
+    def add_citation(self, citing_publication, cited_publication):
         &#34;&#34;&#34;Add a citation between two publications.
 
         Args:
@@ -96,7 +92,7 @@ class ReferenceGraph:
     def __init__(self):
         self.graph = nx.DiGraph()
 
-    def add_publication(self, publication: Publication):
+    def add_publication(self, publication):
         &#34;&#34;&#34;Add a publication to the graph.
 
         Args:
@@ -105,9 +101,7 @@ class ReferenceGraph:
         hover_info = f&#34;Title: {publication.title}\nAuthors: {publication.authors[0]} et al.\nYear: {publication.year}&#34;
         self.graph.add_node(publication.doi, title=hover_info)
 
-    def add_citation(
-        self, citing_publication: Publication, cited_publication: Publication
-    ):
+    def add_citation(self, citing_publication, cited_publication):
         &#34;&#34;&#34;Add a citation between two publications.
 
         Args:
@@ -137,7 +131,7 @@ class ReferenceGraph:
 <h3>Methods</h3>
 <dl>
 <dt id="reference_network.reference_graph.ReferenceGraph.add_citation"><code class="name flex">
-<span>def <span class="ident">add_citation</span></span>(<span>self, citing_publication: <a title="reference_network.publication.Publication" href="publication.html#reference_network.publication.Publication">Publication</a>, cited_publication: <a title="reference_network.publication.Publication" href="publication.html#reference_network.publication.Publication">Publication</a>)</span>
+<span>def <span class="ident">add_citation</span></span>(<span>self, citing_publication, cited_publication)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Add a citation between two publications.</p>
@@ -152,9 +146,7 @@ class ReferenceGraph:
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def add_citation(
-    self, citing_publication: Publication, cited_publication: Publication
-):
+<pre><code class="python">def add_citation(self, citing_publication, cited_publication):
     &#34;&#34;&#34;Add a citation between two publications.
 
     Args:
@@ -168,7 +160,7 @@ class ReferenceGraph:
 </details>
 </dd>
 <dt id="reference_network.reference_graph.ReferenceGraph.add_publication"><code class="name flex">
-<span>def <span class="ident">add_publication</span></span>(<span>self, publication: <a title="reference_network.publication.Publication" href="publication.html#reference_network.publication.Publication">Publication</a>)</span>
+<span>def <span class="ident">add_publication</span></span>(<span>self, publication)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Add a publication to the graph.</p>
@@ -181,7 +173,7 @@ class ReferenceGraph:
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def add_publication(self, publication: Publication):
+<pre><code class="python">def add_publication(self, publication):
     &#34;&#34;&#34;Add a publication to the graph.
 
     Args:
