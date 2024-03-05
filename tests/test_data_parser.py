@@ -1,4 +1,5 @@
-from reference_network import Publication, PublicationDatabase
+from reference_network.publication import Publication
+from reference_network.publication_database import PublicationDatabase
 
 
 def test_data_parser_transform_row_to_publication(csv_data_fetcher, data_parser):
