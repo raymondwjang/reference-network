@@ -27,7 +27,9 @@
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">from abc import ABC, abstractmethod
-
+import os
+import shutil
+from pathlib import Path
 import matplotlib.colors as mcolors
 import networkx as nx
 import seaborn as sns
@@ -48,6 +50,20 @@ class GraphVisualizer(ABC):
 class InteractiveVisualizer(GraphVisualizer):
     def __init__(self, reference_graph, config):
         super().__init__(reference_graph, config)
+
+    def copy_library_files(self):
+        source_path = Path(&#34;lib&#34;)
+        destination_path = Path(self.config.interactive_graph_path).parent / &#34;lib&#34;
+        # Ensure the destination directory exists
+        if not os.path.exists(destination_path):
+            os.makedirs(destination_path, exist_ok=True)
+
+        # Copy the entire folder
+        try:
+            shutil.copytree(source_path, destination_path, dirs_exist_ok=True)
+            print(&#34;Library files copied successfully.&#34;)
+        except Exception as e:
+            print(f&#34;Error copying library files: {e}&#34;)
 
     def visualize(self):
         &#34;&#34;&#34;Visualize the reference graph interactively using Pyvis.&#34;&#34;&#34;
@@ -96,8 +112,9 @@ class InteractiveVisualizer(GraphVisualizer):
                 node_id, &#34;#808080&#34;
             )  # Default to gray if not found
 
-        net.show_buttons(filter_=[&#34;physics&#34;])
+        net.show_buttons(filter_=True)  # [&#34;physics&#34;])
         net.show(self.config.interactive_graph_path, notebook=False)
+        self.copy_library_files()
 
 
 class StaticVisualizer(GraphVisualizer):
@@ -191,6 +208,20 @@ inheritance.</p></div>
     def __init__(self, reference_graph, config):
         super().__init__(reference_graph, config)
 
+    def copy_library_files(self):
+        source_path = Path(&#34;lib&#34;)
+        destination_path = Path(self.config.interactive_graph_path).parent / &#34;lib&#34;
+        # Ensure the destination directory exists
+        if not os.path.exists(destination_path):
+            os.makedirs(destination_path, exist_ok=True)
+
+        # Copy the entire folder
+        try:
+            shutil.copytree(source_path, destination_path, dirs_exist_ok=True)
+            print(&#34;Library files copied successfully.&#34;)
+        except Exception as e:
+            print(f&#34;Error copying library files: {e}&#34;)
+
     def visualize(self):
         &#34;&#34;&#34;Visualize the reference graph interactively using Pyvis.&#34;&#34;&#34;
         # Create a Pyvis network
@@ -238,8 +269,9 @@ inheritance.</p></div>
                 node_id, &#34;#808080&#34;
             )  # Default to gray if not found
 
-        net.show_buttons(filter_=[&#34;physics&#34;])
-        net.show(self.config.interactive_graph_path, notebook=False)</code></pre>
+        net.show_buttons(filter_=True)  # [&#34;physics&#34;])
+        net.show(self.config.interactive_graph_path, notebook=False)
+        self.copy_library_files()</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -248,6 +280,30 @@ inheritance.</p></div>
 </ul>
 <h3>Methods</h3>
 <dl>
+<dt id="reference_network.graph_visualizer.InteractiveVisualizer.copy_library_files"><code class="name flex">
+<span>def <span class="ident">copy_library_files</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def copy_library_files(self):
+    source_path = Path(&#34;lib&#34;)
+    destination_path = Path(self.config.interactive_graph_path).parent / &#34;lib&#34;
+    # Ensure the destination directory exists
+    if not os.path.exists(destination_path):
+        os.makedirs(destination_path, exist_ok=True)
+
+    # Copy the entire folder
+    try:
+        shutil.copytree(source_path, destination_path, dirs_exist_ok=True)
+        print(&#34;Library files copied successfully.&#34;)
+    except Exception as e:
+        print(f&#34;Error copying library files: {e}&#34;)</code></pre>
+</details>
+</dd>
 <dt id="reference_network.graph_visualizer.InteractiveVisualizer.visualize"><code class="name flex">
 <span>def <span class="ident">visualize</span></span>(<span>self)</span>
 </code></dt>
@@ -304,8 +360,9 @@ inheritance.</p></div>
             node_id, &#34;#808080&#34;
         )  # Default to gray if not found
 
-    net.show_buttons(filter_=[&#34;physics&#34;])
-    net.show(self.config.interactive_graph_path, notebook=False)</code></pre>
+    net.show_buttons(filter_=True)  # [&#34;physics&#34;])
+    net.show(self.config.interactive_graph_path, notebook=False)
+    self.copy_library_files()</code></pre>
 </details>
 </dd>
 </dl>
@@ -399,6 +456,7 @@ inheritance.</p></div>
 <li>
 <h4><code><a title="reference_network.graph_visualizer.InteractiveVisualizer" href="#reference_network.graph_visualizer.InteractiveVisualizer">InteractiveVisualizer</a></code></h4>
 <ul class="">
+<li><code><a title="reference_network.graph_visualizer.InteractiveVisualizer.copy_library_files" href="#reference_network.graph_visualizer.InteractiveVisualizer.copy_library_files">copy_library_files</a></code></li>
 <li><code><a title="reference_network.graph_visualizer.InteractiveVisualizer.visualize" href="#reference_network.graph_visualizer.InteractiveVisualizer.visualize">visualize</a></code></li>
 </ul>
 </li>
