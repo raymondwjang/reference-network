@@ -1,5 +1,7 @@
 from abc import ABC, abstractmethod
-
+import os
+import shutil
+from pathlib import Path
 import matplotlib.colors as mcolors
 import networkx as nx
 import seaborn as sns
@@ -20,6 +22,20 @@ class GraphVisualizer(ABC):
 class InteractiveVisualizer(GraphVisualizer):
     def __init__(self, reference_graph, config):
         super().__init__(reference_graph, config)
+
+    def copy_library_files(self):
+        source_path = Path("lib")
+        destination_path = Path(self.config.interactive_graph_path).parent / "lib"
+        # Ensure the destination directory exists
+        if not os.path.exists(destination_path):
+            os.makedirs(destination_path, exist_ok=True)
+
+        # Copy the entire folder
+        try:
+            shutil.copytree(source_path, destination_path, dirs_exist_ok=True)
+            print("Library files copied successfully.")
+        except Exception as e:
+            print(f"Error copying library files: {e}")
 
     def visualize(self):
         """Visualize the reference graph interactively using Pyvis."""
@@ -68,8 +84,9 @@ class InteractiveVisualizer(GraphVisualizer):
                 node_id, "#808080"
             )  # Default to gray if not found
 
-        net.show_buttons(filter_=["physics"])
+        net.show_buttons(filter_=True)  # ["physics"])
         net.show(self.config.interactive_graph_path, notebook=False)
+        self.copy_library_files()
 
 
 class StaticVisualizer(GraphVisualizer):
