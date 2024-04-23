@@ -5,6 +5,7 @@
     "es6": true,
     "node": true
   },
+  "ignorepatterns": ["eslintrc.json"],
   "extends": [
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
@@ -60,10 +61,7 @@
     "@typescript-eslint/consistent-type-assertions": "error",
     "@typescript-eslint/dot-notation": "error",
     "@typescript-eslint/explicit-module-boundary-types": "warn",
-    "@typescript-eslint/indent": [
-      "error",
-      2
-    ],
+    "@typescript-eslint/indent": ["error", 2],
     "@typescript-eslint/member-delimiter-style": [
       "error",
       {
@@ -131,10 +129,7 @@
     "@typescript-eslint/require-await": "error",
     "@typescript-eslint/restrict-plus-operands": "error",
     "@typescript-eslint/restrict-template-expressions": "off",
-    "@typescript-eslint/semi": [
-      "error",
-      "never"
-    ],
+    "@typescript-eslint/semi": ["error", "never"],
     "@typescript-eslint/triple-slash-reference": [
       "error",
       {
@@ -146,10 +141,7 @@
     "@typescript-eslint/unbound-method": "error",
     "@typescript-eslint/unified-signatures": "error",
     "arrow-body-style": "error",
-    "arrow-parens": [
-      "error",
-      "as-needed"
-    ],
+    "arrow-parens": ["error", "as-needed"],
     "brace-style": [
       "error",
       "stroustrup",
@@ -167,15 +159,9 @@
     ],
     "complexity": "off",
     "constructor-super": "error",
-    "curly": [
-      "error",
-      "multi-line"
-    ],
+    "curly": ["error", "multi-line"],
     "eol-last": "error",
-    "eqeqeq": [
-      "error",
-      "smart"
-    ],
+    "eqeqeq": ["error", "smart"],
     "guard-for-in": "error",
     "id-blacklist": [
       "error",
@@ -191,10 +177,7 @@
     ],
     "id-match": "error",
     "import/order": "off",
-    "linebreak-style": [
-      "error",
-      "unix"
-    ],
+    "linebreak-style": ["error", "unix"],
     "max-classes-per-file": "off",
     "max-len": [
       "warn",
@@ -240,10 +223,7 @@
     "no-unused-vars": "off",
     "no-var": "error",
     "object-shorthand": "error",
-    "one-var": [
-      "off",
-      "never"
-    ],
+    "one-var": ["off", "never"],
     "prefer-arrow/prefer-arrow-functions": [
       "error",
       {
@@ -258,10 +238,7 @@
     ],
     "prefer-object-spread": "error",
     "prefer-template": "error",
-    "quote-props": [
-      "error",
-      "as-needed"
-    ],
+    "quote-props": ["error", "as-needed"],
     "radix": "off",
     "require-await": "off",
     "space-before-function-paren": [
@@ -276,9 +253,7 @@
       "error",
       "always",
       {
-        "markers": [
-          "/"
-        ]
+        "markers": ["/"]
       }
     ],
     "use-isnan": "error",
