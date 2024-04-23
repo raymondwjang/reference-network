@@ -105,7 +105,7 @@ export async function install() {
 export async function startup({ id, version, resourceURI, rootURI = resourceURI.spec }) {
   await waitForZotero()
 
-  log('Starting UNIQUE STRING2')
+  log('Starting')
 
   // 'Services' may not be available in Zotero 6
   if (typeof Services == 'undefined') {
