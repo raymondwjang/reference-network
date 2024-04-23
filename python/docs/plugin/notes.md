@@ -4,7 +4,7 @@
 
 Bootstrapped Zotero plugins in Zotero 7 require two components:
 
-- A WebExtension-style manifest.json file, as described above 
+- A WebExtension-style manifest.json file, as described above
 - A bootstrap.js file containing functions to handle various events:
   - Plugin lifecycle hooks
   - Window hooks
@@ -12,7 +12,6 @@ Bootstrapped Zotero plugins in Zotero 7 require two components:
 ## Hooks
 
 Plugin lifecycle hooks are modeled after the legacy Mozilla bootstrapped-extension framework:
-
 
 Plugin lifecycle hooks are passed two parameters:
 
@@ -25,7 +24,6 @@ Plugin lifecycle hooks are passed two parameters:
 Window hooks are passed one parameter:
 
 - An object with a window property containing the target window
-
 
 ### `startup()`
 

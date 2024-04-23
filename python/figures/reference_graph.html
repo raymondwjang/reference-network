@@ -1,0 +1,744 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+                <link href="lib/tom-select/tom-select.css" rel="stylesheet">
+                <script src="lib/tom-select/tom-select.complete.min.js"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 750px;
+                 background-color: #222222;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+             #loadingBar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width: 100%;
+                 height: 750px;
+                 background-color:rgba(200,200,200,0.8);
+                 -webkit-transition: all 0.5s ease;
+                 -moz-transition: all 0.5s ease;
+                 -ms-transition: all 0.5s ease;
+                 -o-transition: all 0.5s ease;
+                 transition: all 0.5s ease;
+                 opacity:1;
+             }
+
+             #bar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width:20px;
+                 height:20px;
+                 margin:auto auto auto auto;
+                 border-radius:11px;
+                 border:2px solid rgba(30,30,30,0.05);
+                 background: rgb(0, 173, 246); /* Old browsers */
+                 box-shadow: 2px 0px 4px rgba(0,0,0,0.4);
+             }
+
+             #border {
+                 position:absolute;
+                 top:10px;
+                 left:10px;
+                 width:500px;
+                 height:23px;
+                 margin:auto auto auto auto;
+                 box-shadow: 0px 0px 4px rgba(0,0,0,0.2);
+                 border-radius:10px;
+             }
+
+             #text {
+                 position:absolute;
+                 top:8px;
+                 left:530px;
+                 width:30px;
+                 height:50px;
+                 margin:auto auto auto auto;
+                 font-size:22px;
+                 color: #000000;
+             }
+
+             div.outerBorder {
+                 position:relative;
+                 top:400px;
+                 width:600px;
+                 height:44px;
+                 margin:auto auto auto auto;
+                 border:8px solid rgba(0,0,0,0.1);
+                 background: rgb(252,252,252); /* Old browsers */
+                 background: -moz-linear-gradient(top,  rgba(252,252,252,1) 0%, rgba(237,237,237,1) 100%); /* FF3.6+ */
+                 background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(252,252,252,1)), color-stop(100%,rgba(237,237,237,1))); /* Chrome,Safari4+ */
+                 background: -webkit-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Chrome10+,Safari5.1+ */
+                 background: -o-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Opera 11.10+ */
+                 background: -ms-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* IE10+ */
+                 background: linear-gradient(to bottom,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* W3C */
+                 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfcfc', endColorstr='#ededed',GradientType=0 ); /* IE6-9 */
+                 border-radius:72px;
+                 box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+             }
+             
+
+             
+             #config {
+                 float: left;
+                 width: 400px;
+                 height: 600px;
+             }
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+                <div id="select-menu" class="card-header">
+                    <div class="row no-gutters">
+                        <div class="col-10 pb-2">
+                            <select
+                            class="form-select"
+                            aria-label="Default select example"
+                            onchange="selectNode([value]);"
+                            id="select-node"
+                            placeholder="Select node..."
+                            >
+                                <option selected>Select a Node by ID</option>
+                                
+                                    <option value="10.1016/j.neuron.2020.07.011">10.1016/j.neuron.2020.07.011</option>
+                                
+                                    <option value="10.1126/science.aat3810">10.1126/science.aat3810</option>
+                                
+                                    <option value="10.1038/nature21692">10.1038/nature21692</option>
+                                
+                                    <option value="10.1002/hipo.22488">10.1002/hipo.22488</option>
+                                
+                                    <option value="10.1016/j.tics.2018.07.006">10.1016/j.tics.2018.07.006</option>
+                                
+                                    <option value="10.1126/science.aas9204">10.1126/science.aas9204</option>
+                                
+                                    <option value="10.1038/s41583-018-0077-1">10.1038/s41583-018-0077-1</option>
+                                
+                                    <option value="10.1146/annurev-neuro-080317-061956">10.1146/annurev-neuro-080317-061956</option>
+                                
+                                    <option value="10.1126/science.aaw4325">10.1126/science.aaw4325</option>
+                                
+                                    <option value="10.1038/nature11028">10.1038/nature11028</option>
+                                
+                                    <option value="10.1126/science.1159775">10.1126/science.1159775</option>
+                                
+                                    <option value="10.1126/science.1239073">10.1126/science.1239073</option>
+                                
+                                    <option value="10.1038/nature13725">10.1038/nature13725</option>
+                                
+                                    <option value="10.1038/s41593-018-0210-5">10.1038/s41593-018-0210-5</option>
+                                
+                                    <option value="10.1016/j.tics.2007.06.010">10.1016/j.tics.2007.06.010</option>
+                                
+                                    <option value="10.7554/eLife.79559">10.7554/eLife.79559</option>
+                                
+                                    <option value="10.1038/nrn3687">10.1038/nrn3687</option>
+                                
+                                    <option value="10.1038/s41586-022-04560-0">10.1038/s41586-022-04560-0</option>
+                                
+                                    <option value="10.1016/j.celrep.2017.10.013">10.1016/j.celrep.2017.10.013</option>
+                                
+                                    <option value="10.1038/s41592-023-01838-7">10.1038/s41592-023-01838-7</option>
+                                
+                                    <option value="10.1016/j.celrep.2016.12.004">10.1016/j.celrep.2016.12.004</option>
+                                
+                                    <option value="10.1117/1.NPh.9.4.041402">10.1117/1.NPh.9.4.041402</option>
+                                
+                                    <option value="10.1038/s41593-019-0517-x">10.1038/s41593-019-0517-x</option>
+                                
+                                    <option value="10.1126/sciadv.adg3918">10.1126/sciadv.adg3918</option>
+                                
+                                    <option value="10.1016/j.cell.2020.09.061">10.1016/j.cell.2020.09.061</option>
+                                
+                                    <option value="10.1038/s43588-022-00390-2">10.1038/s43588-022-00390-2</option>
+                                
+                                    <option value="10.1038/nature13665">10.1038/nature13665</option>
+                                
+                                    <option value="10.1152/jn.90941.2008">10.1152/jn.90941.2008</option>
+                                
+                                    <option value="10.1016/j.cub.2021.07.062">10.1016/j.cub.2021.07.062</option>
+                                
+                                    <option value="10.1038/nrn4000">10.1038/nrn4000</option>
+                                
+                                    <option value="10.1038/s41593-019-0555-4">10.1038/s41593-019-0555-4</option>
+                                
+                                    <option value="10.1371/journal.pcbi.1009832">10.1371/journal.pcbi.1009832</option>
+                                
+                                    <option value="10.1002/(SICI)1098-1063(1996)6:2<149::AID-HIPO6>3.0.CO;2-K">10.1002/(SICI)1098-1063(1996)6:2<149::AID-HIPO6>3.0.CO;2-K</option>
+                                
+                                    <option value="10.1016/j.celrep.2022.111695">10.1016/j.celrep.2022.111695</option>
+                                
+                                    <option value="10.1016/j.conb.2021.10.010">10.1016/j.conb.2021.10.010</option>
+                                
+                                    <option value="10.1016/j.neuron.2012.01.010">10.1016/j.neuron.2012.01.010</option>
+                                
+                                    <option value="10.1016/j.cell.2020.09.031">10.1016/j.cell.2020.09.031</option>
+                                
+                                    <option value="10.1101/418939">10.1101/418939</option>
+                                
+                                    <option value="10.1103/PhysRevX.8.031003">10.1103/PhysRevX.8.031003</option>
+                                
+                                    <option value="10.1016/j.celrep.2023.113142">10.1016/j.celrep.2023.113142</option>
+                                
+                                    <option value="10.1016/j.tins.2008.06.008">10.1016/j.tins.2008.06.008</option>
+                                
+                                    <option value="10.1002/hipo.450010207">10.1002/hipo.450010207</option>
+                                
+                                    <option value="10.1038/381425a0">10.1038/381425a0</option>
+                                
+                                    <option value="10.1523/JNEUROSCI.5492-03.2004">10.1523/JNEUROSCI.5492-03.2004</option>
+                                
+                                    <option value="10.1038/s41586-021-04268-7">10.1038/s41586-021-04268-7</option>
+                                
+                                    <option value="10.1038/nn.3968">10.1038/nn.3968</option>
+                                
+                                    <option value="10.1016/j.conb.2020.11.003">10.1016/j.conb.2020.11.003</option>
+                                
+                                    <option value="10.1016/j.neuron.2018.05.020">10.1016/j.neuron.2018.05.020</option>
+                                
+                                    <option value="10.1016/j.neuron.2023.05.005">10.1016/j.neuron.2023.05.005</option>
+                                
+                                    <option value="10.1016/j.neuron.2014.07.017">10.1016/j.neuron.2014.07.017</option>
+                                
+                                    <option value="10.1126/science.aaf0594">10.1126/science.aaf0594</option>
+                                
+                                    <option value="10.1371/journal.pcbi.1011768">10.1371/journal.pcbi.1011768</option>
+                                
+                                    <option value="10.1002/hipo.23132">10.1002/hipo.23132</option>
+                                
+                                    <option value="10.1038/nn.2384">10.1038/nn.2384</option>
+                                
+                                    <option value="10.1038/nature03687">10.1038/nature03687</option>
+                                
+                                    <option value="10.1016/j.neuron.2018.10.002">10.1016/j.neuron.2018.10.002</option>
+                                
+                                    <option value="10.1093/acprof:oso/9780195301069.001.0001">10.1093/acprof:oso/9780195301069.001.0001</option>
+                                
+                                    <option value="10.1523/JNEUROSCI.23-35-11167.2003">10.1523/JNEUROSCI.23-35-11167.2003</option>
+                                
+                                    <option value="10.1101/2023.09.22.558966">10.1101/2023.09.22.558966</option>
+                                
+                                    <option value="10.1523/JNEUROSCI.23-26-08827.2003">10.1523/JNEUROSCI.23-26-08827.2003</option>
+                                
+                                    <option value="10.1038/nn.3304">10.1038/nn.3304</option>
+                                
+                                    <option value="10.1016/j.neuron.2015.06.011">10.1016/j.neuron.2015.06.011</option>
+                                
+                                    <option value="10.1038/nature08499">10.1038/nature08499</option>
+                                
+                                    <option value="10.1016/S0896-6273(02)00586-X">10.1016/S0896-6273(02)00586-X</option>
+                                
+                                    <option value="10.1038/s41467-020-14611-7">10.1038/s41467-020-14611-7</option>
+                                
+                                    <option value="10.1155/2011/182602">10.1155/2011/182602</option>
+                                
+                                    <option value="10.1038/nn1961">10.1038/nn1961</option>
+                                
+                                    <option value="10.1002/hipo.20345">10.1002/hipo.20345</option>
+                                
+                                    <option value="10.1126/science.aao3474">10.1126/science.aao3474</option>
+                                
+                                    <option value="10.1523/JNEUROSCI.2291-17.2017">10.1523/JNEUROSCI.2291-17.2017</option>
+                                
+                                    <option value="10.1101/cshperspect.a021808">10.1101/cshperspect.a021808</option>
+                                
+                                    <option value="10.1038/ncomms13239">10.1038/ncomms13239</option>
+                                
+                                    <option value="10.1016/j.cub.2017.10.073">10.1016/j.cub.2017.10.073</option>
+                                
+                                    <option value="10.1016/j.neuron.2016.07.047">10.1016/j.neuron.2016.07.047</option>
+                                
+                                    <option value="10.1038/nn.4543">10.1038/nn.4543</option>
+                                
+                                    <option value="10.1038/nrn.2016.21">10.1038/nrn.2016.21</option>
+                                
+                                    <option value="10.1016/j.conb.2017.02.012">10.1016/j.conb.2017.02.012</option>
+                                
+                                    <option value="10.1038/s41593-018-0232-z">10.1038/s41593-018-0232-z</option>
+                                
+                                    <option value="10.1038/s41593-019-0467-3">10.1038/s41593-019-0467-3</option>
+                                
+                                    <option value="10.1016/j.cub.2019.08.019">10.1016/j.cub.2019.08.019</option>
+                                
+                                    <option value="10.1038/nn0107-13">10.1038/nn0107-13</option>
+                                
+                                    <option value="10.1038/nn.3904">10.1038/nn.3904</option>
+                                
+                                    <option value="10.1016/j.neuron.2019.09.012">10.1016/j.neuron.2019.09.012</option>
+                                
+                                    <option value="10.1007/s10827-018-0704-x">10.1007/s10827-018-0704-x</option>
+                                
+                                    <option value="10.1167/8.8.11">10.1167/8.8.11</option>
+                                
+                                    <option value="10.1371/journal.pcbi.1002581">10.1371/journal.pcbi.1002581</option>
+                                
+                                    <option value="10.3389/fncir.2016.00012">10.3389/fncir.2016.00012</option>
+                                
+                                    <option value="10.3389/fncir.2019.00022">10.3389/fncir.2019.00022</option>
+                                
+                                    <option value="10.1371/journal.pone.0182648">10.1371/journal.pone.0182648</option>
+                                
+                                    <option value="10.1146/annurev-neuro-062012-170330">10.1146/annurev-neuro-062012-170330</option>
+                                
+                                    <option value="10.1038/nn.2440">10.1038/nn.2440</option>
+                                
+                                    <option value="10.1101/115949">10.1101/115949</option>
+                                
+                                    <option value="10.3389/fncel.2019.00232">10.3389/fncel.2019.00232</option>
+                                
+                                    <option value="10.1186/s12915-016-0261-6">10.1186/s12915-016-0261-6</option>
+                                
+                                    <option value="10.1126/science.1174519">10.1126/science.1174519</option>
+                                
+                                    <option value="10.1016/j.cub.2015.12.048">10.1016/j.cub.2015.12.048</option>
+                                
+                                    <option value="10.1016/j.neuroimage.2013.06.022">10.1016/j.neuroimage.2013.06.022</option>
+                                
+                                    <option value="10.1038/s41467-021-25150-0">10.1038/s41467-021-25150-0</option>
+                                
+                                    <option value="10.1016/j.neuron.2018.10.006">10.1016/j.neuron.2018.10.006</option>
+                                
+                                    <option value="10.1016/j.neuron.2015.06.013">10.1016/j.neuron.2015.06.013</option>
+                                
+                                    <option value="10.1016/j.neuron.2021.09.044">10.1016/j.neuron.2021.09.044</option>
+                                
+                                    <option value="10.1016/j.neuron.2021.07.002">10.1016/j.neuron.2021.07.002</option>
+                                
+                                    <option value="10.1126/science.1189664">10.1126/science.1189664</option>
+                                
+                                    <option value="10.1126/science.aax6239">10.1126/science.aax6239</option>
+                                
+                                    <option value="10.1146/annurev.neuro.28.061604.135703">10.1146/annurev.neuro.28.061604.135703</option>
+                                
+                                    <option value="10.1038/nn1253">10.1038/nn1253</option>
+                                
+                                    <option value="10.1038/nature12600">10.1038/nature12600</option>
+                                
+                                    <option value="10.1016/j.neuroscience.2022.03.008">10.1016/j.neuroscience.2022.03.008</option>
+                                
+                                    <option value="10.1038/nn.4157">10.1038/nn.4157</option>
+                                
+                                    <option value="10.1016/j.neuroscience.2022.02.009">10.1016/j.neuroscience.2022.02.009</option>
+                                
+                                    <option value="10.1515/revneuro-2019-0044">10.1515/revneuro-2019-0044</option>
+                                
+                                    <option value="10.3389/fncir.2020.00054">10.3389/fncir.2020.00054</option>
+                                
+                                    <option value="10.1098/rsta.2007.2092">10.1098/rsta.2007.2092</option>
+                                
+                                    <option value="10.3389/fphys.2012.00163">10.3389/fphys.2012.00163</option>
+                                
+                                    <option value="10.1103/PhysRevLett.94.058101">10.1103/PhysRevLett.94.058101</option>
+                                
+                                    <option value="10.1523/JNEUROSCI.1095-21.2022">10.1523/JNEUROSCI.1095-21.2022</option>
+                                
+                                    <option value="10.1016/j.tins.2022.08.007">10.1016/j.tins.2022.08.007</option>
+                                
+                                    <option value="10.1038/s41593-022-01153-y">10.1038/s41593-022-01153-y</option>
+                                
+                                    <option value="10.1016/j.cell.2020.10.024">10.1016/j.cell.2020.10.024</option>
+                                
+                                    <option value="10.1002/wcs.1653">10.1002/wcs.1653</option>
+                                
+                                    <option value="10.1038/s41467-022-29384-4">10.1038/s41467-022-29384-4</option>
+                                
+                                    <option value="10.1038/npp.2016.73">10.1038/npp.2016.73</option>
+                                
+                                    <option value="10.1016/j.nlm.2016.07.007">10.1016/j.nlm.2016.07.007</option>
+                                
+                                    <option value="10.1016/j.conb.2018.10.013">10.1016/j.conb.2018.10.013</option>
+                                
+                                    <option value="10.1126/science.aal2690">10.1126/science.aal2690</option>
+                                
+                                    <option value="10.1016/j.nlm.2020.107266">10.1016/j.nlm.2020.107266</option>
+                                
+                                    <option value="10.3389/fnmol.2015.00078">10.3389/fnmol.2015.00078</option>
+                                
+                                    <option value="10.1016/j.celrep.2020.108128">10.1016/j.celrep.2020.108128</option>
+                                
+                                    <option value="10.1016/j.jii.2018.11.005">10.1016/j.jii.2018.11.005</option>
+                                
+                                    <option value="10.1101/2023.07.25.550571">10.1101/2023.07.25.550571</option>
+                                
+                                    <option value="10.1109/EMBC46164.2021.9629611">10.1109/EMBC46164.2021.9629611</option>
+                                
+                                    <option value="10.1101/2023.03.06.531342">10.1101/2023.03.06.531342</option>
+                                
+                                    <option value="10.1038/s41593-022-01090-w">10.1038/s41593-022-01090-w</option>
+                                
+                                    <option value="10.48550/arXiv.2107.04084">10.48550/arXiv.2107.04084</option>
+                                
+                                    <option value="10.1038/s41593-018-0312-0">10.1038/s41593-018-0312-0</option>
+                                
+                                    <option value="10.7554/eLife.53985">10.7554/eLife.53985</option>
+                                
+                                    <option value="10.1523/JNEUROSCI.0730-21.2021">10.1523/JNEUROSCI.0730-21.2021</option>
+                                
+                                    <option value="10.1098/rspb.2021.1111">10.1098/rspb.2021.1111</option>
+                                
+                                    <option value="10.48550/arXiv.2112.04035">10.48550/arXiv.2112.04035</option>
+                                
+                            </select>
+                        </div>
+                        <div class="col-2 pb-2">
+                            <button type="button" class="btn btn-primary btn-block" onclick="neighbourhoodHighlight({nodes: []});">Reset Selection</button>
+                        </div>
+                    </div>
+                </div>
+            
+            
+              <div id="filter-menu" class="card-header">
+                <div class="row no-gutters">
+                  <div class="col-3 pb-2">
+                    <select
+                            class="form-select"
+                            aria-label="Default select example"
+                            onchange="updateFilter(value, 'item')"
+                            id="select-item"
+                        >
+                        <option value="">Select a network item</option>
+                        <option value="edge">edge</option>
+                        <option value="node">node</option>
+                    </select>
+                  </div>
+                  <div class="col-3 pb-2">
+                    <select
+                            class="form-select"
+                            aria-label="Default select example"
+                            onchange="updateFilter(value, 'property')"
+                            id="select-property"
+                        >
+                        <option value="">Select a property...</option>
+                    </select>
+                  </div>
+                  <div class="col-3 pb-2">
+                    <select
+                            class="form-select"
+                            aria-label="Default select example"
+                            id="select-value"
+                        >
+                        <option value="">Select value(s)...</option>
+                    </select>
+                  </div>
+                  <div class="col-1 pb-2">
+                    <button type="button" class="btn btn-primary btn-block" onclick="highlightFilter(filter);">Filter</button>
+                  </div>
+                  <div class="col-2 pb-2">
+                    <button type="button" class="btn btn-primary btn-block" onclick="clearFilter(true)">Reset Selection</button>
+                  </div>
+                </div>
+              </div>
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+            <div id="loadingBar">
+              <div class="outerBorder">
+                <div id="text">0%</div>
+                <div id="border">
+                  <div id="bar"></div>
+                </div>
+              </div>
+            </div>
+        
+        
+            <div id="config"></div>
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+                  new TomSelect("#select-node",{
+                      create: false,
+                      sortField: {
+                          field: "text",
+                          direction: "asc"
+                      }
+                  });
+              
+
+              
+                  // explicitly using onItemAdd and this function as we need to save multiple values
+                  let updateValueFilter = function() {
+                      return function () {
+                      filter['value'].push(arguments[0])
+                      }
+                  }
+
+                  let valueControl = new TomSelect("#select-value",{
+                      maxItems: null,
+                      valueField: 'id',
+                      labelField: 'title',
+                      searchField: 'title',
+                      create: false,
+                      sortField: {
+                          field: "text",
+                          direction: "asc"
+                      },
+                      onItemAdd: updateValueFilter()
+                  });
+
+                  let addValues = function() {
+                      return function () {
+                          // clear the current value options and add the selected attribute values
+                          // tom-select handles duplicates
+                          let selectedProperty = arguments[0];
+                          valueControl.clear();
+                          valueControl.clearOptions();
+                          filter['value'] = []
+                          if (filter['item'] === 'node') {
+                              for (let each in allNodes) {
+                                  valueControl.addOption({
+                                      id:allNodes[each][selectedProperty],
+                                      title:allNodes[each][selectedProperty]
+                                  })
+                              }
+                          }
+                          else if (filter['item'] === 'edge') {
+                              for (let each in allEdges) {
+                                  valueControl.addOption({
+                                      id:allEdges[each][selectedProperty],
+                                      title:allEdges[each][selectedProperty]
+                                  })
+                              }
+                          }
+                      }
+                  };
+
+                  let propControl = new TomSelect("#select-property",{
+                      valueField: 'id',
+                      labelField: 'title',
+                      searchField: 'title',
+                      create: false,
+                      sortField: {
+                          field: "text",
+                          direction: "asc"
+                      },
+                      onItemAdd: addValues()
+                  });
+
+                  let addProperties = function() {
+                      return function () {
+                          // loops through the selected network item and adds the attributes to dropdown
+                          // tom-select handles duplicates
+                          clearFilter(false)
+                          if (arguments[0] === 'edge') {
+                              for (let each in allEdges) {
+                                  if (allEdges.hasOwnProperty(each)) {
+                                      for (let eachProp in allEdges[each]) {
+                                          if (allEdges[each].hasOwnProperty(eachProp)) {
+                                              propControl.addOption({id: eachProp, title: eachProp})
+                                          }
+                                      }
+                                  }
+                              }
+                          }
+                          else if (arguments[0] === 'node') {
+                              for (let each in allNodes) {
+                                  if (allNodes.hasOwnProperty(each)) {
+                                      for (let eachProp in allNodes[each]) {
+                                          if (allNodes[each].hasOwnProperty(eachProp)
+                                              && (eachProp !== 'hidden' && eachProp !== 'savedLabel'
+                                                  && eachProp !== 'hiddenLabel')) {
+                                              propControl.addOption({id: eachProp, title: eachProp})
+
+                                          }
+                                      }
+                                  }
+                              }
+                          }
+                      }
+                  };
+
+                  let itemControl = new TomSelect("#select-item",{
+                      create: false,
+                      sortField:{
+                          field: "text",
+                          direction: "asc"
+                      },
+                      onItemAdd: addProperties()
+                  });
+
+                  function clearFilter(reset) {
+                      // utility function to clear all the selected filter options
+                      // if reset is set to true, the existing filter will be removed
+                      // else, only the dropdown options are cleared
+                      propControl.clear();
+                      propControl.clearOptions();
+                      valueControl.clear();
+                      valueControl.clearOptions();
+                      filter = {
+                          item : '',
+                          property : '',
+                          value : []
+                      }
+                      if (reset) {
+                          itemControl.clear();
+                          filterHighlight({nodes: []})
+                      }
+                  }
+
+                  function updateFilter(value, key) {
+                      // key could be 'item' or 'property' and value is as selected in dropdown
+                      filter[key] = value
+                  }
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#ff6400", "font": {"color": "white"}, "id": "10.1016/j.neuron.2020.07.011", "label": "10.1016/j.neuron.2020.07.011", "shape": "dot", "size": 10, "title": "Title: An Integrated Index: Engrams, Place Cells, and Hippocampal Memory\nAuthors: Goode, Travis D. et al.\nYear: 2020"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1126/science.aat3810", "label": "10.1126/science.aat3810", "shape": "dot", "size": 16, "title": "Title: Synapse-specific representation of the identity of overlapping memory engrams\nAuthors: Abdou, Kareem et al.\nYear: 2018"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1038/nature21692", "label": "10.1038/nature21692", "shape": "dot", "size": 30, "title": "Title: Mapping of a non-spatial dimension by the hippocampal\u2013entorhinal circuit\nAuthors: Aronov, Dmitriy et al.\nYear: 2017"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1002/hipo.22488", "label": "10.1002/hipo.22488", "shape": "dot", "size": 32, "title": "Title: Hippocampal sharp wave-ripple: A cognitive biomarker for episodic memory and planning\nAuthors: Buzs\u00e1ki, Gy\u00f6rgy et al.\nYear: 2015"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1016/j.tics.2018.07.006", "label": "10.1016/j.tics.2018.07.006", "shape": "dot", "size": 18, "title": "Title: Space and Time: The Hippocampus as a Sequence Generator\nAuthors: Buzs\u00e1ki, Gy\u00f6rgy et al.\nYear: 2018"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1126/science.aas9204", "label": "10.1126/science.aas9204", "shape": "dot", "size": 18, "title": "Title: Interregional synaptic maps among engram cells underlie memory formation\nAuthors: Choi, Jun-Hyeok et al.\nYear: 2018"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1038/s41583-018-0077-1", "label": "10.1038/s41583-018-0077-1", "shape": "dot", "size": 16, "title": "Title: The hippocampal sharp wave\u2013ripple in memory retrieval for immediate use and consolidation\nAuthors: Joo, Hannah R. et al.\nYear: 2018"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1146/annurev-neuro-080317-061956", "label": "10.1146/annurev-neuro-080317-061956", "shape": "dot", "size": 18, "title": "Title: Memory Allocation: Mechanisms and Function\nAuthors: Josselyn, Sheena A. et al.\nYear: 2018"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1126/science.aaw4325", "label": "10.1126/science.aaw4325", "shape": "dot", "size": 14, "title": "Title: Memory engrams: Recalling the past and imagining the future\nAuthors: Josselyn, Sheena A. et al.\nYear: 2020"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1038/nature11028", "label": "10.1038/nature11028", "shape": "dot", "size": 48, "title": "Title: Optogenetic stimulation of a hippocampal engram activates fear memory recall\nAuthors: Liu, Xu et al.\nYear: 2012"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1126/science.1159775", "label": "10.1126/science.1159775", "shape": "dot", "size": 42, "title": "Title: Internally Generated Cell Assembly Sequences in the Rat Hippocampus\nAuthors: Pastalkova, Eva et al.\nYear: 2008"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1126/science.1239073", "label": "10.1126/science.1239073", "shape": "dot", "size": 36, "title": "Title: Creating a False Memory in the Hippocampus\nAuthors: Ramirez, Steve et al.\nYear: 2013"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1038/nature13725", "label": "10.1038/nature13725", "shape": "dot", "size": 28, "title": "Title: Bidirectional switch of the valence associated with a hippocampal contextual memory engram\nAuthors: Redondo, Roger L. et al.\nYear: 2014"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1038/s41593-018-0210-5", "label": "10.1038/s41593-018-0210-5", "shape": "dot", "size": 10, "title": "Title: Cognitive computational neuroscience\nAuthors: Kriegeskorte, Nikolaus et al.\nYear: 2018"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1016/j.tics.2007.06.010", "label": "10.1016/j.tics.2007.06.010", "shape": "dot", "size": 22, "title": "Title: Untangling invariant object recognition\nAuthors: DiCarlo, James J. et al.\nYear: 2007"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.7554/eLife.79559", "label": "10.7554/eLife.79559", "shape": "dot", "size": 10, "title": "Title: Circular and unified analysis in network neuroscience\nAuthors: Rubinov, Mika et al.\nYear: 2023"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1038/nrn3687", "label": "10.1038/nrn3687", "shape": "dot", "size": 18, "title": "Title: The log-dynamic brain: how skewed distributions affect network operations\nAuthors: Buzs\u00e1ki, Gy\u00f6rgy et al.\nYear: 2014"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1038/s41586-022-04560-0", "label": "10.1038/s41586-022-04560-0", "shape": "dot", "size": 14, "title": "Title: A stable hippocampal code in freely flying bats\nAuthors: Liberti, William A. et al.\nYear: 2022"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1016/j.celrep.2017.10.013", "label": "10.1016/j.celrep.2017.10.013", "shape": "dot", "size": 24, "title": "Title: Tracking the Same Neurons across Multiple Days in Ca2+ Imaging Data\nAuthors: Sheintuch, Liron et al.\nYear: 2017"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1038/s41592-023-01838-7", "label": "10.1038/s41592-023-01838-7", "shape": "dot", "size": 10, "title": "Title: Rapid detection of neurons in widefield calcium imaging datasets after training with synthetic data\nAuthors: Zhang, Yuanlong et al.\nYear: 2023"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1016/j.celrep.2016.12.004", "label": "10.1016/j.celrep.2016.12.004", "shape": "dot", "size": 14, "title": "Title: Long-Term Optical Access to an Estimated One Million Neurons in the Live Mouse Cortex\nAuthors: Kim, Tony Hyun et al.\nYear: 2016"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1117/1.NPh.9.4.041402", "label": "10.1117/1.NPh.9.4.041402", "shape": "dot", "size": 10, "title": "Title: Review of data processing of functional optical microscopy for neuroscience\nAuthors: Benisty, Hadas et al.\nYear: 2022"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1038/s41593-019-0517-x", "label": "10.1038/s41593-019-0517-x", "shape": "dot", "size": 10, "title": "Title: Inception loops discover what excites neurons most using deep predictive models\nAuthors: Walker, Edgar Y. et al.\nYear: 2019"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1126/sciadv.adg3918", "label": "10.1126/sciadv.adg3918", "shape": "dot", "size": 10, "title": "Title: Miniscope-LFOV: A large-field-of-view, single-cell-resolution, miniature microscope for wired and wire-free imaging of neural dynamics in freely behaving animals\nAuthors: Guo, Changliang et al.\nYear: 2023"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1016/j.cell.2020.09.061", "label": "10.1016/j.cell.2020.09.061", "shape": "dot", "size": 12, "title": "Title: Targeted Activation of Hippocampal Place Cells Drives Memory-Guided Spatial Behavior\nAuthors: Robinson, Nick T. M. et al.\nYear: 2020"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1038/s43588-022-00390-2", "label": "10.1038/s43588-022-00390-2", "shape": "dot", "size": 10, "title": "Title: Dimensionality reduction of calcium-imaged neuronal population activity\nAuthors: Koh, Tze Hui et al.\nYear: 2023"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1038/nature13665", "label": "10.1038/nature13665", "shape": "dot", "size": 18, "title": "Title: Neural constraints on learning\nAuthors: Sadtler, Patrick T. et al.\nYear: 2014"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1152/jn.90941.2008", "label": "10.1152/jn.90941.2008", "shape": "dot", "size": 18, "title": "Title: Gaussian-process factor analysis for low-dimensional single-trial analysis of neural population activity\nAuthors: Yu, Byron M. et al.\nYear: 2009"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1016/j.cub.2021.07.062", "label": "10.1016/j.cub.2021.07.062", "shape": "dot", "size": 16, "title": "Title: Representational drift in the mouse visual cortex\nAuthors: Deitch, Daniel et al.\nYear: 2021"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1038/nrn4000", "label": "10.1038/nrn4000", "shape": "dot", "size": 36, "title": "Title: Finding the engram\nAuthors: Josselyn, Sheena A. et al.\nYear: 2015"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1038/s41593-019-0555-4", "label": "10.1038/s41593-019-0555-4", "shape": "dot", "size": 14, "title": "Title: Long-term stability of cortical population dynamics underlying consistent behavior\nAuthors: Gallego, Juan A. et al.\nYear: 2020"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1371/journal.pcbi.1009832", "label": "10.1371/journal.pcbi.1009832", "shape": "dot", "size": 12, "title": "Title: Bias-free estimation of information content in temporally sparse neuronal activity\nAuthors: Sheintuch, Liron et al.\nYear: 2022"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1002/(SICI)1098-1063(1996)6:2\u003c149::AID-HIPO6\u003e3.0.CO;2-K", "label": "10.1002/(SICI)1098-1063(1996)6:2\u003c149::AID-HIPO6\u003e3.0.CO;2-K", "shape": "dot", "size": 46, "title": "Title: Theta phase precession in hippocampal neuronal populations and the compression of temporal sequences\nAuthors: Skaggs, William E. et al.\nYear: 1996"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1016/j.celrep.2022.111695", "label": "10.1016/j.celrep.2022.111695", "shape": "dot", "size": 12, "title": "Title: Exercise increases information content and affects long-term stability of hippocampal place codes\nAuthors: Rechavi, Yoav et al.\nYear: 2022"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1016/j.conb.2021.10.010", "label": "10.1016/j.conb.2021.10.010", "shape": "dot", "size": 12, "title": "Title: Neural population geometry: An approach for understanding biological and artificial neural networks\nAuthors: Chung, SueYeon et al.\nYear: 2021"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1016/j.neuron.2012.01.010", "label": "10.1016/j.neuron.2012.01.010", "shape": "dot", "size": 18, "title": "Title: How Does the Brain Solve Visual Object Recognition?\nAuthors: DiCarlo, James\u00a0J. et al.\nYear: 2012"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1016/j.cell.2020.09.031", "label": "10.1016/j.cell.2020.09.031", "shape": "dot", "size": 14, "title": "Title: The Geometry of Abstraction in the Hippocampus and Prefrontal Cortex\nAuthors: Bernardi, Silvia et al.\nYear: 2020"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1101/418939", "label": "10.1101/418939", "shape": "dot", "size": 12, "title": "Title: Probing variability in a cognitive map using manifold inference from neural dynamics\nAuthors: Low, Ryan J. et al.\nYear: 2018"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1103/PhysRevX.8.031003", "label": "10.1103/PhysRevX.8.031003", "shape": "dot", "size": 10, "title": "Title: Classification and Geometry of General Perceptual Manifolds\nAuthors: Chung, SueYeon et al.\nYear: 2018"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1016/j.celrep.2023.113142", "label": "10.1016/j.celrep.2023.113142", "shape": "dot", "size": 10, "title": "Title: A manifold neural population code for space in hippocampal coactivity dynamics independent of place fields\nAuthors: Levy, Eliott Robert Joseph et al.\nYear: 2023"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1016/j.tins.2008.06.008", "label": "10.1016/j.tins.2008.06.008", "shape": "dot", "size": 16, "title": "Title: Understanding memory through hippocampal remapping\nAuthors: Colgin, Laura Lee et al.\nYear: 2008"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1002/hipo.450010207", "label": "10.1002/hipo.450010207", "shape": "dot", "size": 30, "title": "Title: Experience-dependent modifications of hippocampal place cell firing\nAuthors: Bostock, Elizabeth et al.\nYear: 1991"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1038/381425a0", "label": "10.1038/381425a0", "shape": "dot", "size": 24, "title": "Title: Geometric determinants of the place fields of hippocampal neurons\nAuthors: O\u0027Keefe, John et al.\nYear: 1996"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1523/JNEUROSCI.5492-03.2004", "label": "10.1523/JNEUROSCI.5492-03.2004", "shape": "dot", "size": 14, "title": "Title: Putting Fear in Its Place: Remapping of Hippocampal Place Cells during Fear Conditioning\nAuthors: Moita, Marta A. P. et al.\nYear: 2004"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1038/s41586-021-04268-7", "label": "10.1038/s41586-021-04268-7", "shape": "dot", "size": 14, "title": "Title: Toroidal topology of population activity in grid cells\nAuthors: Gardner, Richard J. et al.\nYear: 2022"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1038/nn.3968", "label": "10.1038/nn.3968", "shape": "dot", "size": 26, "title": "Title: Internally organized mechanisms of the head direction sense\nAuthors: Peyrache, Adrien et al.\nYear: 2015"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1016/j.conb.2020.11.003", "label": "10.1016/j.conb.2020.11.003", "shape": "dot", "size": 10, "title": "Title: Rethinking brain-wide interactions through multi-region \u2018network of networks\u2019 models\nAuthors: Perich, Matthew G et al.\nYear: 2020"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1016/j.neuron.2018.05.020", "label": "10.1016/j.neuron.2018.05.020", "shape": "dot", "size": 14, "title": "Title: Flexible Sensorimotor Computations through Rapid Reconfiguration of Cortical Dynamics\nAuthors: Remington, Evan D. et al.\nYear: 2018"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1016/j.neuron.2023.05.005", "label": "10.1016/j.neuron.2023.05.005", "shape": "dot", "size": 12, "title": "Title: Time and experience differentially affect distinct aspects of hippocampal representational drift\nAuthors: Geva, Nitzan et al.\nYear: 2023"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1016/j.neuron.2014.07.017", "label": "10.1016/j.neuron.2014.07.017", "shape": "dot", "size": 28, "title": "Title: Neurons Are Recruited to a Memory Trace Based on Relative Neuronal Excitability Immediately before Training\nAuthors: Yiu, Adelaide\u00a0P. et al.\nYear: 2014"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1126/science.aaf0594", "label": "10.1126/science.aaf0594", "shape": "dot", "size": 24, "title": "Title: Competition between engrams influences fear memory formation and recall\nAuthors: Rashid, Asim J. et al.\nYear: 2016"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1371/journal.pcbi.1011768", "label": "10.1371/journal.pcbi.1011768", "shape": "dot", "size": 10, "title": "Title: Quantifying the distribution of feature values over data represented in arbitrary dimensional spaces\nAuthors: Sebastian, Enrique R. et al.\nYear: 2024"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1002/hipo.23132", "label": "10.1002/hipo.23132", "shape": "dot", "size": 10, "title": "Title: Episodic memory: Neuronal codes for what, where, and when\nAuthors: Sugar, J\u00f8rgen et al.\nYear: 2019"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1038/nn.2384", "label": "10.1038/nn.2384", "shape": "dot", "size": 44, "title": "Title: Selective suppression of hippocampal ripples impairs spatial memory\nAuthors: Girardeau, Gabrielle et al.\nYear: 2009"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1038/nature03687", "label": "10.1038/nature03687", "shape": "dot", "size": 28, "title": "Title: Invariant visual representation by single neurons in the human brain\nAuthors: Quiroga, R. Quian et al.\nYear: 2005"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1016/j.neuron.2018.10.002", "label": "10.1016/j.neuron.2018.10.002", "shape": "dot", "size": 14, "title": "Title: What Is a Cognitive Map? Organizing Knowledge for Flexible Behavior\nAuthors: Behrens, Timothy E.J. et al.\nYear: 2018"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1093/acprof:oso/9780195301069.001.0001", "label": "10.1093/acprof:oso/9780195301069.001.0001", "shape": "dot", "size": 20, "title": "Title: Rhythms of the Brain\nAuthors: Buzs\u00e1ki, Gy\u00f6rgy et al.\nYear: 2006"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1523/JNEUROSCI.23-35-11167.2003", "label": "10.1523/JNEUROSCI.23-35-11167.2003", "shape": "dot", "size": 20, "title": "Title: Neuronal Avalanches in Neocortical Circuits\nAuthors: Beggs, John M. et al.\nYear: 2003"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1101/2023.09.22.558966", "label": "10.1101/2023.09.22.558966", "shape": "dot", "size": 10, "title": "Title: Sensory experience steers representational drift in mouse visual cortex\nAuthors: Bauer, Joel et al.\nYear: 2023"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1523/JNEUROSCI.23-26-08827.2003", "label": "10.1523/JNEUROSCI.23-26-08827.2003", "shape": "dot", "size": 18, "title": "Title: Heterogeneous Modulation of Place Cell Firing by Changes in Context\nAuthors: Anderson, Michael I. et al.\nYear: 2003"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1038/nn.3304", "label": "10.1038/nn.3304", "shape": "dot", "size": 22, "title": "Title: Memory, navigation and theta rhythm in the hippocampal-entorhinal system\nAuthors: Buzs\u00e1ki, Gy\u00f6rgy et al.\nYear: 2013"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1016/j.neuron.2015.06.011", "label": "10.1016/j.neuron.2015.06.011", "shape": "dot", "size": 20, "title": "Title: A Map for Social Navigation in the Human Brain\nAuthors: Tavares, Rita\u00a0Morais et al.\nYear: 2015"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1038/nature08499", "label": "10.1038/nature08499", "shape": "dot", "size": 20, "title": "Title: Intracellular dynamics of hippocampal place cells during virtual navigation\nAuthors: Harvey, Christopher D. et al.\nYear: 2009"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1016/S0896-6273(02)00586-X", "label": "10.1016/S0896-6273(02)00586-X", "shape": "dot", "size": 32, "title": "Title: Theta Oscillations in the Hippocampus\nAuthors: Buzs\u00e1ki, Gy\u00f6rgy et al.\nYear: 2002"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1038/s41467-020-14611-7", "label": "10.1038/s41467-020-14611-7", "shape": "dot", "size": 10, "title": "Title: The place-cell representation of volumetric space in rats\nAuthors: Grieves, Roddy M. et al.\nYear: 2020"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1155/2011/182602", "label": "10.1155/2011/182602", "shape": "dot", "size": 10, "title": "Title: Place Cells, Grid Cells, Attractors, and Remapping\nAuthors: Jeffery, Kathryn J. et al.\nYear: 2011"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1038/nn1961", "label": "10.1038/nn1961", "shape": "dot", "size": 38, "title": "Title: Forward and reverse hippocampal place-cell sequences during ripples\nAuthors: Diba, Kamran et al.\nYear: 2007"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1002/hipo.20345", "label": "10.1002/hipo.20345", "shape": "dot", "size": 18, "title": "Title: Hippocampal theta sequences\nAuthors: Foster, David J. et al.\nYear: 2007"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1126/science.aao3474", "label": "10.1126/science.aao3474", "shape": "dot", "size": 16, "title": "Title: Social place-cells in the bat hippocampus\nAuthors: Omer, David B. et al.\nYear: 2018"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1523/JNEUROSCI.2291-17.2017", "label": "10.1523/JNEUROSCI.2291-17.2017", "shape": "dot", "size": 16, "title": "Title: Hippocampal-Prefrontal Reactivation during Learning Is Stronger in Awake Compared with Sleep States\nAuthors: Tang, Wenbo et al.\nYear: 2017"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1101/cshperspect.a021808", "label": "10.1101/cshperspect.a021808", "shape": "dot", "size": 14, "title": "Title: Place Cells, Grid Cells, and Memory\nAuthors: Moser, May-Britt et al.\nYear: 2015"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1038/ncomms13239", "label": "10.1038/ncomms13239", "shape": "dot", "size": 10, "title": "Title: Reorganization between preparatory and movement population responses in motor cortex\nAuthors: Elsayed, Gamaleldin F. et al.\nYear: 2016"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1016/j.cub.2017.10.073", "label": "10.1016/j.cub.2017.10.073", "shape": "dot", "size": 12, "title": "Title: The Role of Hippocampal Replay in Memory and Planning\nAuthors: \u00d3lafsd\u00f3ttir, H. Freyja et al.\nYear: 2018"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1016/j.neuron.2016.07.047", "label": "10.1016/j.neuron.2016.07.047", "shape": "dot", "size": 22, "title": "Title: Reverse Replay of Hippocampal Place Cells Is Uniquely Modulated by Changing Reward\nAuthors: Ambrose, R. Ellen et al.\nYear: 2016"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1038/nn.4543", "label": "10.1038/nn.4543", "shape": "dot", "size": 18, "title": "Title: Sharp wave ripples during learning stabilize the hippocampal spatial map\nAuthors: Roux, Lisa et al.\nYear: 2017"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1038/nrn.2016.21", "label": "10.1038/nrn.2016.21", "shape": "dot", "size": 16, "title": "Title: Rhythms of the hippocampal network\nAuthors: Colgin, Laura Lee et al.\nYear: 2016"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1016/j.conb.2017.02.012", "label": "10.1016/j.conb.2017.02.012", "shape": "dot", "size": 10, "title": "Title: Sculpting memory during sleep: concurrent consolidation and forgetting\nAuthors: Feld, Gordon B et al.\nYear: 2017"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1038/s41593-018-0232-z", "label": "10.1038/s41593-018-0232-z", "shape": "dot", "size": 16, "title": "Title: Prioritized memory access explains planning and hippocampal replay\nAuthors: Mattar, Marcelo G. et al.\nYear: 2018"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1038/s41593-019-0467-3", "label": "10.1038/s41593-019-0467-3", "shape": "dot", "size": 10, "title": "Title: Mechanisms of systems memory consolidation during sleep\nAuthors: Klinzing, Jens G. et al.\nYear: 2019"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1016/j.cub.2019.08.019", "label": "10.1016/j.cub.2019.08.019", "shape": "dot", "size": 10, "title": "Title: How Targeted Memory Reactivation Promotes the\u00a0Selective Strengthening of Memories in Sleep\nAuthors: Lewis, Penelope A. et al.\nYear: 2019"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1038/nn0107-13", "label": "10.1038/nn0107-13", "shape": "dot", "size": 14, "title": "Title: Cortico-hippocampal interaction during up-down states and memory consolidation\nAuthors: Mehta, Mayank R. et al.\nYear: 2007"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1038/nn.3904", "label": "10.1038/nn.3904", "shape": "dot", "size": 16, "title": "Title: Theta sequences are essential for internally generated hippocampal firing fields\nAuthors: Wang, Yingxue et al.\nYear: 2015"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1016/j.neuron.2019.09.012", "label": "10.1016/j.neuron.2019.09.012", "shape": "dot", "size": 10, "title": "Title: Dynamics of Awake Hippocampal-Prefrontal Replay for Spatial Learning and Memory-Guided Decision Making\nAuthors: Shin, Justin D. et al.\nYear: 2019"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1007/s10827-018-0704-x", "label": "10.1007/s10827-018-0704-x", "shape": "dot", "size": 10, "title": "Title: A detailed anatomical and mathematical model of the hippocampal formation for the generation of sharp-wave ripples and theta-nested gamma oscillations\nAuthors: Aussel, Am\u00e9lie et al.\nYear: 2018"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1167/8.8.11", "label": "10.1167/8.8.11", "shape": "dot", "size": 12, "title": "Title: Topological analysis of population activity in visual cortex\nAuthors: Singh, Gurjeet et al.\nYear: 2008"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1371/journal.pcbi.1002581", "label": "10.1371/journal.pcbi.1002581", "shape": "dot", "size": 12, "title": "Title: A Topological Paradigm for Hippocampal Spatial Map Formation Using Persistent Homology\nAuthors: Dabaghian, Y. et al.\nYear: 2012"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.3389/fncir.2016.00012", "label": "10.3389/fncir.2016.00012", "shape": "dot", "size": 12, "title": "Title: The Art of Grid Fields: Geometry of Neuronal Time\nAuthors: Shilnikov, Andrey L. et al.\nYear: 2016"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.3389/fncir.2019.00022", "label": "10.3389/fncir.2019.00022", "shape": "dot", "size": 10, "title": "Title: Locations in the Neocortex: A Theory of Sensorimotor Object Recognition Using Cortical Grid Cells\nAuthors: Lewis, Marcus et al.\nYear: 2019"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1371/journal.pone.0182648", "label": "10.1371/journal.pone.0182648", "shape": "dot", "size": 10, "title": "Title: An integrative model of the intrinsic hippocampal theta rhythm\nAuthors: Hummos, Ali et al.\nYear: 2017"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1146/annurev-neuro-062012-170330", "label": "10.1146/annurev-neuro-062012-170330", "shape": "dot", "size": 16, "title": "Title: Mechanisms and Functions of Theta Rhythms\nAuthors: Colgin, Laura Lee et al.\nYear: 2013"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1038/nn.2440", "label": "10.1038/nn.2440", "shape": "dot", "size": 20, "title": "Title: Self-generated theta oscillations in the hippocampus\nAuthors: Goutagny, Romain et al.\nYear: 2009"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1101/115949", "label": "10.1101/115949", "shape": "dot", "size": 10, "title": "Title: Combining theory, model and experiment to understand how theta rhythms are generated in the hippocampus\nAuthors: Ferguson, Katie A. et al.\nYear: 2017"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.3389/fncel.2019.00232", "label": "10.3389/fncel.2019.00232", "shape": "dot", "size": 10, "title": "Title: Hippocampal Sequences During Exploration: Mechanisms and Functions\nAuthors: Drieu, C\u00e9line et al.\nYear: 2019"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1186/s12915-016-0261-6", "label": "10.1186/s12915-016-0261-6", "shape": "dot", "size": 16, "title": "Title: What is memory? The present state of the engram\nAuthors: Poo, Mu-ming et al.\nYear: 2016"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1126/science.1174519", "label": "10.1126/science.1174519", "shape": "dot", "size": 24, "title": "Title: Molecular and Cellular Approaches to Memory Allocation in Neural Circuits\nAuthors: Silva, Alcino J. et al.\nYear: 2009"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1016/j.cub.2015.12.048", "label": "10.1016/j.cub.2015.12.048", "shape": "dot", "size": 10, "title": "Title: Hippocampal-Prefrontal Theta Oscillations Support Memory Integration\nAuthors: Backus, Alexander R. et al.\nYear: 2016"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1016/j.neuroimage.2013.06.022", "label": "10.1016/j.neuroimage.2013.06.022", "shape": "dot", "size": 10, "title": "Title: Theta rhythm and the encoding and retrieval of space and time\nAuthors: Hasselmo, Michael E. et al.\nYear: 2014"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1038/s41467-021-25150-0", "label": "10.1038/s41467-021-25150-0", "shape": "dot", "size": 10, "title": "Title: Theta-phase dependent neuronal coding during sequence learning in human single neurons\nAuthors: Reddy, Leila et al.\nYear: 2021"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1016/j.neuron.2018.10.006", "label": "10.1016/j.neuron.2018.10.006", "shape": "dot", "size": 10, "title": "Title: Navigating Social Space\nAuthors: Schafer, Matthew et al.\nYear: 2018"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1016/j.neuron.2015.06.013", "label": "10.1016/j.neuron.2015.06.013", "shape": "dot", "size": 10, "title": "Title: The Hippocampus as a Cognitive Map \u2026 of Social Space\nAuthors: Eichenbaum, Howard et al.\nYear: 2015"}, {"color": "#b900ff", "font": {"color": "white"}, "id": "10.1016/j.neuron.2021.09.044", "label": "10.1016/j.neuron.2021.09.044", "shape": "dot", "size": 10, "title": "Title: A synaptic learning rule for exploiting nonlinear dendritic computation\nAuthors: Bicknell, Brendan A. et al.\nYear: 2021"}, {"color": "#b900ff", "font": {"color": "white"}, "id": "10.1016/j.neuron.2021.07.002", "label": "10.1016/j.neuron.2021.07.002", "shape": "dot", "size": 14, "title": "Title: Single cortical neurons as deep artificial neural networks\nAuthors: Beniaguev, David et al.\nYear: 2021"}, {"color": "#b900ff", "font": {"color": "white"}, "id": "10.1126/science.1189664", "label": "10.1126/science.1189664", "shape": "dot", "size": 18, "title": "Title: Dendritic Discrimination of Temporal Input Sequences in Cortical Neurons\nAuthors: Branco, Tiago et al.\nYear: 2010"}, {"color": "#b900ff", "font": {"color": "white"}, "id": "10.1126/science.aax6239", "label": "10.1126/science.aax6239", "shape": "dot", "size": 20, "title": "Title: Dendritic action potentials and computation in human layer 2/3 cortical neurons\nAuthors: Gidon, Albert et al.\nYear: 2020"}, {"color": "#b900ff", "font": {"color": "white"}, "id": "10.1146/annurev.neuro.28.061604.135703", "label": "10.1146/annurev.neuro.28.061604.135703", "shape": "dot", "size": 20, "title": "Title: Dendritic computation\nAuthors: London, Michael et al.\nYear: 2005"}, {"color": "#b900ff", "font": {"color": "white"}, "id": "10.1038/nn1253", "label": "10.1038/nn1253", "shape": "dot", "size": 22, "title": "Title: Computational subunits in thin dendrites of pyramidal cells\nAuthors: Polsky, Alon et al.\nYear: 2004"}, {"color": "#b900ff", "font": {"color": "white"}, "id": "10.1038/nature12600", "label": "10.1038/nature12600", "shape": "dot", "size": 20, "title": "Title: Dendritic spikes enhance stimulus selectivity in cortical neurons in vivo\nAuthors: Smith, Spencer L. et al.\nYear: 2013"}, {"color": "#b900ff", "font": {"color": "white"}, "id": "10.1016/j.neuroscience.2022.03.008", "label": "10.1016/j.neuroscience.2022.03.008", "shape": "dot", "size": 10, "title": "Title: Are Dendrites Conceptually Useful?\nAuthors: Larkum, Matthew E. et al.\nYear: 2022"}, {"color": "#b900ff", "font": {"color": "white"}, "id": "10.1038/nn.4157", "label": "10.1038/nn.4157", "shape": "dot", "size": 10, "title": "Title: Dendritic integration: 60 years of progress\nAuthors: Stuart, Greg J. et al.\nYear: 2015"}, {"color": "#b900ff", "font": {"color": "white"}, "id": "10.1016/j.neuroscience.2022.02.009", "label": "10.1016/j.neuroscience.2022.02.009", "shape": "dot", "size": 10, "title": "Title: The Guide to Dendritic Spikes of the Mammalian Cortex \u003ci\u003eIn Vitro\u003c/i\u003e and \u003ci\u003eIn Vivo\u003c/i\u003e\nAuthors: Larkum, Matthew E. et al.\nYear: 2022"}, {"color": "#b900ff", "font": {"color": "white"}, "id": "10.1515/revneuro-2019-0044", "label": "10.1515/revneuro-2019-0044", "shape": "dot", "size": 12, "title": "Title: Spikelets in pyramidal neurons: generating mechanisms, distinguishing properties, and functional implications\nAuthors: Michalikova, Martina et al.\nYear: 2019"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.3389/fncir.2020.00054", "label": "10.3389/fncir.2020.00054", "shape": "dot", "size": 12, "title": "Title: Why Brain Criticality Is Clinically Relevant: A Scoping Review\nAuthors: Zimmern, Vincent et al.\nYear: 2020"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1098/rsta.2007.2092", "label": "10.1098/rsta.2007.2092", "shape": "dot", "size": 12, "title": "Title: The criticality hypothesis: how local cortical networks might optimize information processing\nAuthors: Beggs, John M et al.\nYear: 2007"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.3389/fphys.2012.00163", "label": "10.3389/fphys.2012.00163", "shape": "dot", "size": 14, "title": "Title: Being Critical of Criticality in the Brain\nAuthors: Beggs, John M. et al.\nYear: 2012"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1103/PhysRevLett.94.058101", "label": "10.1103/PhysRevLett.94.058101", "shape": "dot", "size": 16, "title": "Title: Critical Branching Captures Activity in Living Neural Networks and Maximizes the Number of Metastable States\nAuthors: Haldeman, Clayton et al.\nYear: 2005"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1523/JNEUROSCI.1095-21.2022", "label": "10.1523/JNEUROSCI.1095-21.2022", "shape": "dot", "size": 12, "title": "Title: Long-Range Amplitude Coupling Is Optimized for Brain Networks That Function at Criticality\nAuthors: Avramiea, Arthur-Ervin et al.\nYear: 2022"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1016/j.tins.2022.08.007", "label": "10.1016/j.tins.2022.08.007", "shape": "dot", "size": 10, "title": "Title: How critical is brain criticality?\nAuthors: O\u2019Byrne, Jordan et al.\nYear: 2022"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1038/s41593-022-01153-y", "label": "10.1038/s41593-022-01153-y", "shape": "dot", "size": 10, "title": "Title: How to build a cognitive map\nAuthors: Whittington, James C. R. et al.\nYear: 2022"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1016/j.cell.2020.10.024", "label": "10.1016/j.cell.2020.10.024", "shape": "dot", "size": 12, "title": "Title: The Tolman-Eichenbaum Machine: Unifying Space and Relational Memory through Generalization in the Hippocampal Formation\nAuthors: Whittington, James C. R. et al.\nYear: 2020"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1002/wcs.1653", "label": "10.1002/wcs.1653", "shape": "dot", "size": 10, "title": "Title: The 21st century engram\nAuthors: Robins, Sarah et al.\nYear: 2023"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1038/s41467-022-29384-4", "label": "10.1038/s41467-022-29384-4", "shape": "dot", "size": 10, "title": "Title: Brain-wide mapping reveals that engrams for a single memory are distributed across multiple brain regions\nAuthors: Roy, Dheeraj S. et al.\nYear: 2022"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1038/npp.2016.73", "label": "10.1038/npp.2016.73", "shape": "dot", "size": 18, "title": "Title: Neuronal Allocation to a Hippocampal Engram\nAuthors: Park, Sungmo et al.\nYear: 2016"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1016/j.nlm.2016.07.007", "label": "10.1016/j.nlm.2016.07.007", "shape": "dot", "size": 18, "title": "Title: Parvalbumin interneurons constrain the size of the lateral amygdala engram\nAuthors: Morrison, Dano J. et al.\nYear: 2016"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1016/j.conb.2018.10.013", "label": "10.1016/j.conb.2018.10.013", "shape": "dot", "size": 12, "title": "Title: Neuronal competition: microcircuit mechanisms define the sparsity of the engram\nAuthors: Rao-Ruiz, Priyanka et al.\nYear: 2019"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1126/science.aal2690", "label": "10.1126/science.aal2690", "shape": "dot", "size": 18, "title": "Title: Overlapping memory trace indispensable for linking, but not recalling, individual memories\nAuthors: Yokose, Jun et al.\nYear: 2017"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.1016/j.nlm.2020.107266", "label": "10.1016/j.nlm.2020.107266", "shape": "dot", "size": 10, "title": "Title: The role of intrinsic excitability in the evolution of memory: Significance in memory allocation, consolidation, and updating\nAuthors: Chen, Lingxuan et al.\nYear: 2020"}, {"color": "#ff6400", "font": {"color": "white"}, "id": "10.3389/fnmol.2015.00078", "label": "10.3389/fnmol.2015.00078", "shape": "dot", "size": 10, "title": "Title: Role of Immediate-Early Genes in Synaptic Plasticity and Neuronal Ensembles Underlying the Memory Trace\nAuthors: Minatohara, Keiichiro et al.\nYear: 2016"}, {"color": "#ffc900", "font": {"color": "white"}, "id": "10.1016/j.celrep.2020.108128", "label": "10.1016/j.celrep.2020.108128", "shape": "dot", "size": 10, "title": "Title: Brain States and Transitions: Insights from Computational Neuroscience\nAuthors: Kringelbach, Morten L. et al.\nYear: 2020"}, {"color": "#d1ff00", "font": {"color": "white"}, "id": "10.1016/j.jii.2018.11.005", "label": "10.1016/j.jii.2018.11.005", "shape": "dot", "size": 10, "title": "Title: A comprehensive survey of recent developments in neuronal communication and computational neuroscience\nAuthors: Mishra, Abhilash et al.\nYear: 2019"}, {"color": "#6cff00", "font": {"color": "white"}, "id": "10.1101/2023.07.25.550571", "label": "10.1101/2023.07.25.550571", "shape": "dot", "size": 10, "title": "Title: Rastermap: a discovery method for neural population recordings\nAuthors: Stringer, Carsen et al.\nYear: 2023"}, {"color": "#08ff00", "font": {"color": "white"}, "id": "10.1109/EMBC46164.2021.9629611", "label": "10.1109/EMBC46164.2021.9629611", "shape": "dot", "size": 10, "title": "Title: Open-Source Software for Real-time Calcium Imaging and Synchronized Neuron Firing Detection\nAuthors: Taniguchi, Masaki et al.\nYear: 2021"}, {"color": "#00ff5c", "font": {"color": "white"}, "id": "10.1101/2023.03.06.531342", "label": "10.1101/2023.03.06.531342", "shape": "dot", "size": 10, "title": "Title: An expanded GCaMP reporter toolkit for functional imaging in C. elegans\nAuthors: Ding, Jimmy et al.\nYear: 2023"}, {"color": "#00ffc1", "font": {"color": "white"}, "id": "10.1038/s41593-022-01090-w", "label": "10.1038/s41593-022-01090-w", "shape": "dot", "size": 10, "title": "Title: Linking task structure and neural network dynamics\nAuthors: M\u00e1rton, Christian David et al.\nYear: 2022"}, {"color": "#00d9ff", "font": {"color": "white"}, "id": "10.48550/arXiv.2107.04084", "label": "10.48550/arXiv.2107.04084", "shape": "dot", "size": 10, "title": "Title: Interpreting neural computations by examining intrinsic and embedding dimensionality of neural activity\nAuthors: Jazayeri, Mehrdad et al.\nYear: 2021"}, {"color": "#0074ff", "font": {"color": "white"}, "id": "10.1038/s41593-018-0312-0", "label": "10.1038/s41593-018-0312-0", "shape": "dot", "size": 10, "title": "Title: Human cognition involves the dynamic integration of neural activity and neuromodulatory systems\nAuthors: Shine, James M. et al.\nYear: 2019"}, {"color": "#0010ff", "font": {"color": "white"}, "id": "10.7554/eLife.53985", "label": "10.7554/eLife.53985", "shape": "dot", "size": 10, "title": "Title: The head direction circuit of two insect species\nAuthors: Pisokas, Ioannis et al.\nYear: 2020"}, {"color": "#5400ff", "font": {"color": "white"}, "id": "10.1523/JNEUROSCI.0730-21.2021", "label": "10.1523/JNEUROSCI.0730-21.2021", "shape": "dot", "size": 10, "title": "Title: Hippocampal Sequencing Mechanisms Are Disrupted in a Maternal Immune Activation Model of Schizophrenia Risk\nAuthors: Speers, Lucinda J. et al.\nYear: 2021"}, {"color": "#ff00e1", "font": {"color": "white"}, "id": "10.1098/rspb.2021.1111", "label": "10.1098/rspb.2021.1111", "shape": "dot", "size": 10, "title": "Title: Phase transitions in biology: from bird flocks to population dynamics\nAuthors: Heffern, Elleard F. W. et al.\nYear: 2021"}, {"color": "#ff007c", "font": {"color": "white"}, "id": "10.48550/arXiv.2112.04035", "label": "10.48550/arXiv.2112.04035", "shape": "dot", "size": 10, "title": "Title: Relating transformers to models and neural representations of the hippocampal formation\nAuthors: Whittington, James C. R. et al.\nYear: 2022"}]);
+                  edges = new vis.DataSet([{"arrows": "to", "from": "10.1016/j.neuron.2020.07.011", "to": "10.1126/science.aat3810", "width": 1}, {"arrows": "to", "from": "10.1016/j.neuron.2020.07.011", "to": "10.1038/nature21692", "width": 1}, {"arrows": "to", "from": "10.1016/j.neuron.2020.07.011", "to": "10.1002/hipo.22488", "width": 1}, {"arrows": "to", "from": "10.1016/j.neuron.2020.07.011", "to": "10.1016/j.tics.2018.07.006", "width": 1}, {"arrows": "to", "from": "10.1016/j.neuron.2020.07.011", "to": "10.1126/science.aas9204", "width": 1}, {"arrows": "to", "from": "10.1016/j.neuron.2020.07.011", "to": "10.1038/s41583-018-0077-1", "width": 1}, {"arrows": "to", "from": "10.1016/j.neuron.2020.07.011", "to": "10.1146/annurev-neuro-080317-061956", "width": 1}, {"arrows": "to", "from": "10.1016/j.neuron.2020.07.011", "to": "10.1126/science.aaw4325", "width": 1}, {"arrows": "to", "from": "10.1016/j.neuron.2020.07.011", "to": "10.1038/nature11028", "width": 1}, {"arrows": "to", "from": "10.1016/j.neuron.2020.07.011", "to": "10.1126/science.1159775", "width": 1}, {"arrows": "to", "from": "10.1016/j.neuron.2020.07.011", "to": "10.1126/science.1239073", "width": 1}, {"arrows": "to", "from": "10.1016/j.neuron.2020.07.011", "to": "10.1038/nature13725", "width": 1}, {"arrows": "to", "from": "10.1038/s41593-018-0210-5", "to": "10.1016/j.tics.2007.06.010", "width": 1}, {"arrows": "to", "from": "10.7554/eLife.79559", "to": "10.1038/nrn3687", "width": 1}, {"arrows": "to", "from": "10.1038/s41586-022-04560-0", "to": "10.1016/j.celrep.2017.10.013", "width": 1}, {"arrows": "to", "from": "10.1038/s41592-023-01838-7", "to": "10.1016/j.celrep.2016.12.004", "width": 1}, {"arrows": "to", "from": "10.1117/1.NPh.9.4.041402", "to": "10.1016/j.celrep.2017.10.013", "width": 1}, {"arrows": "to", "from": "10.1038/s41593-019-0517-x", "to": "10.1016/j.tics.2007.06.010", "width": 1}, {"arrows": "to", "from": "10.1126/sciadv.adg3918", "to": "10.1016/j.cell.2020.09.061", "width": 1}, {"arrows": "to", "from": "10.1126/sciadv.adg3918", "to": "10.1016/j.celrep.2017.10.013", "width": 1}, {"arrows": "to", "from": "10.1038/s43588-022-00390-2", "to": "10.1038/nature13665", "width": 1}, {"arrows": "to", "from": "10.1038/s43588-022-00390-2", "to": "10.1152/jn.90941.2008", "width": 1}, {"arrows": "to", "from": "10.1016/j.celrep.2017.10.013", "to": "10.1016/j.celrep.2016.12.004", "width": 1}, {"arrows": "to", "from": "10.1016/j.cub.2021.07.062", "to": "10.1038/nrn4000", "width": 1}, {"arrows": "to", "from": "10.1016/j.cub.2021.07.062", "to": "10.1016/j.celrep.2017.10.013", "width": 1}, {"arrows": "to", "from": "10.1016/j.cub.2021.07.062", "to": "10.1038/s41593-019-0555-4", "width": 1}, {"arrows": "to", "from": "10.1371/journal.pcbi.1009832", "to": "10.1016/j.celrep.2017.10.013", "width": 1}, {"arrows": "to", "from": "10.1371/journal.pcbi.1009832", "to": "10.1002/(SICI)1098-1063(1996)6:2\u003c149::AID-HIPO6\u003e3.0.CO;2-K", "width": 1}, {"arrows": "to", "from": "10.1016/j.celrep.2022.111695", "to": "10.1016/j.cub.2021.07.062", "width": 1}, {"arrows": "to", "from": "10.1016/j.celrep.2022.111695", "to": "10.1016/j.celrep.2017.10.013", "width": 1}, {"arrows": "to", "from": "10.1016/j.celrep.2022.111695", "to": "10.1371/journal.pcbi.1009832", "width": 1}, {"arrows": "to", "from": "10.1016/j.conb.2021.10.010", "to": "10.1016/j.tics.2007.06.010", "width": 1}, {"arrows": "to", "from": "10.1016/j.conb.2021.10.010", "to": "10.1016/j.neuron.2012.01.010", "width": 1}, {"arrows": "to", "from": "10.1016/j.conb.2021.10.010", "to": "10.1038/nature13665", "width": 1}, {"arrows": "to", "from": "10.1016/j.conb.2021.10.010", "to": "10.1016/j.cell.2020.09.031", "width": 1}, {"arrows": "to", "from": "10.1016/j.conb.2021.10.010", "to": "10.1101/418939", "width": 1}, {"arrows": "to", "from": "10.1103/PhysRevX.8.031003", "to": "10.1016/j.tics.2007.06.010", "width": 1}, {"arrows": "to", "from": "10.1103/PhysRevX.8.031003", "to": "10.1016/j.neuron.2012.01.010", "width": 1}, {"arrows": "to", "from": "10.1016/j.celrep.2023.113142", "to": "10.1016/j.tins.2008.06.008", "width": 1}, {"arrows": "to", "from": "10.1016/j.celrep.2023.113142", "to": "10.1002/hipo.450010207", "width": 1}, {"arrows": "to", "from": "10.1016/j.celrep.2023.113142", "to": "10.1038/381425a0", "width": 1}, {"arrows": "to", "from": "10.1016/j.celrep.2023.113142", "to": "10.1523/JNEUROSCI.5492-03.2004", "width": 1}, {"arrows": "to", "from": "10.1016/j.celrep.2023.113142", "to": "10.1038/s41586-021-04268-7", "width": 1}, {"arrows": "to", "from": "10.1016/j.celrep.2023.113142", "to": "10.1038/nn.3968", "width": 1}, {"arrows": "to", "from": "10.1016/j.celrep.2023.113142", "to": "10.1038/s41586-022-04560-0", "width": 1}, {"arrows": "to", "from": "10.1016/j.celrep.2023.113142", "to": "10.1016/j.tics.2018.07.006", "width": 1}, {"arrows": "to", "from": "10.1016/j.conb.2020.11.003", "to": "10.1016/j.neuron.2018.05.020", "width": 1}, {"arrows": "to", "from": "10.1016/j.conb.2020.11.003", "to": "10.1038/s41593-019-0555-4", "width": 1}, {"arrows": "to", "from": "10.1016/j.neuron.2023.05.005", "to": "10.1016/j.cub.2021.07.062", "width": 1}, {"arrows": "to", "from": "10.1016/j.neuron.2023.05.005", "to": "10.1016/j.celrep.2017.10.013", "width": 1}, {"arrows": "to", "from": "10.1016/j.neuron.2023.05.005", "to": "10.1126/science.1159775", "width": 1}, {"arrows": "to", "from": "10.1016/j.neuron.2023.05.005", "to": "10.1038/s41586-022-04560-0", "width": 1}, {"arrows": "to", "from": "10.1016/j.neuron.2023.05.005", "to": "10.1016/j.neuron.2014.07.017", "width": 1}, {"arrows": "to", "from": "10.1016/j.neuron.2023.05.005", "to": "10.1126/science.aaf0594", "width": 1}, {"arrows": "to", "from": "10.1016/j.neuron.2023.05.005", "to": "10.1016/j.celrep.2022.111695", "width": 1}, {"arrows": "to", "from": "10.1371/journal.pcbi.1011768", "to": "10.1016/j.conb.2021.10.010", "width": 1}, {"arrows": "to", "from": "10.1371/journal.pcbi.1011768", "to": "10.1038/nn.3968", "width": 1}, {"arrows": "to", "from": "10.1002/hipo.23132", "to": "10.1038/nature21692", "width": 1}, {"arrows": "to", "from": "10.1002/hipo.23132", "to": "10.1038/nn.2384", "width": 1}, {"arrows": "to", "from": "10.1002/hipo.23132", "to": "10.1038/nrn4000", "width": 1}, {"arrows": "to", "from": "10.1002/hipo.23132", "to": "10.1038/nature11028", "width": 1}, {"arrows": "to", "from": "10.1002/hipo.23132", "to": "10.1038/381425a0", "width": 1}, {"arrows": "to", "from": "10.1002/hipo.23132", "to": "10.1126/science.1159775", "width": 1}, {"arrows": "to", "from": "10.1002/hipo.23132", "to": "10.1038/nature03687", "width": 1}, {"arrows": "to", "from": "10.1002/hipo.23132", "to": "10.1002/(SICI)1098-1063(1996)6:2\u003c149::AID-HIPO6\u003e3.0.CO;2-K", "width": 1}, {"arrows": "to", "from": "10.1016/j.cell.2020.09.031", "to": "10.1016/j.neuron.2018.10.002", "width": 1}, {"arrows": "to", "from": "10.1016/j.cell.2020.09.031", "to": "10.1016/j.tics.2007.06.010", "width": 1}, {"arrows": "to", "from": "10.1016/j.cell.2020.09.031", "to": "10.1016/j.neuron.2012.01.010", "width": 1}, {"arrows": "to", "from": "10.1038/nature13665", "to": "10.1152/jn.90941.2008", "width": 1}, {"arrows": "to", "from": "10.1016/j.neuron.2012.01.010", "to": "10.1016/j.tics.2007.06.010", "width": 1}, {"arrows": "to", "from": "10.1016/j.tics.2007.06.010", "to": "10.1038/nature03687", "width": 1}, {"arrows": "to", "from": "10.1038/nrn3687", "to": "10.1093/acprof:oso/9780195301069.001.0001", "width": 1}, {"arrows": "to", "from": "10.1038/nrn3687", "to": "10.1523/JNEUROSCI.23-35-11167.2003", "width": 1}, {"arrows": "to", "from": "10.1038/nrn3687", "to": "10.1126/science.1159775", "width": 1}, {"arrows": "to", "from": "10.1038/nrn3687", "to": "10.1038/nature03687", "width": 1}, {"arrows": "to", "from": "10.1101/2023.09.22.558966", "to": "10.1016/j.neuron.2023.05.005", "width": 1}, {"arrows": "to", "from": "10.1101/2023.09.22.558966", "to": "10.1016/j.cub.2021.07.062", "width": 1}, {"arrows": "to", "from": "10.1523/JNEUROSCI.23-26-08827.2003", "to": "10.1002/hipo.450010207", "width": 1}, {"arrows": "to", "from": "10.1523/JNEUROSCI.23-26-08827.2003", "to": "10.1038/381425a0", "width": 1}, {"arrows": "to", "from": "10.1038/nature21692", "to": "10.1038/nn.3304", "width": 1}, {"arrows": "to", "from": "10.1038/nature21692", "to": "10.1016/j.neuron.2015.06.011", "width": 1}, {"arrows": "to", "from": "10.1038/nature21692", "to": "10.1016/j.tins.2008.06.008", "width": 1}, {"arrows": "to", "from": "10.1038/nature21692", "to": "10.1126/science.1159775", "width": 1}, {"arrows": "to", "from": "10.1038/nature08499", "to": "10.1002/(SICI)1098-1063(1996)6:2\u003c149::AID-HIPO6\u003e3.0.CO;2-K", "width": 1}, {"arrows": "to", "from": "10.1038/nature08499", "to": "10.1016/S0896-6273(02)00586-X", "width": 1}, {"arrows": "to", "from": "10.1038/s41467-020-14611-7", "to": "10.1038/381425a0", "width": 1}, {"arrows": "to", "from": "10.1038/s41467-020-14611-7", "to": "10.1002/(SICI)1098-1063(1996)6:2\u003c149::AID-HIPO6\u003e3.0.CO;2-K", "width": 1}, {"arrows": "to", "from": "10.1155/2011/182602", "to": "10.1523/JNEUROSCI.23-26-08827.2003", "width": 1}, {"arrows": "to", "from": "10.1155/2011/182602", "to": "10.1002/hipo.450010207", "width": 1}, {"arrows": "to", "from": "10.1016/j.tins.2008.06.008", "to": "10.1002/hipo.450010207", "width": 1}, {"arrows": "to", "from": "10.1016/j.tins.2008.06.008", "to": "10.1523/JNEUROSCI.5492-03.2004", "width": 1}, {"arrows": "to", "from": "10.1016/j.tins.2008.06.008", "to": "10.1523/JNEUROSCI.23-26-08827.2003", "width": 1}, {"arrows": "to", "from": "10.1523/JNEUROSCI.5492-03.2004", "to": "10.1002/hipo.450010207", "width": 1}, {"arrows": "to", "from": "10.1523/JNEUROSCI.5492-03.2004", "to": "10.1016/S0896-6273(02)00586-X", "width": 1}, {"arrows": "to", "from": "10.1016/j.cell.2020.09.061", "to": "10.1038/nature21692", "width": 1}, {"arrows": "to", "from": "10.1016/j.cell.2020.09.061", "to": "10.1002/hipo.450010207", "width": 1}, {"arrows": "to", "from": "10.1016/j.cell.2020.09.061", "to": "10.1038/nn1961", "width": 1}, {"arrows": "to", "from": "10.1016/j.cell.2020.09.061", "to": "10.1002/hipo.20345", "width": 1}, {"arrows": "to", "from": "10.1016/j.cell.2020.09.061", "to": "10.1038/nn.2384", "width": 1}, {"arrows": "to", "from": "10.1016/j.cell.2020.09.061", "to": "10.1038/nature08499", "width": 1}, {"arrows": "to", "from": "10.1016/j.cell.2020.09.061", "to": "10.1038/nature11028", "width": 1}, {"arrows": "to", "from": "10.1016/j.cell.2020.09.061", "to": "10.1126/science.aao3474", "width": 1}, {"arrows": "to", "from": "10.1016/j.cell.2020.09.061", "to": "10.1126/science.1159775", "width": 1}, {"arrows": "to", "from": "10.1016/j.cell.2020.09.061", "to": "10.1038/nn.3968", "width": 1}, {"arrows": "to", "from": "10.1016/j.cell.2020.09.061", "to": "10.1126/science.1239073", "width": 1}, {"arrows": "to", "from": "10.1016/j.cell.2020.09.061", "to": "10.1002/(SICI)1098-1063(1996)6:2\u003c149::AID-HIPO6\u003e3.0.CO;2-K", "width": 1}, {"arrows": "to", "from": "10.1016/j.cell.2020.09.061", "to": "10.1523/JNEUROSCI.2291-17.2017", "width": 1}, {"arrows": "to", "from": "10.1016/j.cell.2020.09.061", "to": "10.1016/j.neuron.2015.06.011", "width": 1}, {"arrows": "to", "from": "10.1038/s41593-019-0555-4", "to": "10.1038/nature13665", "width": 1}, {"arrows": "to", "from": "10.1038/s41593-019-0555-4", "to": "10.1016/j.neuron.2018.05.020", "width": 1}, {"arrows": "to", "from": "10.1038/s41593-019-0555-4", "to": "10.1152/jn.90941.2008", "width": 1}, {"arrows": "to", "from": "10.1101/418939", "to": "10.1101/cshperspect.a021808", "width": 1}, {"arrows": "to", "from": "10.1101/418939", "to": "10.1126/science.1159775", "width": 1}, {"arrows": "to", "from": "10.1101/418939", "to": "10.1038/nature21692", "width": 1}, {"arrows": "to", "from": "10.1101/418939", "to": "10.1152/jn.90941.2008", "width": 1}, {"arrows": "to", "from": "10.1101/418939", "to": "10.1038/nn.3968", "width": 1}, {"arrows": "to", "from": "10.1038/ncomms13239", "to": "10.1038/nature13665", "width": 1}, {"arrows": "to", "from": "10.1038/nn.3968", "to": "10.1093/acprof:oso/9780195301069.001.0001", "width": 1}, {"arrows": "to", "from": "10.1016/j.cub.2017.10.073", "to": "10.1038/nn1961", "width": 1}, {"arrows": "to", "from": "10.1016/j.cub.2017.10.073", "to": "10.1016/j.neuron.2016.07.047", "width": 1}, {"arrows": "to", "from": "10.1016/j.cub.2017.10.073", "to": "10.1038/nn.2384", "width": 1}, {"arrows": "to", "from": "10.1016/j.cub.2017.10.073", "to": "10.1038/nn.4543", "width": 1}, {"arrows": "to", "from": "10.1016/j.cub.2017.10.073", "to": "10.1038/nature03687", "width": 1}, {"arrows": "to", "from": "10.1016/j.cub.2017.10.073", "to": "10.1002/hipo.450010207", "width": 1}, {"arrows": "to", "from": "10.1038/s41583-018-0077-1", "to": "10.1002/hipo.22488", "width": 1}, {"arrows": "to", "from": "10.1038/s41583-018-0077-1", "to": "10.1016/j.cub.2017.10.073", "width": 1}, {"arrows": "to", "from": "10.1038/s41583-018-0077-1", "to": "10.1146/annurev-neuro-080317-061956", "width": 1}, {"arrows": "to", "from": "10.1038/s41583-018-0077-1", "to": "10.1038/nn.2384", "width": 1}, {"arrows": "to", "from": "10.1038/s41583-018-0077-1", "to": "10.1101/cshperspect.a021808", "width": 1}, {"arrows": "to", "from": "10.1038/s41583-018-0077-1", "to": "10.1038/nn.4543", "width": 1}, {"arrows": "to", "from": "10.1038/s41583-018-0077-1", "to": "10.1038/nn1961", "width": 1}, {"arrows": "to", "from": "10.1038/s41583-018-0077-1", "to": "10.1523/JNEUROSCI.2291-17.2017", "width": 1}, {"arrows": "to", "from": "10.1038/s41583-018-0077-1", "to": "10.1016/j.neuron.2016.07.047", "width": 1}, {"arrows": "to", "from": "10.1038/s41583-018-0077-1", "to": "10.1038/nrn.2016.21", "width": 1}, {"arrows": "to", "from": "10.1038/s41583-018-0077-1", "to": "10.1038/nature21692", "width": 1}, {"arrows": "to", "from": "10.1038/s41583-018-0077-1", "to": "10.1038/nn.3304", "width": 1}, {"arrows": "to", "from": "10.1038/nn.4543", "to": "10.1038/nn1961", "width": 1}, {"arrows": "to", "from": "10.1038/nn.4543", "to": "10.1002/hipo.22488", "width": 1}, {"arrows": "to", "from": "10.1038/nn.4543", "to": "10.1038/nn.2384", "width": 1}, {"arrows": "to", "from": "10.1016/j.conb.2017.02.012", "to": "10.1038/nn.2384", "width": 1}, {"arrows": "to", "from": "10.1016/j.neuron.2016.07.047", "to": "10.1038/nn1961", "width": 1}, {"arrows": "to", "from": "10.1016/j.neuron.2016.07.047", "to": "10.1038/nn.2384", "width": 1}, {"arrows": "to", "from": "10.1038/s41593-018-0232-z", "to": "10.1038/nn1961", "width": 1}, {"arrows": "to", "from": "10.1038/s41593-018-0232-z", "to": "10.1016/j.neuron.2016.07.047", "width": 1}, {"arrows": "to", "from": "10.1038/s41593-019-0467-3", "to": "10.1038/nn1961", "width": 1}, {"arrows": "to", "from": "10.1038/s41593-019-0467-3", "to": "10.1038/nn.2384", "width": 1}, {"arrows": "to", "from": "10.1038/s41593-019-0467-3", "to": "10.1002/hipo.22488", "width": 1}, {"arrows": "to", "from": "10.1016/j.cub.2019.08.019", "to": "10.1038/nn.2384", "width": 1}, {"arrows": "to", "from": "10.1523/JNEUROSCI.2291-17.2017", "to": "10.1016/j.neuron.2016.07.047", "width": 1}, {"arrows": "to", "from": "10.1523/JNEUROSCI.2291-17.2017", "to": "10.1002/hipo.22488", "width": 1}, {"arrows": "to", "from": "10.1523/JNEUROSCI.2291-17.2017", "to": "10.1038/nrn.2016.21", "width": 1}, {"arrows": "to", "from": "10.1523/JNEUROSCI.2291-17.2017", "to": "10.1038/nn.2384", "width": 1}, {"arrows": "to", "from": "10.1523/JNEUROSCI.2291-17.2017", "to": "10.1038/nn.4543", "width": 1}, {"arrows": "to", "from": "10.1002/hipo.22488", "to": "10.1016/S0896-6273(02)00586-X", "width": 1}, {"arrows": "to", "from": "10.1002/hipo.22488", "to": "10.1093/acprof:oso/9780195301069.001.0001", "width": 1}, {"arrows": "to", "from": "10.1002/hipo.22488", "to": "10.1038/nrn3687", "width": 1}, {"arrows": "to", "from": "10.1002/hipo.22488", "to": "10.1038/nn.3304", "width": 1}, {"arrows": "to", "from": "10.1002/hipo.22488", "to": "10.1038/nn1961", "width": 1}, {"arrows": "to", "from": "10.1002/hipo.22488", "to": "10.1038/nn.2384", "width": 1}, {"arrows": "to", "from": "10.1002/hipo.22488", "to": "10.1038/nn0107-13", "width": 1}, {"arrows": "to", "from": "10.1002/hipo.22488", "to": "10.1126/science.1159775", "width": 1}, {"arrows": "to", "from": "10.1002/hipo.22488", "to": "10.1038/nn.3968", "width": 1}, {"arrows": "to", "from": "10.1002/hipo.22488", "to": "10.1038/nature03687", "width": 1}, {"arrows": "to", "from": "10.1002/hipo.22488", "to": "10.1002/(SICI)1098-1063(1996)6:2\u003c149::AID-HIPO6\u003e3.0.CO;2-K", "width": 1}, {"arrows": "to", "from": "10.1002/hipo.22488", "to": "10.1038/nn.3904", "width": 1}, {"arrows": "to", "from": "10.1038/nn1961", "to": "10.1002/(SICI)1098-1063(1996)6:2\u003c149::AID-HIPO6\u003e3.0.CO;2-K", "width": 1}, {"arrows": "to", "from": "10.1016/j.neuron.2019.09.012", "to": "10.1016/j.neuron.2016.07.047", "width": 1}, {"arrows": "to", "from": "10.1016/j.neuron.2019.09.012", "to": "10.1002/hipo.22488", "width": 1}, {"arrows": "to", "from": "10.1016/j.neuron.2019.09.012", "to": "10.1038/nn1961", "width": 1}, {"arrows": "to", "from": "10.1016/j.neuron.2019.09.012", "to": "10.1038/s41583-018-0077-1", "width": 1}, {"arrows": "to", "from": "10.1016/j.neuron.2019.09.012", "to": "10.1038/s41593-018-0232-z", "width": 1}, {"arrows": "to", "from": "10.1016/j.neuron.2019.09.012", "to": "10.1523/JNEUROSCI.2291-17.2017", "width": 1}, {"arrows": "to", "from": "10.1007/s10827-018-0704-x", "to": "10.1016/S0896-6273(02)00586-X", "width": 1}, {"arrows": "to", "from": "10.1007/s10827-018-0704-x", "to": "10.1002/hipo.22488", "width": 1}, {"arrows": "to", "from": "10.1038/s41586-021-04268-7", "to": "10.1038/nn.3968", "width": 1}, {"arrows": "to", "from": "10.1038/s41586-021-04268-7", "to": "10.1167/8.8.11", "width": 1}, {"arrows": "to", "from": "10.1038/s41586-021-04268-7", "to": "10.1371/journal.pcbi.1002581", "width": 1}, {"arrows": "to", "from": "10.3389/fncir.2016.00012", "to": "10.1038/nrn3687", "width": 1}, {"arrows": "to", "from": "10.3389/fncir.2019.00022", "to": "10.1016/j.neuron.2012.01.010", "width": 1}, {"arrows": "to", "from": "10.1371/journal.pone.0182648", "to": "10.1016/S0896-6273(02)00586-X", "width": 1}, {"arrows": "to", "from": "10.1371/journal.pone.0182648", "to": "10.1146/annurev-neuro-062012-170330", "width": 1}, {"arrows": "to", "from": "10.1371/journal.pone.0182648", "to": "10.1038/nn.2440", "width": 1}, {"arrows": "to", "from": "10.1101/115949", "to": "10.1016/S0896-6273(02)00586-X", "width": 1}, {"arrows": "to", "from": "10.1101/115949", "to": "10.1093/acprof:oso/9780195301069.001.0001", "width": 1}, {"arrows": "to", "from": "10.1101/115949", "to": "10.1146/annurev-neuro-062012-170330", "width": 1}, {"arrows": "to", "from": "10.1101/115949", "to": "10.1038/nrn.2016.21", "width": 1}, {"arrows": "to", "from": "10.1101/115949", "to": "10.1038/nn.2440", "width": 1}, {"arrows": "to", "from": "10.3389/fncel.2019.00232", "to": "10.1016/j.neuron.2016.07.047", "width": 1}, {"arrows": "to", "from": "10.3389/fncel.2019.00232", "to": "10.1038/nature21692", "width": 1}, {"arrows": "to", "from": "10.3389/fncel.2019.00232", "to": "10.1038/nn.3304", "width": 1}, {"arrows": "to", "from": "10.3389/fncel.2019.00232", "to": "10.1038/nn1961", "width": 1}, {"arrows": "to", "from": "10.3389/fncel.2019.00232", "to": "10.1002/hipo.20345", "width": 1}, {"arrows": "to", "from": "10.3389/fncel.2019.00232", "to": "10.1038/nn.2384", "width": 1}, {"arrows": "to", "from": "10.3389/fncel.2019.00232", "to": "10.1038/nn.2440", "width": 1}, {"arrows": "to", "from": "10.3389/fncel.2019.00232", "to": "10.1038/nature08499", "width": 1}, {"arrows": "to", "from": "10.3389/fncel.2019.00232", "to": "10.1038/nature11028", "width": 1}, {"arrows": "to", "from": "10.3389/fncel.2019.00232", "to": "10.1038/s41593-018-0232-z", "width": 1}, {"arrows": "to", "from": "10.3389/fncel.2019.00232", "to": "10.1126/science.1159775", "width": 1}, {"arrows": "to", "from": "10.3389/fncel.2019.00232", "to": "10.1186/s12915-016-0261-6", "width": 1}, {"arrows": "to", "from": "10.3389/fncel.2019.00232", "to": "10.1038/nature13725", "width": 1}, {"arrows": "to", "from": "10.3389/fncel.2019.00232", "to": "10.1038/nn.4543", "width": 1}, {"arrows": "to", "from": "10.3389/fncel.2019.00232", "to": "10.1126/science.1174519", "width": 1}, {"arrows": "to", "from": "10.3389/fncel.2019.00232", "to": "10.1002/(SICI)1098-1063(1996)6:2\u003c149::AID-HIPO6\u003e3.0.CO;2-K", "width": 1}, {"arrows": "to", "from": "10.1002/hipo.20345", "to": "10.1002/(SICI)1098-1063(1996)6:2\u003c149::AID-HIPO6\u003e3.0.CO;2-K", "width": 1}, {"arrows": "to", "from": "10.1016/j.cub.2015.12.048", "to": "10.1016/S0896-6273(02)00586-X", "width": 1}, {"arrows": "to", "from": "10.1126/science.1159775", "to": "10.1038/381425a0", "width": 1}, {"arrows": "to", "from": "10.1126/science.1159775", "to": "10.1002/(SICI)1098-1063(1996)6:2\u003c149::AID-HIPO6\u003e3.0.CO;2-K", "width": 1}, {"arrows": "to", "from": "10.1146/annurev-neuro-062012-170330", "to": "10.1016/S0896-6273(02)00586-X", "width": 1}, {"arrows": "to", "from": "10.1146/annurev-neuro-062012-170330", "to": "10.1093/acprof:oso/9780195301069.001.0001", "width": 1}, {"arrows": "to", "from": "10.1146/annurev-neuro-062012-170330", "to": "10.1002/hipo.20345", "width": 1}, {"arrows": "to", "from": "10.1146/annurev-neuro-062012-170330", "to": "10.1038/nn.2440", "width": 1}, {"arrows": "to", "from": "10.1146/annurev-neuro-062012-170330", "to": "10.1038/nature08499", "width": 1}, {"arrows": "to", "from": "10.1146/annurev-neuro-062012-170330", "to": "10.1002/(SICI)1098-1063(1996)6:2\u003c149::AID-HIPO6\u003e3.0.CO;2-K", "width": 1}, {"arrows": "to", "from": "10.1038/nn.3304", "to": "10.1038/381425a0", "width": 1}, {"arrows": "to", "from": "10.1038/nn.3304", "to": "10.1038/nature03687", "width": 1}, {"arrows": "to", "from": "10.1038/nn.3304", "to": "10.1126/science.1159775", "width": 1}, {"arrows": "to", "from": "10.1038/nn.3304", "to": "10.1002/(SICI)1098-1063(1996)6:2\u003c149::AID-HIPO6\u003e3.0.CO;2-K", "width": 1}, {"arrows": "to", "from": "10.1038/nrn.2016.21", "to": "10.1146/annurev-neuro-062012-170330", "width": 1}, {"arrows": "to", "from": "10.1038/nrn.2016.21", "to": "10.1002/(SICI)1098-1063(1996)6:2\u003c149::AID-HIPO6\u003e3.0.CO;2-K", "width": 1}, {"arrows": "to", "from": "10.1038/nrn.2016.21", "to": "10.1038/nn.2440", "width": 1}, {"arrows": "to", "from": "10.1038/nrn.2016.21", "to": "10.1038/nn.3904", "width": 1}, {"arrows": "to", "from": "10.1038/nrn.2016.21", "to": "10.1002/hipo.20345", "width": 1}, {"arrows": "to", "from": "10.1038/nrn.2016.21", "to": "10.1002/hipo.22488", "width": 1}, {"arrows": "to", "from": "10.1038/nrn.2016.21", "to": "10.1038/nn.2384", "width": 1}, {"arrows": "to", "from": "10.1038/nrn.2016.21", "to": "10.1038/nn0107-13", "width": 1}, {"arrows": "to", "from": "10.1038/nrn.2016.21", "to": "10.1038/nn1961", "width": 1}, {"arrows": "to", "from": "10.1038/nn.2440", "to": "10.1016/S0896-6273(02)00586-X", "width": 1}, {"arrows": "to", "from": "10.1016/j.tics.2018.07.006", "to": "10.3389/fncir.2016.00012", "width": 1}, {"arrows": "to", "from": "10.1016/j.tics.2018.07.006", "to": "10.1016/S0896-6273(02)00586-X", "width": 1}, {"arrows": "to", "from": "10.1016/j.tics.2018.07.006", "to": "10.1038/nature21692", "width": 1}, {"arrows": "to", "from": "10.1016/j.tics.2018.07.006", "to": "10.1002/(SICI)1098-1063(1996)6:2\u003c149::AID-HIPO6\u003e3.0.CO;2-K", "width": 1}, {"arrows": "to", "from": "10.1016/j.tics.2018.07.006", "to": "10.1038/381425a0", "width": 1}, {"arrows": "to", "from": "10.1016/j.tics.2018.07.006", "to": "10.1038/nn.3904", "width": 1}, {"arrows": "to", "from": "10.1016/j.tics.2018.07.006", "to": "10.1126/science.1159775", "width": 1}, {"arrows": "to", "from": "10.1016/j.tics.2018.07.006", "to": "10.1002/hipo.22488", "width": 1}, {"arrows": "to", "from": "10.1016/j.tics.2018.07.006", "to": "10.1038/nn.3968", "width": 1}, {"arrows": "to", "from": "10.1016/S0896-6273(02)00586-X", "to": "10.1002/(SICI)1098-1063(1996)6:2\u003c149::AID-HIPO6\u003e3.0.CO;2-K", "width": 1}, {"arrows": "to", "from": "10.1016/j.neuroimage.2013.06.022", "to": "10.1016/S0896-6273(02)00586-X", "width": 1}, {"arrows": "to", "from": "10.1016/j.neuroimage.2013.06.022", "to": "10.1038/nature08499", "width": 1}, {"arrows": "to", "from": "10.1016/j.neuroimage.2013.06.022", "to": "10.1126/science.1159775", "width": 1}, {"arrows": "to", "from": "10.1016/j.neuroimage.2013.06.022", "to": "10.1002/(SICI)1098-1063(1996)6:2\u003c149::AID-HIPO6\u003e3.0.CO;2-K", "width": 1}, {"arrows": "to", "from": "10.1038/nn.3904", "to": "10.1126/science.1159775", "width": 1}, {"arrows": "to", "from": "10.1038/nn.3904", "to": "10.1002/(SICI)1098-1063(1996)6:2\u003c149::AID-HIPO6\u003e3.0.CO;2-K", "width": 1}, {"arrows": "to", "from": "10.1038/s41467-021-25150-0", "to": "10.1016/j.tics.2018.07.006", "width": 1}, {"arrows": "to", "from": "10.1038/s41467-021-25150-0", "to": "10.1038/nature03687", "width": 1}, {"arrows": "to", "from": "10.1038/s41467-021-25150-0", "to": "10.1002/(SICI)1098-1063(1996)6:2\u003c149::AID-HIPO6\u003e3.0.CO;2-K", "width": 1}, {"arrows": "to", "from": "10.1126/science.aao3474", "to": "10.1038/nn.3968", "width": 1}, {"arrows": "to", "from": "10.1126/science.aao3474", "to": "10.1038/nn1961", "width": 1}, {"arrows": "to", "from": "10.1016/j.neuron.2018.10.006", "to": "10.1038/nature21692", "width": 1}, {"arrows": "to", "from": "10.1016/j.neuron.2018.10.006", "to": "10.1016/j.tins.2008.06.008", "width": 1}, {"arrows": "to", "from": "10.1016/j.neuron.2018.10.006", "to": "10.1126/science.aao3474", "width": 1}, {"arrows": "to", "from": "10.1016/j.neuron.2018.10.006", "to": "10.1038/nature03687", "width": 1}, {"arrows": "to", "from": "10.1016/j.neuron.2018.10.006", "to": "10.1016/j.neuron.2015.06.011", "width": 1}, {"arrows": "to", "from": "10.1016/j.neuron.2015.06.013", "to": "10.1016/j.neuron.2015.06.011", "width": 1}, {"arrows": "to", "from": "10.1016/j.neuron.2021.09.044", "to": "10.1016/j.neuron.2021.07.002", "width": 1}, {"arrows": "to", "from": "10.1016/j.neuron.2021.09.044", "to": "10.1126/science.1189664", "width": 1}, {"arrows": "to", "from": "10.1016/j.neuron.2021.09.044", "to": "10.1126/science.aax6239", "width": 1}, {"arrows": "to", "from": "10.1016/j.neuron.2021.09.044", "to": "10.1146/annurev.neuro.28.061604.135703", "width": 1}, {"arrows": "to", "from": "10.1016/j.neuron.2021.09.044", "to": "10.1038/nn1253", "width": 1}, {"arrows": "to", "from": "10.1016/j.neuron.2021.09.044", "to": "10.1038/nature12600", "width": 1}, {"arrows": "to", "from": "10.1016/j.neuroscience.2022.03.008", "to": "10.1126/science.aax6239", "width": 1}, {"arrows": "to", "from": "10.1016/j.neuroscience.2022.03.008", "to": "10.1038/nature12600", "width": 1}, {"arrows": "to", "from": "10.1126/science.aax6239", "to": "10.1038/nature12600", "width": 1}, {"arrows": "to", "from": "10.1126/science.aax6239", "to": "10.1146/annurev.neuro.28.061604.135703", "width": 1}, {"arrows": "to", "from": "10.1126/science.aax6239", "to": "10.1038/nn1253", "width": 1}, {"arrows": "to", "from": "10.1126/science.aax6239", "to": "10.1126/science.aax6239", "width": 1}, {"arrows": "to", "from": "10.1146/annurev.neuro.28.061604.135703", "to": "10.1038/nn1253", "width": 1}, {"arrows": "to", "from": "10.1126/science.1189664", "to": "10.1146/annurev.neuro.28.061604.135703", "width": 1}, {"arrows": "to", "from": "10.1038/nn.4157", "to": "10.1038/nn1253", "width": 1}, {"arrows": "to", "from": "10.1038/nn.4157", "to": "10.1038/nature12600", "width": 1}, {"arrows": "to", "from": "10.1038/nature12600", "to": "10.1146/annurev.neuro.28.061604.135703", "width": 1}, {"arrows": "to", "from": "10.1038/nature12600", "to": "10.1126/science.1189664", "width": 1}, {"arrows": "to", "from": "10.1038/nature12600", "to": "10.1038/nn1253", "width": 1}, {"arrows": "to", "from": "10.1016/j.neuron.2021.07.002", "to": "10.1126/science.1189664", "width": 1}, {"arrows": "to", "from": "10.1016/j.neuron.2021.07.002", "to": "10.1126/science.aax6239", "width": 1}, {"arrows": "to", "from": "10.1016/j.neuron.2021.07.002", "to": "10.1146/annurev.neuro.28.061604.135703", "width": 1}, {"arrows": "to", "from": "10.1016/j.neuron.2021.07.002", "to": "10.1038/nn1253", "width": 1}, {"arrows": "to", "from": "10.1016/j.neuroscience.2022.02.009", "to": "10.1016/j.neuron.2021.07.002", "width": 1}, {"arrows": "to", "from": "10.1016/j.neuroscience.2022.02.009", "to": "10.1126/science.1189664", "width": 1}, {"arrows": "to", "from": "10.1016/j.neuroscience.2022.02.009", "to": "10.1126/science.aax6239", "width": 1}, {"arrows": "to", "from": "10.1016/j.neuroscience.2022.02.009", "to": "10.1515/revneuro-2019-0044", "width": 1}, {"arrows": "to", "from": "10.1016/j.neuroscience.2022.02.009", "to": "10.1038/nature12600", "width": 1}, {"arrows": "to", "from": "10.3389/fncir.2020.00054", "to": "10.1098/rsta.2007.2092", "width": 1}, {"arrows": "to", "from": "10.3389/fncir.2020.00054", "to": "10.3389/fphys.2012.00163", "width": 1}, {"arrows": "to", "from": "10.3389/fncir.2020.00054", "to": "10.1103/PhysRevLett.94.058101", "width": 1}, {"arrows": "to", "from": "10.1098/rsta.2007.2092", "to": "10.1523/JNEUROSCI.23-35-11167.2003", "width": 1}, {"arrows": "to", "from": "10.1098/rsta.2007.2092", "to": "10.1103/PhysRevLett.94.058101", "width": 1}, {"arrows": "to", "from": "10.1523/JNEUROSCI.1095-21.2022", "to": "10.1523/JNEUROSCI.23-35-11167.2003", "width": 1}, {"arrows": "to", "from": "10.1016/j.tins.2022.08.007", "to": "10.1523/JNEUROSCI.23-35-11167.2003", "width": 1}, {"arrows": "to", "from": "10.1016/j.tins.2022.08.007", "to": "10.3389/fphys.2012.00163", "width": 1}, {"arrows": "to", "from": "10.1016/j.tins.2022.08.007", "to": "10.1523/JNEUROSCI.1095-21.2022", "width": 1}, {"arrows": "to", "from": "10.1016/j.tins.2022.08.007", "to": "10.1103/PhysRevLett.94.058101", "width": 1}, {"arrows": "to", "from": "10.1016/j.tins.2022.08.007", "to": "10.3389/fncir.2020.00054", "width": 1}, {"arrows": "to", "from": "10.1103/PhysRevLett.94.058101", "to": "10.1523/JNEUROSCI.23-35-11167.2003", "width": 1}, {"arrows": "to", "from": "10.1016/j.neuron.2018.10.002", "to": "10.1038/nature21692", "width": 1}, {"arrows": "to", "from": "10.1016/j.neuron.2018.10.002", "to": "10.1002/hipo.450010207", "width": 1}, {"arrows": "to", "from": "10.1016/j.neuron.2018.10.002", "to": "10.1126/science.aao3474", "width": 1}, {"arrows": "to", "from": "10.1016/j.neuron.2018.10.002", "to": "10.1038/nature03687", "width": 1}, {"arrows": "to", "from": "10.1016/j.neuron.2018.10.002", "to": "10.1016/j.neuron.2015.06.011", "width": 1}, {"arrows": "to", "from": "10.1038/s41593-022-01153-y", "to": "10.1016/j.neuron.2018.10.002", "width": 1}, {"arrows": "to", "from": "10.1038/s41593-022-01153-y", "to": "10.1038/nature21692", "width": 1}, {"arrows": "to", "from": "10.1038/s41593-022-01153-y", "to": "10.1523/JNEUROSCI.23-26-08827.2003", "width": 1}, {"arrows": "to", "from": "10.1038/s41593-022-01153-y", "to": "10.1002/hipo.450010207", "width": 1}, {"arrows": "to", "from": "10.1038/s41593-022-01153-y", "to": "10.1016/j.cell.2020.10.024", "width": 1}, {"arrows": "to", "from": "10.1038/s41593-022-01153-y", "to": "10.1038/s41593-018-0232-z", "width": 1}, {"arrows": "to", "from": "10.1038/s41593-022-01153-y", "to": "10.1126/science.1159775", "width": 1}, {"arrows": "to", "from": "10.1038/s41593-022-01153-y", "to": "10.1016/j.cell.2020.09.031", "width": 1}, {"arrows": "to", "from": "10.1038/s41593-022-01153-y", "to": "10.1038/s41586-021-04268-7", "width": 1}, {"arrows": "to", "from": "10.1016/j.cell.2020.10.024", "to": "10.1523/JNEUROSCI.23-26-08827.2003", "width": 1}, {"arrows": "to", "from": "10.1016/j.cell.2020.10.024", "to": "10.1002/hipo.450010207", "width": 1}, {"arrows": "to", "from": "10.1016/j.cell.2020.10.024", "to": "10.1016/j.tics.2018.07.006", "width": 1}, {"arrows": "to", "from": "10.1002/wcs.1653", "to": "10.1038/nrn4000", "width": 1}, {"arrows": "to", "from": "10.1002/wcs.1653", "to": "10.1126/science.aaw4325", "width": 1}, {"arrows": "to", "from": "10.1002/wcs.1653", "to": "10.1038/nature11028", "width": 1}, {"arrows": "to", "from": "10.1002/wcs.1653", "to": "10.1126/science.1239073", "width": 1}, {"arrows": "to", "from": "10.1002/wcs.1653", "to": "10.1038/nature13725", "width": 1}, {"arrows": "to", "from": "10.1038/s41467-022-29384-4", "to": "10.1038/nrn4000", "width": 1}, {"arrows": "to", "from": "10.1038/s41467-022-29384-4", "to": "10.1038/nature11028", "width": 1}, {"arrows": "to", "from": "10.1038/s41467-022-29384-4", "to": "10.1038/nature13725", "width": 1}, {"arrows": "to", "from": "10.1038/s41467-022-29384-4", "to": "10.1126/science.aas9204", "width": 1}, {"arrows": "to", "from": "10.1126/science.aaw4325", "to": "10.1038/nrn4000", "width": 1}, {"arrows": "to", "from": "10.1126/science.aaw4325", "to": "10.1126/science.1239073", "width": 1}, {"arrows": "to", "from": "10.1126/science.aaw4325", "to": "10.1038/nature11028", "width": 1}, {"arrows": "to", "from": "10.1126/science.aaw4325", "to": "10.1038/nature13725", "width": 1}, {"arrows": "to", "from": "10.1126/science.aaw4325", "to": "10.1016/j.neuron.2014.07.017", "width": 1}, {"arrows": "to", "from": "10.1126/science.aaw4325", "to": "10.1126/science.aat3810", "width": 1}, {"arrows": "to", "from": "10.1126/science.aaw4325", "to": "10.1126/science.aas9204", "width": 1}, {"arrows": "to", "from": "10.1126/science.aaw4325", "to": "10.1038/npp.2016.73", "width": 1}, {"arrows": "to", "from": "10.1126/science.aaw4325", "to": "10.1038/nn.2384", "width": 1}, {"arrows": "to", "from": "10.1126/science.aaw4325", "to": "10.1038/s41583-018-0077-1", "width": 1}, {"arrows": "to", "from": "10.1126/science.aaw4325", "to": "10.1002/hipo.22488", "width": 1}, {"arrows": "to", "from": "10.1126/science.aaw4325", "to": "10.1146/annurev-neuro-080317-061956", "width": 1}, {"arrows": "to", "from": "10.1126/science.aaw4325", "to": "10.1126/science.1174519", "width": 1}, {"arrows": "to", "from": "10.1126/science.aaw4325", "to": "10.1016/j.nlm.2016.07.007", "width": 1}, {"arrows": "to", "from": "10.1126/science.aaw4325", "to": "10.1016/j.conb.2018.10.013", "width": 1}, {"arrows": "to", "from": "10.1126/science.aaw4325", "to": "10.1126/science.aaf0594", "width": 1}, {"arrows": "to", "from": "10.1126/science.aaw4325", "to": "10.1126/science.aal2690", "width": 1}, {"arrows": "to", "from": "10.1016/j.nlm.2020.107266", "to": "10.1038/nature08499", "width": 1}, {"arrows": "to", "from": "10.1016/j.nlm.2020.107266", "to": "10.1038/nrn4000", "width": 1}, {"arrows": "to", "from": "10.1016/j.nlm.2020.107266", "to": "10.1038/nature11028", "width": 1}, {"arrows": "to", "from": "10.1016/j.nlm.2020.107266", "to": "10.1038/npp.2016.73", "width": 1}, {"arrows": "to", "from": "10.1016/j.nlm.2020.107266", "to": "10.1186/s12915-016-0261-6", "width": 1}, {"arrows": "to", "from": "10.1016/j.nlm.2020.107266", "to": "10.1126/science.1239073", "width": 1}, {"arrows": "to", "from": "10.1016/j.nlm.2020.107266", "to": "10.1126/science.aaf0594", "width": 1}, {"arrows": "to", "from": "10.1016/j.nlm.2020.107266", "to": "10.1126/science.1174519", "width": 1}, {"arrows": "to", "from": "10.1016/j.nlm.2020.107266", "to": "10.1016/j.neuron.2014.07.017", "width": 1}, {"arrows": "to", "from": "10.1016/j.nlm.2020.107266", "to": "10.1126/science.aal2690", "width": 1}, {"arrows": "to", "from": "10.1016/j.conb.2018.10.013", "to": "10.1146/annurev-neuro-080317-061956", "width": 1}, {"arrows": "to", "from": "10.1016/j.conb.2018.10.013", "to": "10.1038/nrn4000", "width": 1}, {"arrows": "to", "from": "10.1016/j.conb.2018.10.013", "to": "10.1186/s12915-016-0261-6", "width": 1}, {"arrows": "to", "from": "10.1016/j.conb.2018.10.013", "to": "10.1038/nature11028", "width": 1}, {"arrows": "to", "from": "10.1016/j.conb.2018.10.013", "to": "10.1038/nature13725", "width": 1}, {"arrows": "to", "from": "10.1016/j.conb.2018.10.013", "to": "10.1126/science.aas9204", "width": 1}, {"arrows": "to", "from": "10.1016/j.conb.2018.10.013", "to": "10.1016/j.neuron.2014.07.017", "width": 1}, {"arrows": "to", "from": "10.1016/j.conb.2018.10.013", "to": "10.1038/npp.2016.73", "width": 1}, {"arrows": "to", "from": "10.1016/j.conb.2018.10.013", "to": "10.1126/science.aaf0594", "width": 1}, {"arrows": "to", "from": "10.1016/j.conb.2018.10.013", "to": "10.1016/j.nlm.2016.07.007", "width": 1}, {"arrows": "to", "from": "10.1016/j.conb.2018.10.013", "to": "10.1126/science.aat3810", "width": 1}, {"arrows": "to", "from": "10.1146/annurev-neuro-080317-061956", "to": "10.1038/nrn4000", "width": 1}, {"arrows": "to", "from": "10.1146/annurev-neuro-080317-061956", "to": "10.1016/j.nlm.2016.07.007", "width": 1}, {"arrows": "to", "from": "10.1146/annurev-neuro-080317-061956", "to": "10.1038/npp.2016.73", "width": 1}, {"arrows": "to", "from": "10.1146/annurev-neuro-080317-061956", "to": "10.1126/science.1239073", "width": 1}, {"arrows": "to", "from": "10.1146/annurev-neuro-080317-061956", "to": "10.1126/science.aaf0594", "width": 1}, {"arrows": "to", "from": "10.1146/annurev-neuro-080317-061956", "to": "10.1038/nature13725", "width": 1}, {"arrows": "to", "from": "10.1146/annurev-neuro-080317-061956", "to": "10.1126/science.1174519", "width": 1}, {"arrows": "to", "from": "10.1146/annurev-neuro-080317-061956", "to": "10.1016/j.neuron.2014.07.017", "width": 1}, {"arrows": "to", "from": "10.1146/annurev-neuro-080317-061956", "to": "10.1126/science.aal2690", "width": 1}, {"arrows": "to", "from": "10.1126/science.aas9204", "to": "10.1038/nature11028", "width": 1}, {"arrows": "to", "from": "10.1126/science.aas9204", "to": "10.1126/science.1239073", "width": 1}, {"arrows": "to", "from": "10.1126/science.aas9204", "to": "10.1016/j.nlm.2016.07.007", "width": 1}, {"arrows": "to", "from": "10.1126/science.aat3810", "to": "10.1038/nrn4000", "width": 1}, {"arrows": "to", "from": "10.1126/science.aat3810", "to": "10.1038/nature11028", "width": 1}, {"arrows": "to", "from": "10.1126/science.aat3810", "to": "10.1126/science.1174519", "width": 1}, {"arrows": "to", "from": "10.1126/science.aat3810", "to": "10.1126/science.aaf0594", "width": 1}, {"arrows": "to", "from": "10.1126/science.aat3810", "to": "10.1126/science.aal2690", "width": 1}, {"arrows": "to", "from": "10.1126/science.aal2690", "to": "10.1038/nature11028", "width": 1}, {"arrows": "to", "from": "10.1126/science.aal2690", "to": "10.1038/nrn4000", "width": 1}, {"arrows": "to", "from": "10.1126/science.aal2690", "to": "10.1126/science.1239073", "width": 1}, {"arrows": "to", "from": "10.1126/science.aal2690", "to": "10.1126/science.aaf0594", "width": 1}, {"arrows": "to", "from": "10.1126/science.aaf0594", "to": "10.1038/nrn4000", "width": 1}, {"arrows": "to", "from": "10.1126/science.aaf0594", "to": "10.1016/j.neuron.2014.07.017", "width": 1}, {"arrows": "to", "from": "10.1126/science.aaf0594", "to": "10.1126/science.1174519", "width": 1}, {"arrows": "to", "from": "10.1186/s12915-016-0261-6", "to": "10.1038/nature11028", "width": 1}, {"arrows": "to", "from": "10.1186/s12915-016-0261-6", "to": "10.1126/science.1239073", "width": 1}, {"arrows": "to", "from": "10.1186/s12915-016-0261-6", "to": "10.1038/nrn3687", "width": 1}, {"arrows": "to", "from": "10.1186/s12915-016-0261-6", "to": "10.1126/science.1159775", "width": 1}, {"arrows": "to", "from": "10.1186/s12915-016-0261-6", "to": "10.1002/hipo.22488", "width": 1}, {"arrows": "to", "from": "10.1186/s12915-016-0261-6", "to": "10.1038/nn.2384", "width": 1}, {"arrows": "to", "from": "10.1186/s12915-016-0261-6", "to": "10.1038/nn1961", "width": 1}, {"arrows": "to", "from": "10.1186/s12915-016-0261-6", "to": "10.1038/nn.3304", "width": 1}, {"arrows": "to", "from": "10.1038/npp.2016.73", "to": "10.1038/nn.2384", "width": 1}, {"arrows": "to", "from": "10.1038/npp.2016.73", "to": "10.1038/nrn4000", "width": 1}, {"arrows": "to", "from": "10.1038/npp.2016.73", "to": "10.1038/nature11028", "width": 1}, {"arrows": "to", "from": "10.1038/npp.2016.73", "to": "10.1126/science.1239073", "width": 1}, {"arrows": "to", "from": "10.1038/npp.2016.73", "to": "10.1016/j.neuron.2014.07.017", "width": 1}, {"arrows": "to", "from": "10.1016/j.nlm.2016.07.007", "to": "10.1038/nrn4000", "width": 1}, {"arrows": "to", "from": "10.1016/j.nlm.2016.07.007", "to": "10.1038/nature11028", "width": 1}, {"arrows": "to", "from": "10.1016/j.nlm.2016.07.007", "to": "10.1016/j.neuron.2014.07.017", "width": 1}, {"arrows": "to", "from": "10.3389/fnmol.2015.00078", "to": "10.1038/nature11028", "width": 1}, {"arrows": "to", "from": "10.3389/fnmol.2015.00078", "to": "10.1126/science.1239073", "width": 1}, {"arrows": "to", "from": "10.3389/fnmol.2015.00078", "to": "10.1038/nature13725", "width": 1}, {"arrows": "to", "from": "10.1038/nrn4000", "to": "10.1038/nn.2384", "width": 1}, {"arrows": "to", "from": "10.1038/nrn4000", "to": "10.1038/nn1961", "width": 1}, {"arrows": "to", "from": "10.1038/nrn4000", "to": "10.1038/nature11028", "width": 1}, {"arrows": "to", "from": "10.1038/nrn4000", "to": "10.1016/j.neuron.2014.07.017", "width": 1}, {"arrows": "to", "from": "10.1038/nrn4000", "to": "10.1038/nature13725", "width": 1}, {"arrows": "to", "from": "10.1038/nrn4000", "to": "10.1126/science.1239073", "width": 1}, {"arrows": "to", "from": "10.1038/nature13725", "to": "10.1038/nature11028", "width": 1}, {"arrows": "to", "from": "10.1038/nature13725", "to": "10.1126/science.1239073", "width": 1}, {"arrows": "to", "from": "10.1126/science.1239073", "to": "10.1126/science.1159775", "width": 1}, {"arrows": "to", "from": "10.1126/science.1239073", "to": "10.1038/nn.3304", "width": 1}, {"arrows": "to", "from": "10.1126/science.1239073", "to": "10.1038/nature11028", "width": 1}, {"arrows": "to", "from": "10.1038/nature11028", "to": "10.1126/science.1174519", "width": 1}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": true,
+        "filter": true
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+                  // if this network requires displaying the configure window,
+                  // put it in its div
+                  options.configure["container"] = document.getElementById("config");
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+                    network.on("click", neighbourhoodHighlight);
+                  
+
+                  
+                    network.on("selectNode", neighbourhoodHighlight);
+                  
+
+                  
+
+
+                  
+                      network.on("stabilizationProgress", function(params) {
+                          document.getElementById('loadingBar').removeAttribute("style");
+                          var maxWidth = 496;
+                          var minWidth = 20;
+                          var widthFactor = params.iterations/params.total;
+                          var width = Math.max(minWidth,maxWidth * widthFactor);
+                          document.getElementById('bar').style.width = width + 'px';
+                          document.getElementById('text').innerHTML = Math.round(widthFactor*100) + '%';
+                      });
+                      network.once("stabilizationIterationsDone", function() {
+                          document.getElementById('text').innerHTML = '100%';
+                          document.getElementById('bar').style.width = '496px';
+                          document.getElementById('loadingBar').style.opacity = 0;
+                          // really clean the dom element
+                          setTimeout(function () {document.getElementById('loadingBar').style.display = 'none';}, 500);
+                      });
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>
