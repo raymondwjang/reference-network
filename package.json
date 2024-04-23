@@ -1,11 +1,13 @@
 {
   "name": "reference-network",
+  "id": "reference-network@example.com",
   "version": "0.0.1",
   "description": "Reference Network",
   "scripts": {
     "lint": "eslint . --ext .ts --cache --cache-location .eslintcache/",
     "prebuild": "npm run lint",
     "build": "tsc --noEmit && node esbuild.js",
+    "start": "tsc --noEmit && node --watch-path=./src esbuild.js",
     "postbuild": "zotero-plugin-zipup build reference-network",
     "release": "zotero-plugin-release",
     "postversion": "git push --follow-tags"

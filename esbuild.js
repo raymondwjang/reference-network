@@ -39,7 +39,6 @@ async function bundle(config) {
   if (exportGlobals) {
     const esm = await esbuild.build({ ...config, logLevel: 'silent', format: 'esm', metafile: true, write: false })
     if (Object.values(esm.metafile.outputs).length !== 1) throw new Error('exportGlobals not supported for multiple outputs')
-
     for (const output of Object.values(esm.metafile.outputs)) {
       if (output.entryPoint) {
         config.globalName = escape(`{ ${output.exports.sort().join(', ')} }`).replace(/%/g, '$')
@@ -61,13 +60,13 @@ async function bundle(config) {
 async function build() {
   await bundle({
     exportGlobals: true,
-    entryPoints: [ 'bootstrap.ts' ],
+    entryPoints: [ 'src/reference_network/bootstrap.ts' ],
     outdir: 'build',
     banner: { js: 'var Zotero;\n' },
   })
 
   await bundle({
-    entryPoints: [ 'lib.ts' ],
+    entryPoints: [ 'src/reference_network/lib.ts' ],
     outdir: 'build',
   })
 }
