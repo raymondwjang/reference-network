@@ -16,7 +16,10 @@
       "./node_modules/@types"
     ]
   },
-  "include": [ "*.ts", "chrome/content", "typing", "node_modules/zotero-types", "src/reference_network/bootstrap.ts", "src/reference_network/lib.ts" ],
+  "include": [ "*.ts", "chrome/content", "typing", "node_modules/zotero-types",
+    "src/reference_network/bootstrap.ts",
+    "src/reference_network/lib.ts"
+  ],
   "exclude": [
     "node_modules",
     "**/*.spec.ts",
