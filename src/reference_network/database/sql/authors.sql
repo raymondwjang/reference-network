@@ -1,0 +1,5 @@
+CREATE TABLE IF NOT EXISTS authors (
+    creatorID INTEGER PRIMARY KEY,
+    ORCID TEXT,
+    name TEXT
+);
