@@ -1,19 +1,27 @@
 # DB Schema
 
 - graph
-  - source
-  - type
-  - target
-  - data_source
-  - id
+  - id INTEGER PRIMARY KEY AUTOINCREMENT
+  - source TEXT
+  - type TEXT
+  - target TEXT
+  - data_source TEXT
+
 - items
-  - itemID
-  - updated_datetime
+  - itemID INTEGER PRIMARY KEY
+  - updated_datetime DATETIME
+
 - authors
-  - creatorID
-  - ORCID
-  - name
-- author-item link table
+  - creatorID INTEGER PRIMARY KEY
+  - ORCID TEXT
+  - name TEXT
+
+- author_item_link
+  - creatorID INTEGER
+  - itemID INTEGER
+  - FOREIGN KEY(creatorID) REFERENCES authors(creatorID)
+  - FOREIGN KEY(itemID) REFERENCES items(itemID)
+  - PRIMARY KEY (creatorID, itemID)
 
 # TODOs
 
