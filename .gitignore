@@ -163,6 +163,7 @@ cython_debug/
 
 # javascript
 node_modules
+.eslintcache
 .cache*
 gen
 xpi
