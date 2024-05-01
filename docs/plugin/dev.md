@@ -7,6 +7,11 @@ Following: https://www.zotero.org/support/dev/client_coding/plugin_development
 - watch and rebuild the plugin with `npm run start`
 - you have to restart zotero between each change i think
 
+To run zotero with the plugin in debug mode, run the following command:
+
+```sh
+./zotero -purgecaches -zoteroDebugText
+```
 
 Weird things:
 - the build step was generating the extension id as `reference-network@gmail.com` because [`zotero-plugin/rdf` just does that for some reason](https://github.com/retorquere/zotero-plugin/blob/ab40ae4ba59d2b6a3fcce3222d415d9b5d72b14b/rdf.ts#L16)
