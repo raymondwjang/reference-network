@@ -3,6 +3,7 @@
   "name": "Reference Network",
   "version": "0.0.1",
   "description": "Reference Network",
+  "homepage_url": "https://github.com/RaymondWJang/reference-network",
   "applications": {
     "zotero": {
       "id": "reference-network@example.com",
