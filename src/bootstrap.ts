@@ -1,6 +1,4 @@
 var ReferenceNetwork;
-var Services;
-var Zotero;
 
 Zotero.log("Reference Network: Loading bootstrap");
 
@@ -13,7 +11,7 @@ function log(msg) {
   Zotero.log(`Reference Network: ${msg}`);
 }
 
-function install() {
+export function install() {
   log("Reference Network: Installed");
 }
 
@@ -39,13 +37,17 @@ function install() {
 // Services.scriptloader.loadSubScript(`${rootURI}prefs.js`, obj);
 // }
 
-async function startup({
+export async function startup({
   id,
   version,
   resourceURI,
   rootURI = resourceURI.spec,
 }) {
   log(`Reference Network: Startup`);
+  log(`ID: ${id}`);
+  log(`Version: ${version}`);
+  log(`Resource URI: ${resourceURI}`);
+  log(`Root URI: ${rootURI}`);
 
   Zotero.PreferencePanes.register({
     pluginID: "reference-network@example.com",
@@ -53,6 +55,7 @@ async function startup({
     scripts: [rootURI + "prefs.js"],
   });
 
+  log(`Registered preference pane`);
   // Add DOM elements to the main Zotero pane
   // var win = Zotero.getMainWindow();
   // if (win && win.ZoteroPane) {
@@ -88,17 +91,20 @@ async function startup({
   //   doc.documentElement.appendChild(link2);
   // }
 
-  Services.scriptloader.loadSubScript(`${rootURI}reference-network.ts`);
+  Services.scriptloader.loadSubScript(`${rootURI}reference-network.js`);
+  log(`Loaded reference-network.js`);
+
   ReferenceNetwork.init({ id, version, rootURI });
+  log(`Initialized Reference Network`);
 
   // Zotero.ReferenceNetwork.foo();
 }
 
-function onMainWindowLoad({ window }) {
+export function onMainWindowLoad({ window }) {
   ReferenceNetwork.addToWindow(window);
 }
 
-function onMainWindowUnload({ window }) {
+export function onMainWindowUnload({ window }) {
   ReferenceNetwork.removeFromWindow(window);
 }
 
@@ -118,6 +124,6 @@ export function shutdown() {
   Zotero.ReferenceNetwork = undefined;
 }
 
-function uninstall() {
+export function uninstall() {
   log("Reference Network: Uninstalled");
 }
