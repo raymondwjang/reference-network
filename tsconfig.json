@@ -11,15 +11,8 @@
     "sourceMap": false,
     "downlevelIteration": true,
     "lib": ["es2017", "dom"],
-    "typeRoots": ["./typings", "./node_modules/@types"]
+    "typeRoots": ["./node_modules/@types"]
   },
-  "include": [
-    "*.ts",
-    "chrome/content",
-    "typing",
-    "node_modules/zotero-types",
-    "src/reference_network/bootstrap.ts",
-    "src/reference_network/lib.ts"
-  ],
-  "exclude": ["node_modules", "**/*.spec.ts", "typings"]
+  "include": ["*.ts", "node_modules/zotero-types", "src/**/*.ts"],
+  "exclude": ["node_modules", "**/*.spec.ts"]
 }
