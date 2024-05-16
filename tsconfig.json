@@ -13,6 +13,11 @@
     "lib": ["es2017", "dom"],
     "typeRoots": ["./node_modules/@types"]
   },
-  "include": ["*.ts", "node_modules/zotero-types", "src/**/*.ts"],
+  "include": [
+    "*.ts",
+    "node_modules/zotero-types",
+    "src/**/*.ts",
+    "src/types/global.d.ts"
+  ],
   "exclude": ["node_modules", "**/*.spec.ts"]
 }

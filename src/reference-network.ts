@@ -1,4 +1,4 @@
-var ReferenceNetwork = {
+ReferenceNetwork = {
   id: null,
   version: null,
   rootURI: null,

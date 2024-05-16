@@ -1,5 +1,3 @@
-var ReferenceNetwork;
-
 Zotero.log("Reference Network: Loading bootstrap");
 
 // var stylesheetID = "reference-network-stylesheet";
