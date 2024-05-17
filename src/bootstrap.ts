@@ -1,9 +1,6 @@
-Zotero.log("Reference Network: Loading bootstrap");
+import { ReferenceNetwork } from "./reference-network";
 
-// var stylesheetID = "reference-network-stylesheet";
-// var ftlID = "reference-network-ftl";
-// var menuitemID = "make-it-green-instead";
-// var addedElementIDs = [stylesheetID, ftlID, menuitemID];
+Zotero.log("Reference Network: Loading bootstrap");
 
 function log(msg) {
   Zotero.log(`Reference Network: ${msg}`);
@@ -12,28 +9,6 @@ function log(msg) {
 export function install() {
   log("Reference Network: Installed");
 }
-
-// function setDefaultPrefs(rootURI) {
-// var branch = Services.prefs.getDefaultBranch("");
-// var obj = {
-//   pref(pref, value) {
-//     switch (typeof value) {
-//       case 'boolean':
-//         branch.setBoolPref(pref, value)
-//         break
-//       case 'string':
-//         branch.setStringPref(pref, value)
-//         break
-//       case 'number':
-//         branch.setIntPref(pref, value)
-//         break
-//       default:
-//         Zotero.logError(`Invalid type '${typeof(value)}' for pref '${pref}'`)
-//     }
-//   },
-// }
-// Services.scriptloader.loadSubScript(`${rootURI}prefs.js`, obj);
-// }
 
 export async function startup({
   id,
@@ -54,11 +29,14 @@ export async function startup({
   });
 
   log(`Registered preference pane`);
+
   // Add DOM elements to the main Zotero pane
-  // var win = Zotero.getMainWindow();
-  // if (win && win.ZoteroPane) {
-  //   const zp = win.ZoteroPane;
-  //   const doc = win.document;
+  let win = Zotero.getMainWindow();
+  if (win && win.ZoteroPane) {
+    const zp = win.ZoteroPane;
+    const doc = win.document;
+  }
+
   // createElementNS() necessary in Zotero 6; createElement() defaults to HTML in Zotero 7
   // const HTML_NS = "http://www.w3.org/1999/xhtml";
   // const XUL_NS =
@@ -94,30 +72,18 @@ export async function startup({
 
   ReferenceNetwork.init({ id, version, rootURI });
   log(`Initialized Reference Network`);
-
-  // Zotero.ReferenceNetwork.foo();
 }
 
-export function onMainWindowLoad({ window }) {
-  ReferenceNetwork.addToWindow(window);
-}
+// export function onMainWindowLoad({ window }) {
+//   ReferenceNetwork.addToWindow(window);
+// }
 
-export function onMainWindowUnload({ window }) {
-  ReferenceNetwork.removeFromWindow(window);
-}
+// export function onMainWindowUnload({ window }) {
+//   ReferenceNetwork.removeFromWindow(window);
+// }
 
 export function shutdown() {
   log(`Reference Network: Shutdown`);
-
-  // Remove stylesheet
-  var zp = Zotero.getActiveZoteroPane();
-  if (zp) {
-    // for (const id of addedElementIDs) {
-    //   // ?. (null coalescing operator) not available in Zotero 6
-    //   const elem = zp.document.getElementById(id);
-    //   if (elem) elem.remove();
-    // }
-  }
 
   Zotero.ReferenceNetwork = undefined;
 }
