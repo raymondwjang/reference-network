@@ -16,11 +16,11 @@ type ReasonId = keyof typeof BOOTSTRAP_REASONS;
 export type Reason = (typeof BOOTSTRAP_REASONS)[ReasonId];
 
 function log(msg) {
-  Zotero.log(`Reference Network: ${msg}`);
+  Zotero.log(`Reference Network (bootstrap.ts): ${msg}`);
 }
 
 export function install() {
-  log("Reference Network: Installed");
+  log("Installed");
 }
 
 export async function startup({
@@ -29,7 +29,7 @@ export async function startup({
   resourceURI,
   rootURI = resourceURI.spec,
 }) {
-  log("Reference Network: Startup");
+  log("Startup");
   log(`ID: ${id}`);
   log(`Version: ${version}`);
   log(`Resource URI: ${resourceURI}`);

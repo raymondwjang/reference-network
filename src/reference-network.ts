@@ -1,5 +1,5 @@
-import { Shim } from "./os";
-import { is7 } from "./client";
+import { Shim } from "./environment/os";
+import { is7 } from "./environment/client";
 
 const $OS = is7 ? Shim : OS;
 
@@ -14,7 +14,7 @@ export const ReferenceNetwork = {
   addedElementIDs: [],
 
   log: (msg: string): void => {
-    Zotero.log(`Reference Network: ${msg}`);
+    Zotero.log(`Reference Network (reference-network.ts): ${msg}`);
   },
 
   init({
@@ -26,7 +26,7 @@ export const ReferenceNetwork = {
     version: string;
     rootURI: string;
   }): void {
-    Zotero.log("Loading Reference Network: starting...");
+    this.log("Loading ReferenceNetwork: starting...");
     if (this.initialized) {
       throw new Error("ReferenceNetwork is already running");
     }
@@ -37,6 +37,7 @@ export const ReferenceNetwork = {
     // Build Directory
     this.dir = $OS.Path.join(Zotero.DataDirectory.dir, "reference-network");
     $OS.File.makeDir(this.dir, { ignoreExisting: true });
+    this.log(`Directory created at ${this.dir}`);
 
     // orchestrator.add("start", {
     //   description: "zotero",
