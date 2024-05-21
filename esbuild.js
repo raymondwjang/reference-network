@@ -74,11 +74,16 @@ async function build() {
     exportGlobals: true,
     entryPoints: ["src/bootstrap.ts"],
     outdir: "build",
-    banner: { js: "var Zotero;\n" },
+    // banner: { js: "var Zotero;\n" },
   });
 
   await bundle({
-    entryPoints: ["src/reference-network.ts"],
+    entryPoints: [
+      "src/reference-network.ts",
+      "src/client.ts",
+      "src/os.ts",
+      "src/orchestrator.ts",
+    ],
     outdir: "build",
   });
 }

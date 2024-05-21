@@ -267,7 +267,8 @@
     //   "no-new-func": "off"
   },
   "ignorePatterns": [
-    // "eslintrc.json",
+    "eslintrc.json",
+    "esbuild.js",
     "webpack.config.ts",
     "util/*.ts",
     "minitests/*.ts",
