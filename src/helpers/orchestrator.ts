@@ -1,7 +1,7 @@
-import type { Reason } from "./bootstrap";
+import type { Reason } from "../bootstrap";
 
-import { Shim } from "./os";
-import { is7 } from "./client";
+import { Shim } from "../environment/os";
+import { is7 } from "../environment/client";
 
 export type Actor =
   | "start"

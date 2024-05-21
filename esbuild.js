@@ -80,9 +80,9 @@ async function build() {
   await bundle({
     entryPoints: [
       "src/reference-network.ts",
-      "src/client.ts",
-      "src/os.ts",
-      "src/orchestrator.ts",
+      "src/environment/client.ts",
+      "src/environment/os.ts",
+      "src/helpers/orchestrator.ts",
     ],
     outdir: "build",
   });
