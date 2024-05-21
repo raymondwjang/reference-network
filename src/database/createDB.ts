@@ -1,7 +1,7 @@
 Zotero.ZoteroDBTest = {
-  testDBConnection: async function () {
+  async testDBConnection() {
     try {
-      let results = await Zotero.DB.query(
+      const results = await Zotero.DB.query(
         "SELECT itemID, title FROM items LIMIT 10"
       );
       Zotero.debug(
