@@ -11,8 +11,11 @@
     "sourceMap": false,
     "downlevelIteration": true,
     "lib": ["es2017", "dom"],
-    "typeRoots": ["./node_modules/@types"]
+    "typeRoots": ["./node_modules/@types"],
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true
   },
+  // "lib": ["es6"], // TypeORM: You may also need to enable es6 in the lib section of compiler options, or install es6-shim from @types.
   "include": [
     "*.ts",
     "node_modules/zotero-types",
