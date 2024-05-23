@@ -17,7 +17,7 @@ export const ReferenceNetwork = {
     Zotero.log(`Reference Network (reference-network.ts): ${msg}`);
   },
 
-  init({
+  async init({
     id,
     version,
     rootURI,
@@ -25,7 +25,7 @@ export const ReferenceNetwork = {
     id: string;
     version: string;
     rootURI: string;
-  }): void {
+  }): Promise<void> {
     this.log("Loading ReferenceNetwork: starting...");
     if (this.initialized) {
       throw new Error("ReferenceNetwork is already running");
@@ -39,19 +39,10 @@ export const ReferenceNetwork = {
     $OS.File.makeDir(this.dir, { ignoreExisting: true });
     this.log(`Directory created at ${this.dir}`);
 
-    // orchestrator.add("start", {
-    //   description: "zotero",
-    //   startup: async (reason: Reason) => {
-    //     // https://groups.google.com/d/msg/zotero-dev/QYNGxqTSpaQ/uvGObVNlCgAJ
-    //     // this is what really takes long
-    //     await Zotero.initializationPromise;
-
-    //     this.dir = $OS.Path.join(Zotero.DataDirectory.dir, "reference-network");
-    //     await $OS.File.makeDir(this.dir, { ignoreExisting: true });
-    //     // await Preference.startup(this.dir);
-    //     // Events.startup();
-    //   },
-    // });
+    // Attach New Database
+    await Zotero.DB.queryAsync("ATTACH DATABASE ? AS referencenetwork", [
+      $OS.Path.join(Zotero.DataDirectory.dir, "reference-network.sqlite"),
+    ]);
 
     this.initialized = true;
   },

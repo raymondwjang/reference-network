@@ -51,8 +51,9 @@ export async function startup({
   Services.scriptloader.loadSubScript(`${rootURI}reference-network.js`);
   log("Loaded reference-network.js");
 
-  ReferenceNetwork.init({ id, version, rootURI });
-  log("Initialized Reference Network");
+  await ReferenceNetwork.init({ id, version, rootURI }).then(() =>
+    log("Initialized Reference Network")
+  );
 }
 
 export function shutdown() {
