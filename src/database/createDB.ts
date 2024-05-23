@@ -1,26 +1,13 @@
-Zotero.ZoteroDBTest = {
-  async testDBConnection() {
-    try {
-      const results = await Zotero.DB.query(
-        "SELECT itemID, title FROM items LIMIT 10"
-      );
-      Zotero.debug(
-        "Connected successfully. Sample items from Zotero's database:"
-      );
-      results.forEach((item) => {
-        Zotero.debug(`Item ID: ${item.itemID}, Title: ${item.title}`);
-      });
-    } catch (error) {
-      Zotero.debug("Error querying items table:", error);
-    }
-  },
-};
+import "reflect-metadata";
+import { DataSource } from "typeorm";
+import { Item } from "./entity/Items";
 
-// Running the test function when Zotero starts
-if (Zotero.initializationPromise) {
-  Zotero.initializationPromise.then(() =>
-    Zotero.ZoteroDBTest.testDBConnection()
-  );
-} else {
-  Zotero.ZoteroDBTest.testDBConnection();
-}
+export const AppDataSource = new DataSource({
+  type: "sqlite",
+  database: "database.sqlite",
+  synchronize: true,
+  logging: false,
+  entities: [Item],
+  migrations: [],
+  subscribers: [],
+});
