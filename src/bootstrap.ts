@@ -42,18 +42,18 @@ export async function startup({
   }).then(() => log("Registered preference pane"));
 
   // Add DOM elements to the main Zotero pane
-  const win = Zotero.getMainWindow();
-  if (win && win.ZoteroPane) {
-    const zp = win.ZoteroPane;
-    const doc = win.document;
-  }
+  // const win = Zotero.getMainWindow();
+  // if (win && win.ZoteroPane) {
+  //   const zp = win.ZoteroPane;
+  //   const doc = win.document;
+  // }
 
-  Services.scriptloader.loadSubScript(`${rootURI}reference-network.js`);
-  log("Loaded reference-network.js");
+  // Services.scriptloader.loadSubScript(`${rootURI}reference-network.js`);
+  // log("Loaded reference-network.js");
 
-  await ReferenceNetwork.init({ id, version, rootURI }).then(() =>
-    log("Initialized Reference Network")
-  );
+  // await ReferenceNetwork.init({ id, version, rootURI }).then(() =>
+  //   log("Initialized Reference Network")
+  // );
 }
 
 export function shutdown() {

@@ -1,5 +1,6 @@
 import { Shim } from "./environment/os";
 import { is7 } from "./environment/client";
+import { AppDataSource } from "./database/createDB";
 
 const $OS = is7 ? Shim : OS;
 
@@ -40,9 +41,8 @@ export const ReferenceNetwork = {
     this.log(`Directory created at ${this.dir}`);
 
     // Attach New Database
-    await Zotero.DB.queryAsync("ATTACH DATABASE ? AS referencenetwork", [
-      $OS.Path.join(Zotero.DataDirectory.dir, "reference-network.sqlite"),
-    ]);
+    this.db = AppDataSource;
+    this.log("Database attached");
 
     this.initialized = true;
   },
