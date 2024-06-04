@@ -7,14 +7,12 @@ import { DataSource } from "typeorm";
 
 Zotero.log("Reference Network (createDB.ts): Creating database...");
 
-export const AppDataSource = null;
-// export const AppDataSource = new DataSource({
-//   type: "sqlite",
-//   database: "database.sqlite",
-//   synchronize: true,
-//   logging: false,
-//   entities: [Graph],
-//   // entities: [Item, Author, AuthorItemLink, Graph],
-//   migrations: [],
-//   subscribers: [],
-// });
+export const AppDataSource = new DataSource({
+  type: "sqlite",
+  database: "db.sqlite",
+  synchronize: true,
+  logging: true,
+  entities: [Graph], // [Item, Author, AuthorItemLink, Graph],
+  migrations: [],
+  subscribers: [],
+});
