@@ -1,15 +1,6 @@
 import { Shim } from "./environment/os";
 import { is7 } from "./environment/client";
 // import { AppDataSource } from "./database/createDB";
-import { join } from "path";
-import ZoteroToolkit from "zotero-plugin-toolkit";
-/* Alternatively, import class you need to minify the plugin size
- * ```ts
- * import { BasicTool } from "zotero-plugin-toolkit/dist/basic";
- * import { UITool } from "zotero-plugin-toolkit/dist/tools/ui";
- */
-const ztoolkit = new ZoteroToolkit();
-ztoolkit.log("This is Zotero:", ztoolkit.getGlobal("Zotero"));
 
 const $OS = is7 ? Shim : OS;
 
