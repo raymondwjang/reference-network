@@ -1,4 +1,29 @@
+// import { DataSource } from "typeorm";
+// check is typeorm is importable
+// import { Graph } from "./database/entity/graphs";
+import { OS as $OS } from "./environment/osfile";
 import { ReferenceNetwork } from "./reference-network";
+
+// async function initializeTypeORM() {
+//   const AppDataSource = new DataSource({
+//     type: "sqlite",
+//     database: $OS.Path.join(
+//       Zotero.DataDirectory.dir,
+//       "reference-network.sqlite"
+//     ),
+//     entities: [Graph],
+//     synchronize: true,
+//   });
+
+//   try {
+//     await AppDataSource.initialize();
+//     Zotero.log("TypeORM DataSource initialized successfully.");
+//     return AppDataSource;
+//   } catch (error) {
+//     Zotero.log(`Error initializing TypeORM DataSource: ${error.message}`);
+//     throw error; // Re-throw if you want Zotero to handle it or handle it here
+//   }
+// }
 
 Zotero.log("Reference Network: Loading bootstrap");
 
@@ -29,6 +54,19 @@ export async function startup({
   resourceURI,
   rootURI = resourceURI.spec,
 }) {
+  // try {
+  //   // Initialize TypeORM DataSource
+  //   const dataSource = await initializeTypeORM();
+
+  //   // Proceed with Zotero's startup process
+  //   // Place other startup tasks here
+  //   Zotero.log("Zotero started successfully.");
+  // } catch (error) {
+  //   // Handle any errors that occur during initialization
+  //   Zotero.log(`Error during startup: ${error.message}`);
+  // }
+  // log(typeof Graph); --> This throws an error
+  // log(typeof DataSource); --> This throws an error, as well
   log("Startup");
   log(`ID: ${id}`);
   log(`Version: ${version}`);

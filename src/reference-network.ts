@@ -82,19 +82,13 @@ export const ReferenceNetwork = {
       )) === 0
     ) {
       this.log("Adding rows to Graph table...");
-      await Zotero.DB.queryAsync(`
+      for (let i = 0; i < 10; i++) {
+        await Zotero.DB.queryAsync(`
       INSERT INTO referencenetwork.graph (source, type, target, data_source)
-      VALUES ('source1', 'type1', 'target1', 'data_source1');
+      VALUES ('source${i}', 'type${i}', 'target${i}', 'data_source${i}');
     `);
-      await Zotero.DB.queryAsync(`
-      INSERT INTO referencenetwork.graph (source, type, target, data_source)
-      VALUES ('source2', 'type2', 'target2', 'data_source2');
-    `);
-      await Zotero.DB.queryAsync(`
-      INSERT INTO referencenetwork.graph (source, type, target, data_source)
-      VALUES ('source3', 'type3', 'target3', 'data_source3');
-    `);
-      this.log("Rows added to Graph table");
+        this.log("Rows added to Graph table");
+      }
     }
 
     // for (const ddl of sqlStatements) {
