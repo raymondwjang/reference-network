@@ -1,6 +1,6 @@
 export const entities = {
   authors: `
-    CREATE TABLE IF NOT EXISTS referencenetwork.author (
+    CREATE TABLE IF NOT EXISTS referencenetwork.authors (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         ORCID TEXT,
         created_at TEXT DEFAULT CURRENT_TIMESTAMP,
@@ -8,7 +8,7 @@ export const entities = {
     );
     `,
   graphs: `
-    CREATE TABLE IF NOT EXISTS referencenetwork.graph (
+    CREATE TABLE IF NOT EXISTS referencenetwork.graphs (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         source TEXT,
         type TEXT,
@@ -19,7 +19,7 @@ export const entities = {
     );
     `,
   items: `
-    CREATE TABLE IF NOT EXISTS referencenetwork.item (
+    CREATE TABLE IF NOT EXISTS referencenetwork.items (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         itemID TEXT,
         title TEXT,
@@ -28,7 +28,7 @@ export const entities = {
     );
     `,
   itemAuthors: `
-    CREATE TABLE IF NOT EXISTS referencenetwork.item_author (
+    CREATE TABLE IF NOT EXISTS referencenetwork.item_authors (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         itemID TEXT,
         authorID TEXT,
@@ -71,7 +71,7 @@ export const entities = {
     );
     `,
   libraries: `
-    CREATE TABLE IF NOT EXISTS referencenetwork.library (
+    CREATE TABLE IF NOT EXISTS referencenetwork.libraries (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         libraryID TEXT,
         created_at TEXT DEFAULT CURRENT_TIMESTAMP,
@@ -79,7 +79,7 @@ export const entities = {
     );
     `,
   tags: `
-    CREATE TABLE IF NOT EXISTS referencenetwork.tag (
+    CREATE TABLE IF NOT EXISTS referencenetwork.tags (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         tagID TEXT,
         created_at TEXT DEFAULT CURRENT_TIMESTAMP,
