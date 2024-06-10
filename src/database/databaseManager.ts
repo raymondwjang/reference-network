@@ -1,3 +1,4 @@
+import { entities } from "./entities";
 import { Shim } from "../environment/os";
 
 export class DatabaseManager {
@@ -21,33 +22,43 @@ export class DatabaseManager {
     Zotero.log(`Database attached from ${this.dbPath}`);
 
     // Check for existing tables and create if necessary
-    await this.createGraphTable();
+    await this.forceCreateTable("referencenetwork", "graph");
   }
 
-  private async createGraphTable(): Promise<void> {
-    const exists = await Zotero.DB.valueQueryAsync(
-      "SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name='graph';"
+  private async checkTableExists(
+    schemaName: string,
+    tableName: string
+  ): Promise<boolean> {
+    return await Zotero.DB.valueQueryAsync(
+      `SELECT COUNT(*) FROM ${schemaName}.sqlite_master WHERE type='table' AND name=${tableName}`
     );
+  }
 
-    if (exists) {
-      Zotero.log("Graph table exists");
-      await Zotero.DB.queryAsync("DROP TABLE referencenetwork.graph");
-      Zotero.log("Graph table dropped");
+  private async dropTable(
+    schemaName: string,
+    tableName: string
+  ): Promise<void> {
+    Zotero.log(`Dropping ${tableName} table...`);
+    await Zotero.DB.queryAsync(`DROP TABLE ${schemaName}.${tableName};`);
+  }
+
+  private async createTable(
+    schemaName: string,
+    tableName: string
+  ): Promise<void> {
+    Zotero.log(`Creating ${tableName} table...`);
+    await Zotero.DB.queryAsync(entities[tableName]);
+    Zotero.log(`${tableName} created`);
+  }
+
+  private async forceCreateTable(
+    schemaName: string,
+    tableName: string
+  ): Promise<void> {
+    if (await this.checkTableExists(schemaName, tableName)) {
+      await this.dropTable(schemaName, tableName);
     }
-
-    Zotero.log("Creating Graph table...");
-    await Zotero.DB.queryAsync(`
-            CREATE TABLE referencenetwork.graph (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                source TEXT,
-                type TEXT,
-                target TEXT,
-                data_source TEXT,
-                created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-                updated_at TEXT DEFAULT CURRENT_TIMESTAMP
-            );
-        `);
-    Zotero.log("Graph table created");
+    await this.createTable(schemaName, tableName);
   }
 
   async addGraphRow(
