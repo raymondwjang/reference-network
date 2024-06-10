@@ -1,8 +1,6 @@
-import { Shim } from "./environment/os";
-import { is7 } from "./environment/client";
-// import { AppDataSource } from "./database/createDB";
-
-const $OS = is7 ? Shim : OS;
+import { queries } from "./database/queries";
+import { DatabaseManager } from "./database/databaseManager";
+import { ApiManager } from "./database/apiManager";
 
 export const ReferenceNetwork = {
   id: null,
@@ -10,9 +8,14 @@ export const ReferenceNetwork = {
   rootURI: null,
   initialized: false,
   addedElementIDs: [],
+  dbManager: new DatabaseManager(Zotero.DataDirectory.dir),
 
   log: (msg: string): void => {
     Zotero.log(`Reference Network (reference-network.ts): ${msg}`);
+  },
+
+  error: (msg: string, e: Error): void => {
+    Zotero.logError(e);
   },
 
   async init({
@@ -32,50 +35,8 @@ export const ReferenceNetwork = {
     this.version = version;
     this.rootURI = rootURI;
 
-    // Build Directory
-    this.dir = $OS.Path.join(Zotero.DataDirectory.dir, "reference-network");
-    $OS.File.makeDir(this.dir, { ignoreExisting: true });
-    this.log(`Directory created at ${this.dir}`);
+    await this.dbManager.initializeDatabase();
 
-    // Attach New Database: This is the problem
-    // ok, so I can't even load it.
-    this.log(`Creating database...`);
-    await Zotero.DB.queryAsync("ATTACH DATABASE ? AS referencenetwork", [
-      $OS.Path.join(Zotero.DataDirectory.dir, "reference-network.sqlite"),
-    ]);
-    const tables: Record<string, boolean> = {};
-    for (const table of await Zotero.DB.columnQueryAsync(
-      `SELECT LOWER(REPLACE(name, '-', ''))
-    FROM referencenetwork.sqlite_master
-    WHERE type = 'table';`
-    )) {
-      tables[table] = true;
-    }
-
-    if (tables.graph) {
-      this.log("Graph table exists");
-      await Zotero.DB.queryAsync("DROP TABLE referencenetwork.graph");
-      this.log("Graph table dropped");
-      delete tables.graph;
-    }
-
-    // Generate a Graph Table and add a few rows
-    if (!tables.graph) {
-      this.log("Creating Graph table...");
-      await Zotero.DB.queryAsync(`
-      CREATE TABLE referencenetwork.graph (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        source TEXT,
-        type TEXT,
-        target TEXT,
-        data_source TEXT,
-        created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-        updated_at TEXT DEFAULT CURRENT_TIMESTAMP
-      );
-    `);
-      this.log("Graph table created");
-    }
-    // if graphs table is empty, add some rows
     if (
       (await Zotero.DB.valueQueryAsync(
         "SELECT COUNT(*) FROM referencenetwork.graph"
@@ -83,29 +44,34 @@ export const ReferenceNetwork = {
     ) {
       this.log("Adding rows to Graph table...");
       for (let i = 0; i < 10; i++) {
-        await Zotero.DB.queryAsync(`
-      INSERT INTO referencenetwork.graph (source, type, target, data_source)
-      VALUES ('source${i}', 'type${i}', 'target${i}', 'data_source${i}');
-    `);
-        this.log("Rows added to Graph table");
+        await this.dbManager.addGraphRow(
+          `source-${i}`,
+          `type-${i}`,
+          `target-${i}`,
+          `data_source-${i}`
+        );
+      }
+      this.log("Rows added to Graph table");
+
+      this.log("Grabbing all DOI's from Zotero...");
+      const dois = await Zotero.DB.columnQueryAsync(queries.getDOIs);
+      this.log(
+        "DOI's grabbed: " + dois.length + "\nexamples: " + dois.slice(0, 5)
+      );
+
+      const data = {};
+
+      const apiManager = new ApiManager("raymond.w.jang@gmail.com");
+
+      for (const doi of dois) {
+        // there is a better way to do it, by submitting all requests at once
+        try {
+          data[doi] = await apiManager.fetchData(doi);
+        } catch (e) {
+          this.error(`Error fetching data for DOI ${doi}`, e);
+        }
       }
     }
-
-    // for (const ddl of sqlStatements) {
-    // await connection.query(ddl);
-    // }
-
-    // this.db = new Zotero.DBConnection("referencenetwork");
-    // AppDataSource.initialize()
-    //   .then(() => {
-    //     console.log("Connected to the database!");
-
-    //     // Add additional setup or testing code here
-    //   })
-    //   .catch((error) =>
-    //     console.log("Error during Data Source initialization:", error)
-    //   );
-    // this.log("Database attached");
 
     this.initialized = true;
   },
