@@ -1,4 +1,4 @@
-export const SQLQueries = {
+export const queries = {
   getDOIs: `
           SELECT value -- iD.itemID, iDV.valueID, fieldName
           FROM itemDataValues AS iDV

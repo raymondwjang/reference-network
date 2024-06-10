@@ -1,4 +1,4 @@
-export const SQLQueries = {
+export const entities = {
   authors: `
     CREATE TABLE IF NOT EXISTS referencenetwork.author (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
