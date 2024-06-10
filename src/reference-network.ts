@@ -34,15 +34,16 @@ export const ReferenceNetwork = {
     this.id = id;
     this.version = version;
     this.rootURI = rootURI;
+    let data = [];
 
     await this.dbManager.initializeDatabase();
 
     if (
       (await Zotero.DB.valueQueryAsync(
-        "SELECT COUNT(*) FROM referencenetwork.graph"
+        "SELECT COUNT(*) FROM referencenetwork.graphs"
       )) === 0
     ) {
-      this.log("Adding rows to Graph table...");
+      this.log("Adding rows to Graphs table...");
       for (let i = 0; i < 10; i++) {
         await this.dbManager.addGraphRow(
           `source-${i}`,
@@ -59,20 +60,19 @@ export const ReferenceNetwork = {
         "DOI's grabbed: " + dois.length + "\nexamples: " + dois.slice(0, 5)
       );
 
-      const data = {};
+      const apiManager = new ApiManager(
+        "https://api.openalex.org/",
+        "raymond.w.jang@gmail.com"
+      );
 
-      const apiManager = new ApiManager("raymond.w.jang@gmail.com");
-
-      for (const doi of dois) {
-        // there is a better way to do it, by submitting all requests at once
-        try {
-          data[doi] = await apiManager.fetchData(doi);
-        } catch (e) {
-          this.error(`Error fetching data for DOI ${doi}`, e);
-        }
+      try {
+        data = await apiManager.fetchDOIs(dois, 25);
+      } catch (e) {
+        this.error(e);
       }
     }
-
+    Zotero.log(`data length is: ${Object.keys(data[0])}`);
+    Zotero.log(`${JSON.stringify(data[0].meta)}`);
     this.initialized = true;
   },
 
