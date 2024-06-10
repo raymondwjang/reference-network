@@ -22,7 +22,7 @@ export class DatabaseManager {
     Zotero.log(`Database attached from ${this.dbPath}`);
 
     // Check for existing tables and create if necessary
-    await this.forceCreateTable("referencenetwork", "graph");
+    await this.forceCreateTable("referencenetwork", "graphs");
   }
 
   private async checkTableExists(
@@ -30,7 +30,7 @@ export class DatabaseManager {
     tableName: string
   ): Promise<boolean> {
     return await Zotero.DB.valueQueryAsync(
-      `SELECT COUNT(*) FROM ${schemaName}.sqlite_master WHERE type='table' AND name=${tableName}`
+      `SELECT COUNT(*) FROM ${schemaName}.sqlite_master WHERE type='table' AND name='${tableName}'`
     );
   }
 
@@ -47,6 +47,7 @@ export class DatabaseManager {
     tableName: string
   ): Promise<void> {
     Zotero.log(`Creating ${tableName} table...`);
+    Zotero.log(entities[tableName]);
     await Zotero.DB.queryAsync(entities[tableName]);
     Zotero.log(`${tableName} created`);
   }
@@ -69,7 +70,7 @@ export class DatabaseManager {
   ): Promise<void> {
     await Zotero.DB.queryAsync(
       `
-            INSERT INTO referencenetwork.graph (source, type, target, data_source)
+            INSERT INTO referencenetwork.graphs (source, type, target, data_source)
             VALUES (?, ?, ?, ?);
         `,
       [source, type, target, dataSource]
@@ -77,12 +78,12 @@ export class DatabaseManager {
   }
 
   async getGraphRows(): Promise<any[]> {
-    return await Zotero.DB.queryAsync("SELECT * FROM referencenetwork.graph");
+    return await Zotero.DB.queryAsync("SELECT * FROM referencenetwork.graphs");
   }
 
   async getGraphRow(id: number): Promise<any> {
     return await Zotero.DB.queryAsync(
-      "SELECT * FROM referencenetwork.graph WHERE id = ?",
+      "SELECT * FROM referencenetwork.graphs WHERE id = ?",
       [id]
     );
   }
@@ -96,7 +97,7 @@ export class DatabaseManager {
   ): Promise<void> {
     await Zotero.DB.queryAsync(
       `
-            UPDATE referencenetwork.graph
+            UPDATE referencenetwork.graphs
             SET source = ?, type = ?, target = ?, data_source = ?
             WHERE id = ?;
         `,
@@ -106,12 +107,12 @@ export class DatabaseManager {
 
   async deleteGraphRow(id: number): Promise<void> {
     await Zotero.DB.queryAsync(
-      "DELETE FROM referencenetwork.graph WHERE id = ?",
+      "DELETE FROM referencenetwork.graphs WHERE id = ?",
       [id]
     );
   }
 
   async deleteGraphRows(): Promise<void> {
-    await Zotero.DB.queryAsync("DELETE FROM referencenetwork.graph");
+    await Zotero.DB.queryAsync("DELETE FROM referencenetwork.graphs");
   }
 }
