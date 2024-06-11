@@ -48,13 +48,14 @@ export async function startup({
       const doc = win.document;
     }
 
-    const scope = {};
-    Services.scriptloader.loadSubScript(
-      `${rootURI}reference-network.js`,
-      scope
-    );
+    // const scope = {};
+    // Services.scriptloader.loadSubScript(
+    //   `${rootURI}reference-network.js`,
+    //   scope
+    // );
 
-    const referenceNetwork = new scope.ReferenceNetwork();
+    // const referenceNetwork = new scope.ReferenceNetwork();
+    const referenceNetwork = new ReferenceNetwork();
     await referenceNetwork.init({ id, version, rootURI });
     log("Initialized Reference Network");
   } catch (error) {
