@@ -1,4 +1,4 @@
-// import { ReferenceNetwork } from "./reference-network";
+import { ReferenceNetwork } from "./reference-network";
 
 const BOOTSTRAP_REASONS = {
   1: "APP_STARTUP",
@@ -48,23 +48,15 @@ export async function startup({
       const doc = win.document;
     }
 
-    // 	•	Extensions and XUL Applications: Load additional scripts dynamically in response to certain events or conditions.
-    //   This is particularly useful for extensions that need to modify their behavior without reloading the entire extension or application.
-    //  •	Modular Development: Allows developers to organize code into separate files and load them as needed,
-    //   rather than loading all scripts at startup.
     const scope = {};
     Services.scriptloader.loadSubScript(
       `${rootURI}reference-network.js`,
       scope
     );
 
-    if (scope.ReferenceNetwork) {
-      const referenceNetwork = new scope.ReferenceNetwork();
-      await referenceNetwork.init({ id, version, rootURI });
-      log("Initialized Reference Network");
-    } else {
-      log("Reference Network not found");
-    }
+    const referenceNetwork = new scope.ReferenceNetwork();
+    await referenceNetwork.init({ id, version, rootURI });
+    log("Initialized Reference Network");
   } catch (error) {
     log("Error during startup: " + error.message);
   }
