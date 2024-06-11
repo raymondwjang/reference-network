@@ -1,3 +1,5 @@
+import { initUI, destroyUI } from "./ui/ui";
+
 declare const Zotero: any
 declare const Components: any
 const {
@@ -35,5 +37,13 @@ Zotero.ReferenceNetwork = new class {
     else {
       docElem.removeAttribute('data-green-instead')
     }
+  }
+
+  initUI(){
+    initUI();
+  }
+
+  destroyUI(zp){
+    destroyUI(zp);
   }
 }

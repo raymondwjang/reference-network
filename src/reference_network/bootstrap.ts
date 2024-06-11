@@ -118,48 +118,12 @@ export async function startup({ id, version, resourceURI, rootURI = resourceURI.
     setDefaultPrefs(rootURI)
   }
 
-  // Add DOM elements to the main Zotero pane
-  var win = Zotero.getMainWindow()
-  if (win && win.ZoteroPane) {
-    const zp = win.ZoteroPane
-    const doc = win.document
-    // createElementNS() necessary in Zotero 6; createElement() defaults to HTML in Zotero 7
-    const HTML_NS = 'http://www.w3.org/1999/xhtml'
-    const XUL_NS = 'http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul'
-    const link1 = doc.createElementNS(HTML_NS, 'link')
-    link1.id = stylesheetID
-    link1.type = 'text/css'
-    link1.rel = 'stylesheet'
-    link1.href = `${rootURI  }style.css`
-    doc.documentElement.appendChild(link1)
-
-    const menuitem = doc.createElementNS(XUL_NS, 'menuitem')
-    menuitem.id = menuitemID
-    menuitem.setAttribute('type', 'checkbox')
-    menuitem.setAttribute('data-l10n-id', 'make-it-green-instead')
-    menuitem.addEventListener('command', () => {
-      Zotero.ReferenceNetwork.toggleGreen(menuitem.getAttribute('checked') === 'true')
-    })
-    doc.getElementById('menu_viewPopup').appendChild(menuitem)
-
-    // Use strings from reference-network.properties (legacy properties format) in Zotero 6
-    // and from reference-network.ftl (Fluent) in Zotero 7
-    if (Zotero.platformMajorVersion < 102) {
-      const stringBundle = Services.strings.createBundle('chrome://reference-network/locale/reference-network.properties')
-      Zotero.getMainWindow().document.getElementById('make-it-green-instead')
-        .setAttribute('label', stringBundle.GetStringFromName('makeItGreenInstead.label'))
-    }
-    else {
-      const link2 = doc.createElementNS(HTML_NS, 'link')
-      link2.id = ftlID
-      link2.rel = 'localization'
-      link2.href = 'reference-network.ftl'
-      doc.documentElement.appendChild(link2)
-    }
-  }
-
   Services.scriptloader.loadSubScript(`${rootURI  }lib.js`)
   Zotero.ReferenceNetwork.foo()
+}
+
+export async function onMainWindowLoad(window) {
+  Zotero.ReferenceNetwork.initUI(window)
 }
 
 export function shutdown() {
@@ -167,13 +131,7 @@ export function shutdown() {
 
   // Remove stylesheet
   var zp = Zotero.getActiveZoteroPane()
-  if (zp) {
-    for (const id of addedElementIDs) {
-      // ?. (null coalescing operator) not available in Zotero 6
-      const elem = zp.document.getElementById(id)
-      if (elem) elem.remove()
-    }
-  }
+  Zotero.ReferenceNetwork.destroyUI(zp);
 
   Zotero.ReferenceNetwork = undefined
 }
