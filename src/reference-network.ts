@@ -2,87 +2,72 @@ import { queries } from "./database/queries";
 import { DatabaseManager } from "./database/databaseManager";
 import { ApiManager } from "./database/apiManager";
 
-export const ReferenceNetwork = {
-  id: null,
-  version: null,
-  rootURI: null,
-  initialized: false,
-  addedElementIDs: [],
-  dbManager: new DatabaseManager(Zotero.DataDirectory.dir),
+// Define an interface for initialization options
+interface InitOptions {
+  id: string;
+  version: string;
+  rootURI: string;
+}
 
-  log: (msg: string): void => {
+export class ReferenceNetwork {
+  // I guess this is the .h of the __init__ method in Python 😭
+  private id: string | null = null;
+  private version: string | null = null;
+  private rootURI: string | null = null;
+  private initialized: boolean = false;
+  private dbManager: DatabaseManager;
+  private apiManager: ApiManager;
+
+  constructor() {
+    // I guess this is the .c of the __init__ method in Python 😭
+    this.dbManager = new DatabaseManager(Zotero.DataDirectory.dir);
+    this.apiManager = new ApiManager(
+      "https://api.openalex.org/",
+      "raymond.w.jang@gmail.com"
+    );
+  }
+
+  private log(msg: string): void {
     Zotero.log(`Reference Network (reference-network.ts): ${msg}`);
-  },
+  }
 
-  error: (msg: string, e: Error): void => {
+  private error(msg: string, e: Error): void {
     Zotero.logError(e);
-  },
+  }
 
-  async init({
-    id,
-    version,
-    rootURI,
-  }: {
-    id: string;
-    version: string;
-    rootURI: string;
-  }): Promise<void> {
+  async init(options: InitOptions): Promise<void> {
     this.log("Loading ReferenceNetwork: starting...");
     if (this.initialized) {
       throw new Error("ReferenceNetwork is already running");
     }
-    this.id = id;
-    this.version = version;
-    this.rootURI = rootURI;
-    let data = [];
+    this.id = options.id;
+    this.version = options.version;
+    this.rootURI = options.rootURI;
 
     await this.dbManager.initializeDatabase();
 
-    if (
-      (await Zotero.DB.valueQueryAsync(
-        "SELECT COUNT(*) FROM referencenetwork.graphs"
-      )) === 0
-    ) {
-      this.log("Adding rows to Graphs table...");
-      for (let i = 0; i < 10; i++) {
-        await this.dbManager.addGraphRow(
-          `source-${i}`,
-          `type-${i}`,
-          `target-${i}`,
-          `data_source-${i}`
-        );
-      }
-      this.log("Rows added to Graph table");
+    this.log("Grabbing all DOI's from Zotero...");
+    const dois = await Zotero.DB.columnQueryAsync(queries.getDOIs);
+    this.log(
+      "DOI's grabbed: " + dois.length + "\nexamples: " + dois.slice(0, 5)
+    );
 
-      this.log("Grabbing all DOI's from Zotero...");
-      const dois = await Zotero.DB.columnQueryAsync(queries.getDOIs);
-      this.log(
-        "DOI's grabbed: " + dois.length + "\nexamples: " + dois.slice(0, 5)
-      );
-
-      const apiManager = new ApiManager(
-        "https://api.openalex.org/",
-        "raymond.w.jang@gmail.com"
-      );
-
-      try {
-        data = await apiManager.fetchDOIs(dois, 25);
-      } catch (e) {
-        this.error(e);
-      }
+    try {
+      const data = await this.apiManager.fetchDOIs(dois, 25);
+      this.log(`Data length is: ${Object.keys(data[0]).length}`);
+      this.log(`Data: ${JSON.stringify(data[0].meta)}`);
+    } catch (e) {
+      this.error("Failed to fetch DOIs", e);
     }
-    Zotero.log(`data length is: ${Object.keys(data[0])}`);
-    Zotero.log(`${JSON.stringify(data[0].meta)}`);
+
     this.initialized = true;
-  },
+  }
 
   async main() {
-    // `window` is the global object in overlay scope
     const { host } = new URL("https://foo.com/path");
     this.log(`Host is ${host}`);
-
     this.log(
-      `reference-network.ts: main() called with ${this.id}, ${this.version}, ${this.rootURI}`
+      `Main called with ID: ${this.id}, Version: ${this.version}, Root URI: ${this.rootURI}`
     );
-  },
-};
+  }
+}
