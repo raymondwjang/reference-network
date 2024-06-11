@@ -62,12 +62,12 @@ export class ReferenceNetwork {
 
     this.initialized = true;
   }
+}
 
-  async main() {
-    const { host } = new URL("https://foo.com/path");
-    this.log(`Host is ${host}`);
-    this.log(
-      `Main called with ID: ${this.id}, Version: ${this.version}, Root URI: ${this.rootURI}`
-    );
-  }
+function main() {
+  const { host } = new URL("https://foo.com/path");
+  this.log(`Host is ${host}`);
+  this.log(
+    `Main called with ID: ${this.id}, Version: ${this.version}, Root URI: ${this.rootURI}`
+  );
 }
