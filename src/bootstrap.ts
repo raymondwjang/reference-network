@@ -1,6 +1,4 @@
-import { ReferenceNetwork } from "./reference-network";
-
-Zotero.log("Reference Network: Loading bootstrap");
+// import { ReferenceNetwork } from "./reference-network";
 
 const BOOTSTRAP_REASONS = {
   1: "APP_STARTUP",
@@ -15,11 +13,11 @@ const BOOTSTRAP_REASONS = {
 type ReasonId = keyof typeof BOOTSTRAP_REASONS;
 export type Reason = (typeof BOOTSTRAP_REASONS)[ReasonId];
 
-function log(msg) {
+function log(msg: string): void {
   Zotero.log(`Reference Network (bootstrap.ts): ${msg}`);
 }
 
-export function install() {
+export function install(): void {
   log("Installed");
 }
 
@@ -35,26 +33,41 @@ export async function startup({
   log(`Resource URI: ${resourceURI}`);
   log(`Root URI: ${rootURI}`);
 
-  await Zotero.PreferencePanes.register({
-    pluginID: "reference-network@example.com",
-    src: `${rootURI}preferences.xhtml`,
-    scripts: [`${rootURI}prefs.js`],
-  }).then(() => log("Registered preference pane"));
+  try {
+    await Zotero.PreferencePanes.register({
+      pluginID: "reference-network@example.com",
+      src: `${rootURI}preferences.xhtml`,
+      scripts: [`${rootURI}prefs.js`],
+    });
+    log("Registered preference pane");
 
-  // Add DOM elements to the main Zotero pane
-  const win = Zotero.getMainWindow();
-  if (win && win.ZoteroPane) {
-    const zp = win.ZoteroPane;
-    const doc = win.document;
+    // Add DOM elements to the main Zotero pane
+    const win = Zotero.getMainWindow();
+    if (win && win.ZoteroPane) {
+      const zp = win.ZoteroPane;
+      const doc = win.document;
+    }
+
+    // 	•	Extensions and XUL Applications: Load additional scripts dynamically in response to certain events or conditions.
+    //   This is particularly useful for extensions that need to modify their behavior without reloading the entire extension or application.
+    //  •	Modular Development: Allows developers to organize code into separate files and load them as needed,
+    //   rather than loading all scripts at startup.
+    const scope = {};
+    Services.scriptloader.loadSubScript(
+      `${rootURI}reference-network.js`,
+      scope
+    );
+
+    if (scope.ReferenceNetwork) {
+      const referenceNetwork = new scope.ReferenceNetwork();
+      await referenceNetwork.init({ id, version, rootURI });
+      log("Initialized Reference Network");
+    } else {
+      log("Reference Network not found");
+    }
+  } catch (error) {
+    log("Error during startup: " + error.message);
   }
-
-  Services.scriptloader.loadSubScript(`${rootURI}reference-network.js`);
-  log("Loaded reference-network.js");
-
-  // This line is the problem
-  await ReferenceNetwork.init({ id, version, rootURI }).then(() =>
-    log("Initialized Reference Network")
-  );
 }
 
 export function shutdown() {
