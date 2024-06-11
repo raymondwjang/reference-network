@@ -6,7 +6,6 @@ The reference network (temporary name) is a Zotero plugin that will:
 2. interactively recommend your next literature based on your preferences and selections.
 
 Currently being ported into TypeScript from Python.
-```
 
 ## License
 
