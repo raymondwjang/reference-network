@@ -1,10 +1,14 @@
 export class ApiManager {
   private apiUrl: string = "https://api.openalex.org/";
   private userAgent: string;
+  private headers: Record<string, string>;
 
   constructor(apiUrl: string, userAgent: string) {
     this.apiUrl = apiUrl;
     this.userAgent = userAgent;
+    this.headers = {
+      "User-Agent": this.userAgent,
+    };
   }
 
   async fetchDOI(doi: string): Promise<any> {
@@ -12,9 +16,7 @@ export class ApiManager {
       this.apiUrl + `works/https://doi.org/${encodeURIComponent(doi)}`;
     try {
       const response = await Zotero.HTTP.request("GET", url, {
-        headers: {
-          "User-Agent": this.userAgent,
-        },
+        headers: this.headers,
       });
       const data = JSON.parse(response.responseText);
       return data;
@@ -25,39 +27,25 @@ export class ApiManager {
   }
 
   async fetchDOIs(dois: string[], batchSize: number = 50): Promise<any[]> {
-    let url: string = "";
-    const data = []; // Array to collect data from all batches
+    const data = [];
+    let index = 0;
 
-    while (dois.length > batchSize) {
-      url =
-        this.apiUrl + `works?filter=doi:${dois.slice(0, batchSize).join("|")}`;
+    while (index < dois.length) {
+      const batchDOIs = dois.slice(index, index + batchSize);
+      const url = this.apiUrl + `works?filter=doi:${batchDOIs.join("|")}`;
+
       try {
         const response = await Zotero.HTTP.request("GET", url, {
-          headers: {
-            "User-Agent": this.userAgent,
-          },
+          headers: this.headers,
         });
         const dataBatch = JSON.parse(response.responseText);
         data.push(dataBatch); // Store the batch data
       } catch (error) {
         Zotero.logError(error);
-        throw error;
+        throw error; // Re-throw the error after logging it
       }
-      dois = dois.slice(batchSize);
-    }
 
-    url = this.apiUrl + `works?filter=doi:${dois.join("|")}`;
-    try {
-      const response = await Zotero.HTTP.request("GET", url, {
-        headers: {
-          "User-Agent": this.userAgent,
-        },
-      });
-      const dataBatch = JSON.parse(response.responseText);
-      data.push(dataBatch); // Store the last batch data
-    } catch (error) {
-      Zotero.logError(error);
-      throw error;
+      index += batchSize; // Move the index forward by batchSize
     }
 
     return data;
