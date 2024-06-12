@@ -62,9 +62,9 @@ export class ApiManager {
     return data;
   }
 
-  public async fetchCitedBy(id: string, url?: string): Promise<any> {
+  public async fetchCitedBy(openAlexID: string, url?: string): Promise<any> {
     if (!url) {
-      url = `https://api.openalex.org/works?filter=cites:${id}`;
+      url = `https://api.openalex.org/works?filter=cites:${openAlexID}`;
     }
     try {
       const response = await Zotero.HTTP.request("GET", url, {
