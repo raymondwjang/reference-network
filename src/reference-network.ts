@@ -1,6 +1,6 @@
-import { queries } from "./database/queries";
 import { DatabaseManager } from "./database/databaseManager";
 import { ApiManager } from "./database/apiManager";
+import { queries } from "./database/queries";
 
 // Define an interface for initialization options
 interface InitOptions {
@@ -28,7 +28,7 @@ export class ReferenceNetwork {
   }
 
   private log(msg: string): void {
-    Zotero.log(`Reference Network (reference-network.ts): ${msg}`);
+    Zotero.log(msg, "warning", "Reference Network: reference-network.ts");
   }
 
   private error(msg: string, e: Error): void {
@@ -52,22 +52,58 @@ export class ReferenceNetwork {
       "DOI's grabbed: " + dois.length + "\nexamples: " + dois.slice(0, 5)
     );
 
+    const referencedWorks: Record<string, string[]> = {};
+    const relatedWorks: Record<string, string[]> = {};
+    const citedByURL: Record<string, string> = {};
+
     try {
-      const data = await this.apiManager.fetchDOIs(dois, 25);
-      this.log(`Data length is: ${Object.keys(data[0]).length}`);
-      this.log(`Data: ${JSON.stringify(data[0].meta)}`);
+      // test mode
+      const testDOIs = dois.slice(0, 5);
+      const fetchedData = await this.apiManager.fetchReferences(testDOIs, 25);
+      for (const batch of fetchedData) {
+        batch.results.forEach((result: any) => {
+          const id = this.getLastSlashComponent(result.id);
+          referencedWorks[id] = result.referenced_works.map((url: string) =>
+            this.getLastSlashComponent(url)
+          );
+          relatedWorks[id] = result.related_works.map((url: string) =>
+            this.getLastSlashComponent(url)
+          );
+          citedByURL[id] = result.cited_by_api_url;
+        });
+      }
+      this.log(`References: ${JSON.stringify(referencedWorks)}`);
     } catch (e) {
       this.error("Failed to fetch DOIs", e);
     }
 
+    // This should only run when the user calls the "fetchCitedBy" method.
+    // Otherwise, it will make too many requests to OpenAlex.
+    // const citedBy: Record<string, string[]> = {};
+    // try {
+    //   for (const [id, url] of Object.entries(citedByURL)) {
+    //     const response = await this.apiManager.fetchCitedBy(id, url);
+    //     citedBy[id] = response.results.map((result: { id: string }) =>
+    //       this.getLastSlashComponent(result.id)
+    //     );
+    //   }
+    //   this.log(`Cited by: ${JSON.stringify(citedBy)}`);
+    // } catch (e) {
+    //   this.error("Failed to fetch cited by", e);
+    // }
+
     this.initialized = true;
+  }
+
+  private getLastSlashComponent(url: string): string {
+    return url.substring(url.lastIndexOf("/") + 1);
   }
 }
 
 function main() {
   const { host } = new URL("https://foo.com/path");
-  this.log(`Host is ${host}`);
-  this.log(
+  Zotero.log(`Host is ${host}`);
+  Zotero.log(
     `Main called with ID: ${this.id}, Version: ${this.version}, Root URI: ${this.rootURI}`
   );
 }

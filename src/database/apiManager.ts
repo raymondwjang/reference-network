@@ -11,7 +11,15 @@ export class ApiManager {
     };
   }
 
-  async fetchDOI(doi: string): Promise<any> {
+  private log(msg: string): void {
+    Zotero.log(msg, "warning", "Reference Network: apiManager.ts");
+  }
+
+  private logError(error: Error): void {
+    Zotero.logError(error);
+  }
+
+  async fetchReference(doi: string): Promise<any> {
     const url =
       this.apiUrl + `works/https://doi.org/${encodeURIComponent(doi)}`;
     try {
@@ -26,14 +34,17 @@ export class ApiManager {
     }
   }
 
-  async fetchDOIs(dois: string[], batchSize: number = 50): Promise<any[]> {
+  async fetchReferences(
+    dois: string[],
+    batchSize: number = 25
+  ): Promise<any[]> {
     const data = [];
     let index = 0;
 
     while (index < dois.length) {
       const batchDOIs = dois.slice(index, index + batchSize);
       const url = this.apiUrl + `works?filter=doi:${batchDOIs.join("|")}`;
-
+      this.log(`Fetching batch of DOIs: ${url}`);
       try {
         const response = await Zotero.HTTP.request("GET", url, {
           headers: this.headers,
@@ -41,7 +52,7 @@ export class ApiManager {
         const dataBatch = JSON.parse(response.responseText);
         data.push(dataBatch); // Store the batch data
       } catch (error) {
-        Zotero.logError(error);
+        this.logError(error);
         throw error; // Re-throw the error after logging it
       }
 
@@ -49,5 +60,21 @@ export class ApiManager {
     }
 
     return data;
+  }
+
+  public async fetchCitedBy(id: string, url?: string): Promise<any> {
+    if (!url) {
+      url = `https://api.openalex.org/works?filter=cites:${id}`;
+    }
+    try {
+      const response = await Zotero.HTTP.request("GET", url, {
+        headers: this.headers,
+      });
+      const data = JSON.parse(response.responseText);
+      return data;
+    } catch (error) {
+      Zotero.logError(error);
+      throw error; // Re-throw to handle it in the calling function
+    }
   }
 }
