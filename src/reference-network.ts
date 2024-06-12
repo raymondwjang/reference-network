@@ -44,6 +44,8 @@ export class ReferenceNetwork {
     this.version = options.version;
     this.rootURI = options.rootURI;
 
+    // from here, it must be initiated by a user action
+
     await this.dbManager.initializeDatabase();
 
     this.log("Grabbing all DOI's from Zotero...");
@@ -98,12 +100,4 @@ export class ReferenceNetwork {
   private getLastSlashComponent(url: string): string {
     return url.substring(url.lastIndexOf("/") + 1);
   }
-}
-
-function main() {
-  const { host } = new URL("https://foo.com/path");
-  Zotero.log(`Host is ${host}`);
-  Zotero.log(
-    `Main called with ID: ${this.id}, Version: ${this.version}, Root URI: ${this.rootURI}`
-  );
 }
