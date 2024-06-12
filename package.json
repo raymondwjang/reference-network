@@ -25,6 +25,7 @@
   },
   "homepage": "https://github.com/RaymondWJang/reference-network",
   "dependencies": {
+    "dexie": "^4.0.7",
     "esbuild": "^0.18.1",
     "eslint": "^8.42.0",
     "eslint-plugin-import": "^2.27.5",
