@@ -14,7 +14,7 @@ type ReasonId = keyof typeof BOOTSTRAP_REASONS;
 export type Reason = (typeof BOOTSTRAP_REASONS)[ReasonId];
 
 function log(msg: string): void {
-  Zotero.log(`Reference Network (bootstrap.ts): ${msg}`);
+  Zotero.log(msg, "warning", "Reference Network: bootstrap.ts");
 }
 
 export function install(): void {

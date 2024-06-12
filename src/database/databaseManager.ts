@@ -10,16 +10,20 @@ export class DatabaseManager {
     this.dbPath = Shim.Path.join(this.dir, "reference-network.sqlite");
   }
 
+  private log(msg: string): void {
+    Zotero.log(msg, "warning", "Reference Network: databaseManager.ts");
+  }
+
   async initializeDatabase(): Promise<void> {
     // Ensure directory exists
     Shim.File.makeDir(this.dir, { ignoreExisting: true });
-    Zotero.log(`Directory created at ${this.dir}`);
+    this.log(`Directory created at ${this.dir}`);
 
     // Attach database
     await Zotero.DB.queryAsync("ATTACH DATABASE ? AS referencenetwork", [
       this.dbPath,
     ]);
-    Zotero.log(`Database attached from ${this.dbPath}`);
+    this.log(`Database attached from ${this.dbPath}`);
 
     // Check for existing tables and create if necessary
     await this.forceCreateTable("referencenetwork", "graphs");
@@ -38,7 +42,7 @@ export class DatabaseManager {
     schemaName: string,
     tableName: string
   ): Promise<void> {
-    Zotero.log(`Dropping ${tableName} table...`);
+    this.log(`Dropping ${tableName} table...`);
     await Zotero.DB.queryAsync(`DROP TABLE ${schemaName}.${tableName};`);
   }
 
@@ -46,10 +50,9 @@ export class DatabaseManager {
     schemaName: string,
     tableName: string
   ): Promise<void> {
-    Zotero.log(`Creating ${tableName} table...`);
-    Zotero.log(entities[tableName]);
+    this.log(`Creating ${tableName} table...`);
     await Zotero.DB.queryAsync(entities[tableName]);
-    Zotero.log(`${tableName} created`);
+    this.log(`${tableName} created`);
   }
 
   private async forceCreateTable(
