@@ -1,4 +1,4 @@
-import { SQL_CREATE_TABLES } from "./entities";
+import { DATABASE_NAMES, TABLE_NAMES, DDL_QUERIES } from "./entities";
 import { Shim } from "../environment/os";
 
 export class DatabaseManager {
@@ -20,48 +20,63 @@ export class DatabaseManager {
     this.log(`Directory created at ${this.dir}`);
 
     // Attach database
-    await Zotero.DB.queryAsync("ATTACH DATABASE ? AS reference_network", [
-      this.dbPath,
-    ]);
+    await Zotero.DB.queryAsync(
+      `ATTACH DATABASE ? AS ${DATABASE_NAMES.REFERENCE_NETWORK}`,
+      [this.dbPath]
+    );
     this.log(`Database attached from ${this.dbPath}`);
 
     // Check for existing tables and create if necessary
   }
 
+  private checkDDLExists(databaseName: string, tableName: string) {
+    // make sure databaseName and tablename are in databasenames and tablenames
+    if (!Object.values(DATABASE_NAMES).includes(databaseName)) {
+      throw new Error(`Invalid schema name: ${databaseName}`);
+    }
+    if (!Object.values(TABLE_NAMES).includes(tableName)) {
+      throw new Error(`Invalid table name: ${tableName}`);
+    }
+  }
+
   private async checkTableExists(
-    schemaName: string,
+    databaseName: string,
     tableName: string
   ): Promise<boolean> {
+    this.checkDDLExists(databaseName, tableName);
     return await Zotero.DB.valueQueryAsync(
-      `SELECT COUNT(*) FROM ${schemaName}.sqlite_master WHERE type='table' AND name='${tableName}'`
+      `SELECT COUNT(*) FROM ${databaseName}.sqlite_master WHERE type='table' AND name='${tableName}'`
     );
   }
 
   private async dropTable(
-    schemaName: string,
+    databaseName: string,
     tableName: string
   ): Promise<void> {
+    this.checkDDLExists(databaseName, tableName);
     this.log(`Dropping ${tableName} table...`);
-    await Zotero.DB.queryAsync(`DROP TABLE ${schemaName}.${tableName};`);
+    await Zotero.DB.queryAsync(`DROP TABLE ${databaseName}.${tableName};`);
   }
 
   private async createTable(
-    schemaName: string,
+    databaseName: string,
     tableName: string
   ): Promise<void> {
+    this.checkDDLExists(databaseName, tableName);
     this.log(`Creating ${tableName} table...`);
-    await Zotero.DB.queryAsync(entities[tableName]);
+    await Zotero.DB.queryAsync(DDL_QUERIES[tableName]);
     this.log(`${tableName} created`);
   }
 
-  private async forceCreateTable(
-    schemaName: string,
+  private async recreateTable(
+    databaseName: string,
     tableName: string
   ): Promise<void> {
-    if (await this.checkTableExists(schemaName, tableName)) {
-      await this.dropTable(schemaName, tableName);
+    this.checkDDLExists(databaseName, tableName);
+    if (await this.checkTableExists(databaseName, tableName)) {
+      await this.dropTable(databaseName, tableName);
     }
-    await this.createTable(schemaName, tableName);
+    await this.createTable(databaseName, tableName);
   }
 
   async addGraphRow(
@@ -76,17 +91,6 @@ export class DatabaseManager {
             VALUES (?, ?, ?, ?);
         `,
       [source, type, target, dataSource]
-    );
-  }
-
-  async getGraphRows(): Promise<any[]> {
-    return await Zotero.DB.queryAsync("SELECT * FROM referencenetwork.graphs");
-  }
-
-  async getGraphRow(id: number): Promise<any> {
-    return await Zotero.DB.queryAsync(
-      "SELECT * FROM referencenetwork.graphs WHERE id = ?",
-      [id]
     );
   }
 

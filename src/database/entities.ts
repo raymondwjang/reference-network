@@ -1,89 +1,63 @@
-export const entities = {
-  authors: `
-    CREATE TABLE IF NOT EXISTS referencenetwork.authors (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        ORCID TEXT,
-        created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-        updated_at TEXT DEFAULT CURRENT_TIMESTAMP
+export const DATABASE_NAMES = {
+  REFERENCE_NETWORK: "reference_network",
+};
+
+export const TABLE_NAMES = {
+  GRAPHS: `graphs`,
+  ITEMS: `items`,
+  REFERENCED_WORKS: `referenced_works`,
+  RELATED_WORKS: `related_works`,
+  CITED_BY: `cited_by`,
+};
+
+export const DDL_QUERIES = {
+  [TABLE_NAMES.GRAPHS]: `
+    CREATE TABLE IF NOT EXISTS ${DATABASE_NAMES.REFERENCE_NETWORK}.${TABLE_NAMES.GRAPHS} (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      source TEXT,
+      type TEXT,
+      target TEXT,
+      data_source TEXT,
+      created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+      updated_at TEXT DEFAULT CURRENT_TIMESTAMP
     );
-    `,
-  graphs: `
-    CREATE TABLE IF NOT EXISTS referencenetwork.graphs (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        source TEXT,
-        type TEXT,
-        target TEXT,
-        data_source TEXT,
-        created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-        updated_at TEXT DEFAULT CURRENT_TIMESTAMP
+  `,
+  [TABLE_NAMES.ITEMS]: `
+    CREATE TABLE IF NOT EXISTS ${DATABASE_NAMES.REFERENCE_NETWORK}.${TABLE_NAMES.ITEMS} (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      zotero_item_id TEXT,
+      openalex_id TEXT,
+      doi TEXT,
+      created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+      updated_at TEXT DEFAULT CURRENT_TIMESTAMP
     );
-    `,
-  items: `
-    CREATE TABLE IF NOT EXISTS referencenetwork.items (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        itemID TEXT,
-        title TEXT,
-        created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-        updated_at TEXT DEFAULT CURRENT_TIMESTAMP
+  `,
+  [TABLE_NAMES.REFERENCED_WORKS]: `
+    CREATE TABLE IF NOT EXISTS ${DATABASE_NAMES.REFERENCE_NETWORK}.${TABLE_NAMES.REFERENCED_WORKS} (
+      id TEXT PRIMARY KEY,
+      item_id TEXT,
+      cites TEXT,
+      created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+      updated_at TEXT DEFAULT CURRENT_TIMESTAMP
     );
-    `,
-  itemAuthors: `
-    CREATE TABLE IF NOT EXISTS referencenetwork.item_authors (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        itemID TEXT,
-        authorID TEXT,
-        created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-        updated_at TEXT DEFAULT CURRENT_TIMESTAMP
+  `,
+  [TABLE_NAMES.RELATED_WORKS]: `
+    CREATE TABLE IF NOT EXISTS ${DATABASE_NAMES.REFERENCE_NETWORK}.${TABLE_NAMES.RELATED_WORKS} (
+      id TEXT PRIMARY KEY,
+      item_id TEXT,
+      is_related_to TEXT,
+      created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+      updated_at TEXT DEFAULT CURRENT_TIMESTAMP
     );
-    `,
-  itemData: `
-    CREATE TABLE IF NOT EXISTS referencenetwork.item_data (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        itemID TEXT,
-        fieldID TEXT,
-        valueID TEXT,
-        created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-        updated_at TEXT DEFAULT CURRENT_TIMESTAMP
+  `,
+  [TABLE_NAMES.CITED_BY]: `
+    CREATE TABLE IF NOT EXISTS ${DATABASE_NAMES.REFERENCE_NETWORK}.${TABLE_NAMES.CITED_BY} (
+      id TEXT PRIMARY KEY,
+      item_id TEXT,
+      cited_by TEXT,
+      citer_in_library BOOLEAN,
+      created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+      updated_at TEXT DEFAULT CURRENT_TIMESTAMP
     );
-    `,
-  itemDataValues: `
-    CREATE TABLE IF NOT EXISTS referencenetwork.item_data_values (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        value TEXT,
-        created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-        updated_at TEXT DEFAULT CURRENT_TIMESTAMP
-    );
-    `,
-  itemFields: `
-    CREATE TABLE IF NOT EXISTS referencenetwork.item_fields (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        fieldName TEXT,
-        created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-        updated_at TEXT DEFAULT CURRENT_TIMESTAMP
-    );
-    `,
-  itemTypes: `
-    CREATE TABLE IF NOT EXISTS referencenetwork.item_types (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        typeName TEXT,
-        created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-        updated_at TEXT DEFAULT CURRENT_TIMESTAMP
-    );
-    `,
-  libraries: `
-    CREATE TABLE IF NOT EXISTS referencenetwork.libraries (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        libraryID TEXT,
-        created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-        updated_at TEXT DEFAULT CURRENT_TIMESTAMP
-    );
-    `,
-  tags: `
-    CREATE TABLE IF NOT EXISTS referencenetwork.tags (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        tagID TEXT,
-        created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-        updated_at TEXT DEFAULT CURRENT_TIMESTAMP
-    );
-    `,
+  `,
 };
