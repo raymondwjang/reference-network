@@ -1,4 +1,3 @@
-import Dexie from "dexie";
 import { DATABASE_NAMES, TABLE_NAMES, DDL_QUERIES } from "./entities";
 import { Shim } from "../environment/os";
 
@@ -27,24 +26,25 @@ export class DatabaseManager {
     );
     this.log(`Database attached from ${this.dbPath}`);
 
-    // Create a new instance of Dexie
-    const db = new Dexie("MyDatabase");
-
-    // Define a schema for the database
-    db.version(1).stores({
-      friends: "++id, name, age", // `friends` is the name of the table
-    });
-
     // Check for existing tables and create if necessary
+    for (const tableName of Object.values(TABLE_NAMES)) {
+      await this.createTable(DATABASE_NAMES.REFERENCE_NETWORK, tableName);
+    }
   }
 
   private checkDDLExists(databaseName: string, tableName: string) {
     // make sure databaseName and tablename are in databasenames and tablenames
     if (!Object.values(DATABASE_NAMES).includes(databaseName)) {
-      throw new Error(`Invalid schema name: ${databaseName}`);
+      throw new Error(
+        `database name must be one of ${Object.values(
+          DATABASE_NAMES
+        )}: ${databaseName}`
+      );
     }
     if (!Object.values(TABLE_NAMES).includes(tableName)) {
-      throw new Error(`Invalid table name: ${tableName}`);
+      throw new Error(
+        `table name must be one of ${Object.values(TABLE_NAMES)}: ${tableName}`
+      );
     }
   }
 
@@ -72,62 +72,25 @@ export class DatabaseManager {
     tableName: string
   ): Promise<void> {
     this.checkDDLExists(databaseName, tableName);
+    if (await this.checkTableExists(databaseName, tableName)) {
+      this.log(`${tableName} table already exists`);
+      return;
+    }
+
     this.log(`Creating ${tableName} table...`);
     await Zotero.DB.queryAsync(DDL_QUERIES[tableName]);
     this.log(`${tableName} created`);
   }
 
-  private async recreateTable(
+  private async purgeTable(
     databaseName: string,
     tableName: string
   ): Promise<void> {
     this.checkDDLExists(databaseName, tableName);
-    if (await this.checkTableExists(databaseName, tableName)) {
-      await this.dropTable(databaseName, tableName);
+    if (!(await this.checkTableExists(databaseName, tableName))) {
+      throw new Error(`${tableName} table does not exist`);
     }
+    await this.dropTable(databaseName, tableName);
     await this.createTable(databaseName, tableName);
-  }
-
-  async addGraphRow(
-    source: string,
-    type: string,
-    target: string,
-    dataSource: string
-  ): Promise<void> {
-    await Zotero.DB.queryAsync(
-      `
-            INSERT INTO referencenetwork.graphs (source, type, target, data_source)
-            VALUES (?, ?, ?, ?);
-        `,
-      [source, type, target, dataSource]
-    );
-  }
-
-  async updateGraphRow(
-    id: number,
-    source: string,
-    type: string,
-    target: string,
-    dataSource: string
-  ): Promise<void> {
-    await Zotero.DB.queryAsync(
-      `
-            UPDATE referencenetwork.graphs
-            SET source = ?, type = ?, target = ?, data_source = ?
-            WHERE id = ?;
-        `,
-      [source, type, target, dataSource, id]
-    );
-  }
-
-  async deleteGraphRow(id: number): Promise<void> {
-    await Zotero.DB.queryAsync(
-      "DELETE FROM referencenetwork.graphs WHERE id = ?",
-      [id]
-    );
-  }
-
-  async deleteGraphRows(): Promise<void> {
-    await Zotero.DB.queryAsync("DELETE FROM referencenetwork.graphs");
   }
 }
