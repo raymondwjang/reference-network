@@ -77,15 +77,15 @@ async function build() {
     // banner: { js: "var Zotero;\n" },
   });
 
-  await bundle({
-    entryPoints: [
-      "src/reference-network.ts",
-      "src/environment/client.ts",
-      "src/environment/os.ts",
-      // "src/helpers/orchestrator.ts",
-    ],
-    outdir: "build",
-  });
+  // await bundle({
+  //   entryPoints: [
+  //     "src/reference-network.ts",
+  //     "src/environment/client.ts",
+  //     "src/environment/os.ts",
+  //     // "src/helpers/orchestrator.ts",
+  //   ],
+  //   outdir: "build",
+  // });
 }
 
 build().catch((err) => {
