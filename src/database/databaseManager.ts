@@ -1,3 +1,4 @@
+import Dexie from "dexie";
 import { DATABASE_NAMES, TABLE_NAMES, DDL_QUERIES } from "./entities";
 import { Shim } from "../environment/os";
 
@@ -25,6 +26,14 @@ export class DatabaseManager {
       [this.dbPath]
     );
     this.log(`Database attached from ${this.dbPath}`);
+
+    // Create a new instance of Dexie
+    const db = new Dexie("MyDatabase");
+
+    // Define a schema for the database
+    db.version(1).stores({
+      friends: "++id, name, age", // `friends` is the name of the table
+    });
 
     // Check for existing tables and create if necessary
   }
