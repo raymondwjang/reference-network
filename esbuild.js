@@ -16,6 +16,11 @@ function replaceExtToJs(src) {
   return src.replace(/[.]ts$/, ".js");
 }
 
+async function copyFile(source, destination) {
+  await fs.promises.mkdir(path.dirname(destination), { recursive: true });
+  await fs.promises.copyFile(source, destination);
+}
+
 // Bundles the files with the provided configuration
 async function bundle(config) {
   // Default configuration enhanced with custom settings
@@ -105,6 +110,8 @@ async function build() {
     entryPoints: ["src/prefs/prefs.ts"],
     outdir: "build",
   });
+
+  await copyFile("src/prefs/prefs.xhtml", "build/prefs.xhtml");
 }
 
 // Run build and handle any errors
