@@ -1,4 +1,4 @@
-import { entities } from "./entities";
+import { SQL_CREATE_TABLES } from "./entities";
 import { Shim } from "../environment/os";
 
 export class DatabaseManager {
@@ -20,13 +20,12 @@ export class DatabaseManager {
     this.log(`Directory created at ${this.dir}`);
 
     // Attach database
-    await Zotero.DB.queryAsync("ATTACH DATABASE ? AS referencenetwork", [
+    await Zotero.DB.queryAsync("ATTACH DATABASE ? AS reference_network", [
       this.dbPath,
     ]);
     this.log(`Database attached from ${this.dbPath}`);
 
     // Check for existing tables and create if necessary
-    await this.forceCreateTable("referencenetwork", "graphs");
   }
 
   private async checkTableExists(
