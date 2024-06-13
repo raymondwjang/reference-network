@@ -1,29 +1,29 @@
 {
-  "name": "reference-network",
-  "id": "reference-network@example.com",
+  "name": "weaver",
+  "id": "weaver@example.com",
   "version": "0.0.1",
-  "description": "Reference Network",
+  "description": "Weaver",
   "scripts": {
     "lint": "eslint . --ext .ts --cache --cache-location .eslintcache/",
     "prebuild": "npm run lint",
     "build": "tsc --noEmit && node esbuild.js",
     "start": "tsc --noEmit && node --watch-path=./src esbuild.js",
-    "postbuild": "zotero-plugin-zipup build reference-network",
+    "postbuild": "zotero-plugin-zipup build weaver",
     "release": "zotero-plugin-release",
     "postversion": "git push --follow-tags"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/RaymondWJang/reference-network.git"
+    "url": "https://github.com/RaymondWJang/weaver.git"
   },
   "author": {
     "name": "Raymond W. Chang",
     "email": "raymond.w.jang@gmail.com"
   },
   "bugs": {
-    "url": "https://github.com/RaymondWJang/reference-network/issues"
+    "url": "https://github.com/RaymondWJang/weaver/issues"
   },
-  "homepage": "https://github.com/RaymondWJang/reference-network",
+  "homepage": "https://github.com/RaymondWJang/weaver",
   "dependencies": {
     "dexie": "^4.0.7",
     "esbuild": "^0.18.1",
@@ -42,13 +42,12 @@
     "typeorm": "^0.3.20",
     "typescript": "^5.1.3",
     "zotero-plugin": "^1.4.22",
-    "zotero-plugin-toolkit": "^2.3.32",
     "zotero-types": "^1.0.15"
   },
   "xpi": {
-    "name": "Reference Network for Zotero",
-    "updateLink": "https://github.com/RaymondWJang/reference-network/releases/download/v{version}/reference-network-{version}.xpi",
-    "releaseURL": "https://github.com/RaymondWJang/reference-network/releases/download/release/",
+    "name": "Weaver",
+    "updateLink": "https://github.com/RaymondWJang/weaver/releases/download/v{version}/weaver-{version}.xpi",
+    "releaseURL": "https://github.com/RaymondWJang/weaver/releases/download/release/",
     "bootstrapped": true
   },
   "devDependencies": {

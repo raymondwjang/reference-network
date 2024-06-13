@@ -1,4 +1,4 @@
-import { ReferenceNetwork } from "./reference-network";
+import { Weaver } from "./weaver";
 
 const BOOTSTRAP_REASONS = {
   1: "APP_STARTUP",
@@ -14,7 +14,7 @@ type ReasonId = keyof typeof BOOTSTRAP_REASONS;
 export type Reason = (typeof BOOTSTRAP_REASONS)[ReasonId];
 
 function log(msg: string): void {
-  Zotero.log(msg, "warning", "Reference Network: bootstrap.ts");
+  Zotero.log(msg, "warning", "Weaver: bootstrap.ts");
 }
 
 export function install(): void {
@@ -27,6 +27,7 @@ export async function startup({
   resourceURI,
   rootURI = resourceURI.spec,
 }) {
+  await Zotero.initializationPromise;
   log("Startup");
   log(`ID: ${id}`);
   log(`Version: ${version}`);
@@ -35,33 +36,29 @@ export async function startup({
 
   try {
     await Zotero.PreferencePanes.register({
-      pluginID: "reference-network@example.com",
-      src: `${rootURI}preferences.xhtml`,
+      // Generates a pane in Preference
+      pluginID: "weaver@example.com",
+      src: `${rootURI}prefs.xhtml`,
       scripts: [`${rootURI}prefs.js`],
     });
     log("Registered preference pane");
 
-    // Add DOM elements to the main Zotero pane
-    const win = Zotero.getMainWindow();
-    if (win && win.ZoteroPane) {
-      const zp = win.ZoteroPane;
-      const doc = win.document;
-    }
+    // await Zotero.
 
-    const referenceNetwork = new ReferenceNetwork();
-    await referenceNetwork.init({ id, version, rootURI });
-    log("Initialized Reference Network");
+    const weaver = new Weaver();
+    await weaver.init({ id, version, rootURI });
+    log("Initialized Weaver");
   } catch (error) {
     log("Error during startup: " + error.message);
   }
 }
 
 export function shutdown() {
-  log("Reference Network: Shutdown");
+  log("Weaver: Shutdown");
 
-  Zotero.ReferenceNetwork = undefined;
+  Zotero.weaver = undefined;
 }
 
 export function uninstall() {
-  log("Reference Network: Uninstalled");
+  log("Weaver: Uninstalled");
 }

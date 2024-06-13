@@ -5,10 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
   ) as HTMLInputElement;
 
   // Load existing preference value
-  let prefValue = Zotero.Prefs.get(
-    "extensions.reference-network.examplePref",
-    true
-  );
+  let prefValue = Zotero.Prefs.get("extensions.weaver.examplePref", true);
   if (typeof prefValue !== "boolean") {
     prefValue = !!prefValue; // Convert to boolean if it's not
   }
@@ -16,9 +13,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Save preference value on change
   prefElement.addEventListener("change", () => {
-    Zotero.Prefs.set(
-      "extensions.reference-network.examplePref",
-      prefElement.checked
-    );
+    Zotero.Prefs.set("extensions.weaver.examplePref", prefElement.checked);
   });
 });

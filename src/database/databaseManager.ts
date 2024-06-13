@@ -6,12 +6,12 @@ export class DatabaseManager {
   private dbPath: string;
 
   constructor(private rootDir: string) {
-    this.dir = Shim.Path.join(Zotero.DataDirectory.dir, "reference-network");
-    this.dbPath = Shim.Path.join(this.dir, "reference-network.sqlite");
+    this.dir = Shim.Path.join(Zotero.DataDirectory.dir, "weaver");
+    this.dbPath = Shim.Path.join(this.dir, "weaver.sqlite");
   }
 
   private log(msg: string): void {
-    Zotero.log(msg, "warning", "Reference Network: databaseManager.ts");
+    Zotero.log(msg, "warning", "Weaver: databaseManager.ts");
   }
 
   async initializeDatabase(): Promise<void> {
@@ -21,14 +21,14 @@ export class DatabaseManager {
 
     // Attach database
     await Zotero.DB.queryAsync(
-      `ATTACH DATABASE ? AS ${DATABASE_NAMES.REFERENCE_NETWORK}`,
+      `ATTACH DATABASE ? AS ${DATABASE_NAMES.WEAVER}`,
       [this.dbPath]
     );
     this.log(`Database attached from ${this.dbPath}`);
 
     // Check for existing tables and create if necessary
     for (const tableName of Object.values(TABLE_NAMES)) {
-      await this.createTable(DATABASE_NAMES.REFERENCE_NETWORK, tableName);
+      await this.createTable(DATABASE_NAMES.WEAVER, tableName);
     }
   }
 

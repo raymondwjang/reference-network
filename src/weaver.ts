@@ -9,7 +9,7 @@ interface InitOptions {
   rootURI: string;
 }
 
-export class ReferenceNetwork {
+export class Weaver {
   // I guess this is the .h of the __init__ method in Python 😭
   private id: string | null = null;
   private version: string | null = null;
@@ -28,7 +28,7 @@ export class ReferenceNetwork {
   }
 
   private log(msg: string): void {
-    Zotero.log(msg, "warning", "Reference Network: reference-network.ts");
+    Zotero.log(msg, "warning", "Weaver: weaver.ts");
   }
 
   private error(msg: string, e: Error): void {
@@ -36,9 +36,9 @@ export class ReferenceNetwork {
   }
 
   async init(options: InitOptions): Promise<void> {
-    this.log("Loading ReferenceNetwork: starting...");
+    this.log("Loading Weaver: starting...");
     if (this.initialized) {
-      throw new Error("ReferenceNetwork is already running");
+      throw new Error("Weaver is already running");
     }
     this.id = options.id;
     this.version = options.version;

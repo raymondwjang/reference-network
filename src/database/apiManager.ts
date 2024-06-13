@@ -12,7 +12,7 @@ export class ApiManager {
   }
 
   private log(msg: string): void {
-    Zotero.log(msg, "warning", "Reference Network: apiManager.ts");
+    Zotero.log(msg, "warning", "Weaver: apiManager.ts");
   }
 
   private logError(error: Error): void {

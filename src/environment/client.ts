@@ -12,8 +12,8 @@ function clientname(): string {
   }
   // if (process.versions.node) return 'Zotero' // testing
   if (Zotero.clientName) return Zotero.clientName as string;
-  if (Zotero.ReferenceNetwork?.clientName) {
-    return Zotero.ReferenceNetwork.clientName as string;
+  if (Zotero.Weaver?.clientName) {
+    return Zotero.Weaver.clientName as string;
   }
   throw new Error("Unable to detect clientName");
 }

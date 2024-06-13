@@ -1,13 +1,13 @@
 {
   "manifest_version": 2,
-  "name": "Reference Network",
+  "name": "Weaver",
   "version": "0.0.1",
-  "description": "Reference Network",
-  "homepage_url": "https://github.com/RaymondWJang/reference-network",
+  "description": "Weaver",
+  "homepage_url": "https://github.com/RaymondWJang/weaver",
   "applications": {
     "zotero": {
-      "id": "reference-network@example.com",
-      "update_url": "https://github.com/RaymondWJang/reference-network/releases/download/release/update.rdf",
+      "id": "weaver@example.com",
+      "update_url": "https://github.com/RaymondWJang/weaver/releases/download/release/update.rdf",
       "strict_min_version": "6.999",
       "strict_max_version": "7.0.*"
     }
