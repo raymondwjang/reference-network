@@ -27,30 +27,35 @@ export async function startup({
   resourceURI,
   rootURI = resourceURI.spec,
 }) {
-  await Zotero.initializationPromise;
-  log("Startup");
+  await Promise.all([
+    Zotero.initializationPromise,
+    Zotero.unlockPromise,
+    Zotero.uiReadyPromise,
+  ]);
+
   log(`ID: ${id}`);
   log(`Version: ${version}`);
   log(`Resource URI: ${resourceURI}`);
   log(`Root URI: ${rootURI}`);
 
+  const weaver = new Weaver();
+
   try {
-    await Zotero.PreferencePanes.register({
-      // Generates a pane in Preference
-      pluginID: "weaver@example.com",
-      src: `${rootURI}prefs.xhtml`,
-      scripts: [`${rootURI}prefs.js`],
-    });
-    log("Registered preference pane");
+    // await Zotero.PreferencePanes.register({
+    //   // Generates a pane in Preference
+    //   pluginID: "weaver@example.com",
+    //   src: `${rootURI}prefs.xhtml`,
+    //   scripts: [`${rootURI}prefs.js`],
+    // });
+    // log("Registered preference pane");
 
-    // await Zotero.
-
-    const weaver = new Weaver();
     await weaver.init({ id, version, rootURI });
     log("Initialized Weaver");
   } catch (error) {
     log("Error during startup: " + error.message);
   }
+
+  weaver.addToAllWindows();
 }
 
 export function shutdown() {
