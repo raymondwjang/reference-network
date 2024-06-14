@@ -1,5 +1,3 @@
-import { Weaver } from "./weaver";
-
 const BOOTSTRAP_REASONS = {
   1: "APP_STARTUP",
   2: "APP_SHUTDOWN",
@@ -15,6 +13,10 @@ export type Reason = (typeof BOOTSTRAP_REASONS)[ReasonId];
 
 function log(msg: string): void {
   Zotero.log(msg, "warning", "Weaver: bootstrap.ts");
+}
+
+function logError(msg: string, error): void {
+  Zotero.log(`${msg} ${error}: ${error.stack}`, "error");
 }
 
 export function install(): void {
@@ -38,8 +40,11 @@ export async function startup({
   log(`Resource URI: ${resourceURI}`);
   log(`Root URI: ${rootURI}`);
 
-  const weaver = new Weaver();
+  Services.scriptloader.loadSubScript(`${rootURI}weaver.js`, { Zotero });
 
+  // const weaver = Zotero.Weaver;
+
+  log(`Startup: ${typeof Zotero}`);
   try {
     // await Zotero.PreferencePanes.register({
     //   // Generates a pane in Preference
@@ -49,19 +54,24 @@ export async function startup({
     // });
     // log("Registered preference pane");
 
-    await weaver.init({ id, version, rootURI });
+    await Zotero.Weaver.init({ id, version, rootURI });
     log("Initialized Weaver");
   } catch (error) {
-    log("Error during startup: " + error.message);
+    log("Error during startup: " + error.stack);
   }
 
-  weaver.addToAllWindows();
+  try {
+    log(typeof Zotero.Weaver);
+    Zotero.Weaver.addToAllWindows();
+  } catch (error) {
+    logError("Error during a UI Test!", error);
+  }
 }
 
 export function shutdown() {
   log("Weaver: Shutdown");
 
-  Zotero.weaver = undefined;
+  Zotero.Weaver = undefined;
 }
 
 export function uninstall() {

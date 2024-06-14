@@ -107,7 +107,7 @@ async function build() {
   });
 
   await bundle({
-    entryPoints: ["src/prefs/prefs.ts"],
+    entryPoints: ["src/weaver.ts", "src/prefs/prefs.ts"],
     outdir: "build",
   });
 

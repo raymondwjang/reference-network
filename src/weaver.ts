@@ -9,7 +9,7 @@ interface InitOptions {
   rootURI: string;
 }
 
-export class Weaver {
+Zotero.Weaver = class {
   // I guess this is the .h of the __init__ method in Python 😭
   private id: string | null = null;
   private version: string | null = null;
@@ -101,22 +101,13 @@ export class Weaver {
     return url.substring(url.lastIndexOf("/") + 1);
   }
 
-  static addToWindow(window: Window) {
+  public addToWindow(window: Window) {
     const doc = window.document;
 
-    // // Add a stylesheet to the main Zotero pane
-    // let link1 = doc.createElement('link');
-    // link1.id = 'make-it-red-stylesheet';
-    // link1.type = 'text/css';
-    // link1.rel = 'stylesheet';
-    // link1.href = this.rootURI + 'style.css';
-    // doc.documentElement.appendChild(link1);
-    // this.storeAddedElement(link1);
-
     // Use Fluent for localization
-    window.MozXULElement.insertFTLIfNeeded(
-      rootURI + "/locale/en-US/weaver.ftl"
-    );
+    // window.MozXULElement.insertFTLIfNeeded(
+    //   this.rootURI + "/locale/en-US/weaver.ftl"
+    // );
 
     // Add menu option
     if (window.MozXULElement && "createXULElement" in window.document) {
@@ -136,15 +127,15 @@ export class Weaver {
     }
   }
 
-  static menuToggleTest(a, b) {
+  private menuToggleTest(a, b) {
     Zotero.log("Menu has been checked!");
   }
 
-  addToAllWindows(): void {
+  public addToAllWindows(): void {
     const windows: Window[] = Zotero.getMainWindows();
     for (const win of windows) {
       if (!win.ZoteroPane) continue;
-      Weaver.addToWindow(win);
+      this.addToWindow(win);
     }
   }
-}
+};
