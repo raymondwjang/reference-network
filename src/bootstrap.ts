@@ -39,8 +39,9 @@ export async function startup({
     await Zotero.PreferencePanes.register({
       // Generates a pane in Preference
       pluginID: "weaver@example.com",
-      src: `${rootURI}prefs.xhtml`,
+      src: `${rootURI}prefs/prefs.xhtml`,
       scripts: [`${rootURI}prefs/prefs.js`],
+      // defaultXUL: false,
     });
     log("Registered preference pane");
 
