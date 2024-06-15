@@ -8,8 +8,16 @@ function logError(msg: string, error): void {
   Zotero.log(`${msg} ${error}: ${error.stack}`, "error");
 }
 
-export function install(): void {
-  log("Installed");
+export async function install(): Promise<void> {
+  const weaver = new Weaver();
+  Zotero.Weaver = weaver;
+
+  try {
+    await weaver.install();
+    log("Installed Weaver");
+  } catch (error) {
+    logError("Error during installation", error);
+  }
 }
 
 export async function startup({
@@ -29,8 +37,6 @@ export async function startup({
   log(`Resource URI: ${resourceURI}`);
   log(`Root URI: ${rootURI}`);
 
-  // Services.scriptloader.loadSubScript(`${rootURI}weaver.js`, { Zotero });
-
   const weaver = new Weaver();
   Zotero.Weaver = weaver;
 
@@ -44,7 +50,18 @@ export async function startup({
       // defaultXUL: false,
     });
     log("Registered preference pane");
+  } catch (error) {
+    logError("Error registering preference pane", error);
+  }
 
+  try {
+    await weaver.install();
+    log("Installed Weaver");
+  } catch (error) {
+    logError("Error during installation", error);
+  }
+
+  try {
     await weaver.init({ id, version, rootURI });
     log("Initialized Weaver");
   } catch (error) {
