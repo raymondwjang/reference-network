@@ -133,7 +133,7 @@ async function build() {
     outdir: "build",
   });
 
-  await copyFile("src/prefs/prefs.xhtml", "build//prefs/prefs.xhtml");
+  await copyFile("src/prefs/prefs.xhtml", "build/prefs/prefs.xhtml");
   await copyDirectory("src/locale/", "build/locale/");
 }
 
