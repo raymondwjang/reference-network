@@ -19,7 +19,7 @@ export class ApiManager {
     Zotero.logError(error);
   }
 
-  async fetchReference(doi: string): Promise<any> {
+  async fetchPublication(doi: string): Promise<any> {
     const url =
       this.apiUrl + `works/https://doi.org/${encodeURIComponent(doi)}`;
     try {
@@ -34,7 +34,7 @@ export class ApiManager {
     }
   }
 
-  async fetchReferences(
+  async fetchPublications(
     dois: string[],
     batchSize: number = 25
   ): Promise<any[]> {
