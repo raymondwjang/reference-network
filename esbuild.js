@@ -21,6 +21,28 @@ async function copyFile(source, destination) {
   await fs.promises.copyFile(source, destination);
 }
 
+async function copyDirectory(source, destination) {
+  // Ensure the destination directory exists
+  await fs.promises.mkdir(destination, { recursive: true });
+
+  // Read all items in the source directory
+  const items = await fs.promises.readdir(source, { withFileTypes: true });
+
+  // Iterate through each item in the source directory
+  for (const item of items) {
+    const sourcePath = path.join(source, item.name);
+    const destinationPath = path.join(destination, item.name);
+
+    if (item.isDirectory()) {
+      // If it's a directory, recursively copy it
+      await copyDirectory(sourcePath, destinationPath);
+    } else {
+      // If it's a file, copy the file
+      await copyFile(sourcePath, destinationPath);
+    }
+  }
+}
+
 // Bundles the files with the provided configuration
 async function bundle(config) {
   // Default configuration enhanced with custom settings
@@ -111,7 +133,8 @@ async function build() {
     outdir: "build",
   });
 
-  await copyFile("src/prefs/prefs.xhtml", "build/prefs.xhtml");
+  await copyFile("src/prefs/prefs.xhtml", "build//prefs/prefs.xhtml");
+  await copyDirectory("src/locale/", "build/locale/");
 }
 
 // Run build and handle any errors
