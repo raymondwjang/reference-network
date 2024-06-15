@@ -9,7 +9,7 @@ interface InitOptions {
   rootURI: string;
 }
 
-Zotero.Weaver = class {
+export class Weaver {
   // I guess this is the .h of the __init__ method in Python 😭
   private id: string | null = null;
   private version: string | null = null;
@@ -105,9 +105,10 @@ Zotero.Weaver = class {
     const doc = window.document;
 
     // Use Fluent for localization
-    // window.MozXULElement.insertFTLIfNeeded(
-    //   this.rootURI + "/locale/en-US/weaver.ftl"
-    // );
+    window.MozXULElement.insertFTLIfNeeded(
+      this.rootURI + "locale/en-US/weaver.ftl"
+    );
+    this.log(this.rootURI + "locale/en-US/weaver.ftl");
 
     // Add menu option
     if (window.MozXULElement && "createXULElement" in window.document) {
@@ -138,4 +139,4 @@ Zotero.Weaver = class {
       this.addToWindow(win);
     }
   }
-};
+}
