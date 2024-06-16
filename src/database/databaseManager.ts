@@ -1,4 +1,11 @@
-import { DATABASE_NAMES, TABLE_NAMES, DDL_QUERIES } from "./entities";
+import {
+  DATABASE_NAMES,
+  TABLE_NAMES,
+  DDL_QUERIES,
+  ISUD,
+  DatabaseNameKey,
+  TableNameKey,
+} from "./entities";
 import { Shim } from "../environment/os";
 
 export class DatabaseManager {
@@ -32,27 +39,10 @@ export class DatabaseManager {
     }
   }
 
-  private checkDDLExists(databaseName: string, tableName: string) {
-    // make sure databaseName and tablename are in databasenames and tablenames
-    if (!Object.values(DATABASE_NAMES).includes(databaseName)) {
-      throw new Error(
-        `database name must be one of ${Object.values(
-          DATABASE_NAMES
-        )}: ${databaseName}`
-      );
-    }
-    if (!Object.values(TABLE_NAMES).includes(tableName)) {
-      throw new Error(
-        `table name must be one of ${Object.values(TABLE_NAMES)}: ${tableName}`
-      );
-    }
-  }
-
   private async checkTableExists(
     databaseName: string,
     tableName: string
   ): Promise<boolean> {
-    this.checkDDLExists(databaseName, tableName);
     return await Zotero.DB.valueQueryAsync(
       `SELECT COUNT(*) FROM ${databaseName}.sqlite_master WHERE type='table' AND name='${tableName}'`
     );
@@ -62,7 +52,6 @@ export class DatabaseManager {
     databaseName: string,
     tableName: string
   ): Promise<void> {
-    this.checkDDLExists(databaseName, tableName);
     this.log(`Dropping ${tableName} table...`);
     await Zotero.DB.queryAsync(`DROP TABLE ${databaseName}.${tableName};`);
   }
@@ -71,7 +60,6 @@ export class DatabaseManager {
     databaseName: string,
     tableName: string
   ): Promise<void> {
-    this.checkDDLExists(databaseName, tableName);
     if (await this.checkTableExists(databaseName, tableName)) {
       this.log(`${tableName} table already exists`);
       return;
@@ -82,15 +70,53 @@ export class DatabaseManager {
     this.log(`${tableName} created`);
   }
 
-  private async purgeTable(
-    databaseName: string,
-    tableName: string
+  async insert(
+    tableName: TableNameKey,
+    columns: string,
+    values: string
   ): Promise<void> {
-    this.checkDDLExists(databaseName, tableName);
-    if (!(await this.checkTableExists(databaseName, tableName))) {
-      throw new Error(`${tableName} table does not exist`);
+    await Zotero.DB.queryAsync(ISUD.INSERT(tableName, columns, values));
+  }
+
+  async select(
+    tableName: TableNameKey,
+    columns: string,
+    condition: string
+  ): Promise<any[]> {
+    return await Zotero.DB.queryAsync(
+      ISUD.SELECT(tableName, columns, condition)
+    );
+  }
+
+  async update(
+    tableName: TableNameKey,
+    columnValuePairs: string,
+    condition?: string
+  ): Promise<void> {
+    await Zotero.DB.queryAsync(
+      ISUD.UPDATE(tableName, columnValuePairs, condition)
+    );
+  }
+
+  async delete(tableName: TableNameKey, condition: string): Promise<void> {
+    await Zotero.DB.queryAsync(ISUD.DELETE(tableName, condition));
+  }
+
+  async upsert(
+    tableName: TableNameKey,
+    columns: string,
+    values: string,
+    condition: string
+  ): Promise<void> {
+    const rows = await this.select(tableName, columns, condition);
+    if (rows.length === 0) {
+      await this.insert(tableName, columns, values);
+    } else {
+      const columnValuePairs = columns
+        .split(", ")
+        .map((column, i) => `${column} = ${values.split(", ")[i]}`)
+        .join(", ");
+      await this.update(tableName, columnValuePairs, condition);
     }
-    await this.dropTable(databaseName, tableName);
-    await this.createTable(databaseName, tableName);
   }
 }
