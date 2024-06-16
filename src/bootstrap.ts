@@ -1,4 +1,4 @@
-import { Weaver } from "./weaver.js";
+import { weaver } from "./weaver.js";
 
 function log(msg: string): void {
   Zotero.log(msg, "warning", "Weaver: bootstrap.ts");
@@ -9,7 +9,6 @@ function logError(msg: string, error): void {
 }
 
 export async function install(): Promise<void> {
-  const weaver = new Weaver();
   Zotero.Weaver = weaver;
 
   try {
@@ -34,13 +33,14 @@ export async function startup({
 
   log(`ID: ${id}`);
   log(`Version: ${version}`);
-  log(`Resource URI: ${resourceURI}`);
+  // log(`Resource URI: ${resourceURI}`);
   log(`Root URI: ${rootURI}`);
 
-  const weaver = new Weaver();
-  Zotero.Weaver = weaver;
+  if (typeof Zotero.Weaver !== "undefined") {
+    Zotero.Weaver = weaver;
+  }
 
-  log(`Startup: ${typeof Zotero}`);
+  log(`Bootstrap startup`);
   try {
     await Zotero.PreferencePanes.register({
       // Generates a pane in Preference
@@ -52,13 +52,6 @@ export async function startup({
     log("Registered preference pane");
   } catch (error) {
     logError("Error registering preference pane", error);
-  }
-
-  try {
-    await weaver.install();
-    log("Installed Weaver");
-  } catch (error) {
-    logError("Error during installation", error);
   }
 
   try {
