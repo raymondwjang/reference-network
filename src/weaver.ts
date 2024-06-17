@@ -112,7 +112,6 @@ export class Weaver {
   private async grabAllDOIs(libraryID: number = 1): Promise<any[]> {
     this.log("Grabbing all DOI's from Zotero...");
     const query = queries.getDOIs(libraryID);
-    this.log(`Query: ${query}`);
     try {
       const idDOI = await Zotero.DB.queryAsync(query);
       this.log(

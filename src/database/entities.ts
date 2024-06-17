@@ -11,18 +11,15 @@ export type DatabaseNameKey = keyof typeof DATABASE_NAMES;
 export type TableNameKey = keyof typeof TABLE_NAMES;
 
 export const DDL_QUERIES = {
-  [TABLE_NAMES.ITEMS]: `
-    CREATE TABLE IF NOT EXISTS ${DATABASE_NAMES.WEAVER}.${TABLE_NAMES.ITEMS} (
+  [TABLE_NAMES.ITEMS]: `CREATE TABLE IF NOT EXISTS ${DATABASE_NAMES.WEAVER}.${TABLE_NAMES.ITEMS} (
       id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
       zotero_item_id TEXT,
       openalex_id TEXT,
       doi TEXT,
       created_at TEXT DEFAULT CURRENT_TIMESTAMP,
       updated_at TEXT DEFAULT CURRENT_TIMESTAMP
-    );
-  `,
-  [TABLE_NAMES.GRAPHS]: `
-    CREATE TABLE IF NOT EXISTS ${DATABASE_NAMES.WEAVER}.${TABLE_NAMES.GRAPHS} (
+    );`,
+  [TABLE_NAMES.GRAPHS]: `CREATE TABLE IF NOT EXISTS ${DATABASE_NAMES.WEAVER}.${TABLE_NAMES.GRAPHS} (
       id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
       source TEXT NOT NULL,
       target TEXT NOT NULL,
@@ -30,8 +27,7 @@ export const DDL_QUERIES = {
       data_source TEXT,
       created_at TEXT DEFAULT CURRENT_TIMESTAMP,
       updated_at TEXT DEFAULT CURRENT_TIMESTAMP
-    );
-  `,
+    );`,
 };
 
 export const CRUD = {
