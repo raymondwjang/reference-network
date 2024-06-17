@@ -50,9 +50,18 @@ export class Weaver {
 
     // from here, it must be initiated by a user action
     try {
-      const doi = await this.grabAllDOIs(1);
-      await this.fetchAndParseCitations(doi);
+      const libraryID = 1;
+      this.log("point 1");
+      const ZoteroIdDoi = await this.grabAllDOIs(libraryID);
+      this.log("point 2");
+
+      const dois = ZoteroIdDoi.map((row) => row.doi);
+      const data = await this.fetchAndParseCitations(dois);
       // cited = await fetchCitedBy(fetchCitedBy);
+      data["idDoiPair"] = ZoteroIdDoi;
+      this.log("point 3");
+
+      await this.populateItemsTable(data);
     } catch (error) {
       this.error("Failed to grab all DOIs", error);
     }
@@ -60,17 +69,64 @@ export class Weaver {
     this.initialized = true;
   }
 
-  private async grabAllDOIs(libraryID: number = 1): Promise<string[]> {
-    this.log("Grabbing all DOI's from Zotero...");
-    const dois = await Zotero.DB.columnQueryAsync(queries.getDOIs(libraryID));
-    this.log(
-      "DOI's grabbed: " + dois.length + "\nexamples: " + dois.slice(0, 5)
-    );
+  private async populateItemsTable(data: object): Promise<void> {
+    // upsert into items table
+    const referencesDOIs = this.getUniqueElements(data["referencedWorks"]);
+    const relatedDOIs = this.getUniqueElements(data["realatedWorks"]);
 
-    return dois;
+    // combine the sets
+    const allDOIs = new Set([...referencesDOIs, ...relatedDOIs]);
+
+    for (const doi of allDOIs) {
+      await this.dbManager.upsert(
+        "ITEMS",
+        `zotero_item_id, openalex_id, doi`,
+        `${null}, ${null}, ${doi}`,
+        `doi = ${doi}`
+      );
+    }
+    for (const idDoiPair of data["idDoiPair"]) {
+      await this.dbManager.upsert(
+        "ITEMS",
+        `zotero_item_id, openalex_id, doi`,
+        `${idDoiPair.itemID}, ${null}, ${idDoiPair.doi}`,
+        `doi = ${idDoiPair.doi}`
+      );
+    }
   }
 
-  private async fetchAndParseCitations(dois: string[]): Promise<void> {
+  private getUniqueElements(record: Record<string, string[]>): Set<string> {
+    // Extract keys
+    const keys = Object.keys(record);
+
+    // Flatten values
+    const values = Object.values(record).flat();
+
+    // Combine keys and values
+    const combined = keys.concat(values);
+
+    // Create a Set to automatically remove duplicates
+    return new Set(combined);
+  }
+
+  private async grabAllDOIs(libraryID: number = 1): Promise<any[]> {
+    this.log("Grabbing all DOI's from Zotero...");
+    const query = queries.getDOIs(libraryID);
+    this.log(`Query: ${query}`);
+    try {
+      const idDOI = await Zotero.DB.queryAsync(query);
+      this.log(
+        `DOI's grabbed: ${idDOI.length}\nexamples: ${idDOI.slice(0, 5)}`
+      );
+      return idDOI;
+    } catch (e) {
+      this.error(`Failed to grab DOIs: `, e);
+      throw e;
+    }
+  }
+
+  private async fetchAndParseCitations(dois: string[]): Promise<object> {
+    this.log("Fetching and parsing citations...");
     const referencedWorks: Record<string, string[]> = {};
     const relatedWorks: Record<string, string[]> = {};
     const citedByURL: Record<string, string> = {};
@@ -95,6 +151,11 @@ export class Weaver {
     } catch (e) {
       this.error("Failed to fetch DOIs", e);
     }
+    return {
+      referencedWorks: referencedWorks,
+      relatedWorks: relatedWorks,
+      citedByURL: citedByURL,
+    };
   }
 
   private async fetchCitedBy(citedByURL: string[]): Promise<void> {
@@ -155,3 +216,5 @@ export class Weaver {
     }
   }
 }
+
+export const weaver = new Weaver();
