@@ -1,6 +1,6 @@
 export const queries = {
   getDOIs: (libraryID: number) => `
-          SELECT value -- iD.itemID, iDV.valueID, fieldName
+          SELECT value as doi, iD.itemID -- iDV.valueID, fieldName
           FROM itemDataValues AS iDV
                    LEFT JOIN itemData AS iD ON iDV.valueID = iD.valueID
                    LEFT JOIN fields AS f ON iD.fieldID = f.fieldID
