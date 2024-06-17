@@ -1,0 +1,15 @@
+{
+  "manifest_version": 2,
+  "name": "Weaver",
+  "version": "0.0.1",
+  "description": "Weaver",
+  "homepage_url": "https://github.com/RaymondWJang/weaver",
+  "applications": {
+    "zotero": {
+      "id": "weaver@example.com",
+      "update_url": "https://github.com/RaymondWJang/weaver/releases/download/release/update.rdf",
+      "strict_min_version": "6.999",
+      "strict_max_version": "7.0.*"
+    }
+  }
+}

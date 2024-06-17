@@ -10,20 +10,17 @@
     "preserveConstEnums": false,
     "sourceMap": false,
     "downlevelIteration": true,
-    "lib": [ "es2017", "dom" ],
-    "typeRoots": [
-      "./typings",
-      "./node_modules/@types"
-    ]
+    "lib": ["es2017", "dom"],
+    "typeRoots": ["./node_modules/@types"],
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true
   },
-  "include": [ "*.ts", "chrome/content", "typing", "node_modules/zotero-types",
-    "src/reference_network/bootstrap.ts",
-    "src/reference_network/lib.ts",
-    "src/**/*.ts"
+  // "lib": ["es6"], // TypeORM: You may also need to enable es6 in the lib section of compiler options, or install es6-shim from @types.
+  "include": [
+    "*.ts",
+    "node_modules/zotero-types",
+    "src/**/*.ts",
+    "src/types/global.d.ts"
   ],
-  "exclude": [
-    "node_modules",
-    "**/*.spec.ts",
-    "typings"
-  ]
+  "exclude": ["node_modules", "**/*.spec.ts"]
 }
