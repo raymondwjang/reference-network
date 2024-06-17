@@ -2,7 +2,7 @@ import {
   DATABASE_NAMES,
   TABLE_NAMES,
   DDL_QUERIES,
-  ISUD,
+  CRUD,
   DatabaseNameKey,
   TableNameKey,
 } from "./entities";
@@ -75,7 +75,7 @@ export class DatabaseManager {
     columns: string,
     values: string
   ): Promise<void> {
-    await Zotero.DB.queryAsync(ISUD.INSERT(tableName, columns, values));
+    await Zotero.DB.queryAsync(CRUD.INSERT(tableName, columns, values));
   }
 
   async select(
@@ -84,7 +84,7 @@ export class DatabaseManager {
     condition: string
   ): Promise<any[]> {
     return await Zotero.DB.queryAsync(
-      ISUD.SELECT(tableName, columns, condition)
+      CRUD.SELECT(tableName, columns, condition)
     );
   }
 
@@ -94,12 +94,12 @@ export class DatabaseManager {
     condition?: string
   ): Promise<void> {
     await Zotero.DB.queryAsync(
-      ISUD.UPDATE(tableName, columnValuePairs, condition)
+      CRUD.UPDATE(tableName, columnValuePairs, condition)
     );
   }
 
   async delete(tableName: TableNameKey, condition: string): Promise<void> {
-    await Zotero.DB.queryAsync(ISUD.DELETE(tableName, condition));
+    await Zotero.DB.queryAsync(CRUD.DELETE(tableName, condition));
   }
 
   async upsert(
