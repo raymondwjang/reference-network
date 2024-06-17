@@ -11,6 +11,16 @@ export type DatabaseNameKey = keyof typeof DATABASE_NAMES;
 export type TableNameKey = keyof typeof TABLE_NAMES;
 
 export const DDL_QUERIES = {
+  [TABLE_NAMES.ITEMS]: `
+    CREATE TABLE IF NOT EXISTS ${DATABASE_NAMES.WEAVER}.${TABLE_NAMES.ITEMS} (
+      id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+      zotero_item_id TEXT,
+      openalex_id TEXT,
+      doi TEXT,
+      created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+      updated_at TEXT DEFAULT CURRENT_TIMESTAMP
+    );
+  `,
   [TABLE_NAMES.GRAPHS]: `
     CREATE TABLE IF NOT EXISTS ${DATABASE_NAMES.WEAVER}.${TABLE_NAMES.GRAPHS} (
       id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
@@ -22,19 +32,9 @@ export const DDL_QUERIES = {
       updated_at TEXT DEFAULT CURRENT_TIMESTAMP
     );
   `,
-  [TABLE_NAMES.ITEMS]: `
-    CREATE TABLE IF NOT EXISTS ${DATABASE_NAMES.WEAVER}.${TABLE_NAMES.ITEMS} (
-      id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-      zotero_item_id TEXT,
-      openalex_id TEXT,
-      doi TEXT,
-      created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-      updated_at TEXT DEFAULT CURRENT_TIMESTAMP
-    );
-  `,
 };
 
-export const ISUD = {
+export const CRUD = {
   INSERT: (tableName: TableNameKey, columns: string, values: string) =>
     `INSERT INTO ${DATABASE_NAMES.WEAVER}.${TABLE_NAMES[tableName]} (${columns}) VALUES (${values});`,
   SELECT: (tableName: TableNameKey, columns: string, condition?: string) => {
